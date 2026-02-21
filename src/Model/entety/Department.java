@@ -1,37 +1,24 @@
 package Model.entety;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class Department {
-    // --- זיהוי ---
-    private String id;              // מזהה (למשל: "INT-A")
-    private String name;            // שם (למשל: "Internal Medicine A")
-
-    // --- המבנה הפיזי (היררכיה) ---
-    // המחלקה מכילה את רשימת החדרים
-    @Builder.Default
+    private String id;
+    private String name;
     private List<Room> rooms = new ArrayList<>();
-
-    // --- המטופלים (התור) ---
-    // רשימת הממתינים לשיבוץ במחלקה הזו ספציפית
-    @Builder.Default
     private List<Patient> waitingList = new ArrayList<>();
 
-    // --- פונקציות עזר (נוחות לאלגוריתם) ---
+    public Department() {
+    }
 
-    /**
-     * מחזירה את כל המיטות במחלקה ברשימה אחת שטוחה
-     * (חוסך לאלגוריתם לולאות כפולות כל הזמן)
-     */
+    public Department(String id, String name, List<Room> rooms, List<Patient> waitingList) {
+        this.id = id;
+        this.name = name;
+        this.rooms = rooms != null ? rooms : new ArrayList<>();
+        this.waitingList = waitingList != null ? waitingList : new ArrayList<>();
+    }
+
     public List<Bed> getAllBeds() {
         List<Bed> allBeds = new ArrayList<>();
         for (Room room : rooms) {
@@ -40,9 +27,6 @@ public class Department {
         return allBeds;
     }
 
-    /**
-     * מחזירה את סך הקיבולת של המחלקה
-     */
     public int getTotalCapacity() {
         return rooms.stream().mapToInt(Room::getCapacity).sum();
     }
@@ -50,4 +34,16 @@ public class Department {
     public void addRoom(Room room) {
         this.rooms.add(room);
     }
+
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public List<Room> getRooms() { return rooms; }
+    public void setRooms(List<Room> rooms) { this.rooms = rooms != null ? rooms : new ArrayList<>(); }
+
+    public List<Patient> getWaitingList() { return waitingList; }
+    public void setWaitingList(List<Patient> waitingList) { this.waitingList = waitingList != null ? waitingList : new ArrayList<>(); }
 }

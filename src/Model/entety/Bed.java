@@ -1,21 +1,51 @@
 package Model.entety;
 
-
 import Model.enums.BedType;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.util.Objects;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Bed {
-    // --- זיהוי ---
-    private String id;              // ברקוד המיטה
-    private String roomId;          // איפה היא נמצאת
+    private String id;
+    private String roomId;
+    private BedType type;
+    private boolean hasVentilator;
+    private boolean isBroken;
 
-    // --- יכולות ---
-    private BedType type;           // סוג המיטה (רגילה/ICU/בריאטרית)
-    private boolean hasVentilator;  // האם יש לה חיבור לחמצן/מנשם?
-    private boolean isBroken;       // סימולציה של תקלה - אי אפשר לשבץ לפה
+    public Bed() {
+    }
+
+    public Bed(String id, String roomId, BedType type, boolean hasVentilator, boolean isBroken) {
+        this.id = id;
+        this.roomId = roomId;
+        this.type = type;
+        this.hasVentilator = hasVentilator;
+        this.isBroken = isBroken;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Bed other = (Bed) obj;
+        return Objects.equals(id, other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
+
+    public String getRoomId() { return roomId; }
+    public void setRoomId(String roomId) { this.roomId = roomId; }
+
+    public BedType getType() { return type; }
+    public void setType(BedType type) { this.type = type; }
+
+    public boolean isHasVentilator() { return hasVentilator; }
+    public void setHasVentilator(boolean hasVentilator) { this.hasVentilator = hasVentilator; }
+
+    public boolean isBroken() { return isBroken; }
+    public void setBroken(boolean broken) { isBroken = broken; }
 }
