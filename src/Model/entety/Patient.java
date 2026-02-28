@@ -1,11 +1,13 @@
 package Model.entety;
 
+import Model.enums.PatientStatus;
 import java.util.Objects;
 
 public class Patient {
     private String id;
     private PersonalDetails personalDetails;
     private ClinicalData clinicalData;
+    private PatientStatus status = PatientStatus.WAITING;
 
     public Patient() {
     }
@@ -37,4 +39,7 @@ public class Patient {
 
     public ClinicalData getClinicalData() { return clinicalData; }
     public void setClinicalData(ClinicalData clinicalData) { this.clinicalData = clinicalData; }
+
+    public PatientStatus getStatus() { return status; }
+    public void setStatus(PatientStatus status) { this.status = status; }
 }
