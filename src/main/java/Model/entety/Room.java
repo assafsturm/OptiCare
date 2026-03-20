@@ -1,5 +1,7 @@
 package Model.entety;
 
+import exception.CapacityExceededException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +22,11 @@ public class Room {
         this.id = id;
         this.departmentId = departmentId;
         this.capacity = capacity;
-        this.beds = beds != null ? beds : new ArrayList<>();
+        List<Bed> initial = beds != null ? beds : new ArrayList<>();
+        if (initial.size() > capacity) {
+            throw new IllegalArgumentException("Beds list size " + initial.size() + " exceeds room capacity " + capacity);
+        }
+        this.beds = new ArrayList<>(initial);
         this.distanceFromNurseStation = distanceFromNurseStation;
         this.hasNegativePressure = hasNegativePressure;
         this.hasBathroom = hasBathroom;
@@ -30,7 +36,7 @@ public class Room {
         if (beds.size() < capacity) {
             beds.add(bed);
         } else {
-            throw new RuntimeException("Room full");
+            throw new CapacityExceededException("Room full");
         }
     }
 
@@ -44,7 +50,14 @@ public class Room {
     public void setCapacity(int capacity) { this.capacity = capacity; }
 
     public List<Bed> getBeds() { return beds; }
-    public void setBeds(List<Bed> beds) { this.beds = beds != null ? beds : new ArrayList<>(); }
+    /** Sets the bed list; if size exceeds capacity, throws IllegalArgumentException. */
+    public void setBeds(List<Bed> beds) {
+        List<Bed> newBeds = beds != null ? beds : new ArrayList<>();
+        if (newBeds.size() > capacity) {
+            throw new IllegalArgumentException("Beds list size " + newBeds.size() + " exceeds room capacity " + capacity);
+        }
+        this.beds = new ArrayList<>(newBeds);
+    }
 
     public double getDistanceFromNurseStation() { return distanceFromNurseStation; }
     public void setDistanceFromNurseStation(double distanceFromNurseStation) { this.distanceFromNurseStation = distanceFromNurseStation; }

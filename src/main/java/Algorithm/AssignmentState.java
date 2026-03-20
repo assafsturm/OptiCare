@@ -5,7 +5,6 @@ import Model.entety.Patient;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Snapshot of patient-to-bed assignment. Used by the optimizer as a candidate solution.
@@ -50,10 +49,21 @@ public class AssignmentState {
         return bed == null ? null : bedToPatient.get(bed.getId());
     }
 
+    /**
+     * Assigns patient to bed. If the bed is already occupied, the current occupant is unassigned first.
+     * Rejects null patient, null bed, or null ids (no-op).
+     */
     public void assign(Patient patient, Bed bed) {
         if (patient == null || bed == null) return;
         String pid = patient.getId();
         String bid = bed.getId();
+        if (pid == null || bid == null) return;
+        // If bed is already occupied by another patient, unassign them first (one patient per bed).
+        String currentInBed = bedToPatient.get(bid);
+        if (currentInBed != null && !currentInBed.equals(pid)) {
+            patientToBed.remove(currentInBed);
+            bedToPatient.remove(bid);
+        }
         Bed oldBed = patientToBed.get(pid);
         if (oldBed != null) bedToPatient.remove(oldBed.getId());
         patientToBed.put(pid, bed);

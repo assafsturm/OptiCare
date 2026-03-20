@@ -96,4 +96,32 @@ class AssignmentStateTest {
         assertThrows(UnsupportedOperationException.class, () ->
             state.getAssignments().put("other", b2));
     }
+
+    @Test
+    void assign_whenBedAlreadyOccupied_unassignsCurrentAndAssignsNew() {
+        Patient p2 = new Patient("P2", null, null);
+        state.assign(p1, b1);
+        state.assign(p2, b1);
+        assertNull(state.getBed("P1"));
+        assertEquals(b1, state.getBed("P2"));
+        assertEquals("P2", state.getPatientIdInBed(b1));
+        assertEquals(1, state.size());
+    }
+
+    @Test
+    void assign_withNullPatientId_doesNothing() {
+        Patient noId = new Patient();
+        noId.setId(null);
+        state.assign(noId, b1);
+        assertEquals(0, state.size());
+    }
+
+    @Test
+    void assign_withNullBedId_doesNothing() {
+        Bed noId = new Bed();
+        noId.setId(null);
+        noId.setRoomId("R1");
+        state.assign(p1, noId);
+        assertEquals(0, state.size());
+    }
 }
