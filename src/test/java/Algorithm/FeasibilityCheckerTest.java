@@ -1,8 +1,11 @@
 package Algorithm;
 
 import Config.AlgorithmConfig;
+import Algorithm.feasibility.FeasibilityChecker;
+import Algorithm.feasibility.FeasibilityResult;
 import Model.entety.*;
 import Model.enums.BedType;
+import Model.enums.PatientStatus;
 import Model.enums.RiskLevel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +23,7 @@ class FeasibilityCheckerTest {
     private Department department;
 
     @BeforeEach
+    @SuppressWarnings("unused")
     void setUp() {
         config = new AlgorithmConfig();
         checker = new FeasibilityChecker(config);
@@ -71,5 +75,38 @@ class FeasibilityCheckerTest {
         assertFalse(r.isFeasible());
         assertEquals(2, r.getViolations().size());
         assertTrue(r.getViolations().contains("Not enough beds"));
+    }
+
+    @Test
+    void check_temporarilyUnavailableWaiting_excludedFromBedCount() {
+        Patient p1 = new Patient("P1", null, new ClinicalData(RiskLevel.CLEAN, 0, false, null));
+        Patient p2 = new Patient("P2", null, new ClinicalData(RiskLevel.CLEAN, 0, false, null));
+        p2.setTemporarilyUnavailable(true);
+        department.getWaitingList().add(p1);
+        department.getWaitingList().add(p2);
+        FeasibilityResult r = checker.check(department, Map.of("P1", p1, "P2", p2), new AssignmentState());
+        assertTrue(r.isFeasible());
+    }
+
+    @Test
+    void check_nullRisk_notForcedIntoNegativePressureBed() {
+        Room rIso = new Room("R2", "D1", 1, new ArrayList<>(), 0, true, false);
+        rIso.getBeds().add(new Bed("B3", "R2", BedType.REGULAR, false, false));
+        department.addRoom(rIso);
+        Patient p = new Patient("P1", null, new ClinicalData(null, 0, false, null));
+        department.getWaitingList().add(p);
+        FeasibilityResult r = checker.check(department, Map.of("P1", p), new AssignmentState());
+        assertTrue(r.isFeasible());
+    }
+
+    @Test
+    void check_nonWaitingOnWaitingList_ignoredForCapacity() {
+        Patient p1 = new Patient("P1", null, new ClinicalData(RiskLevel.CLEAN, 0, false, null));
+        Patient p2 = new Patient("P2", null, new ClinicalData(RiskLevel.CLEAN, 0, false, null));
+        p2.setStatus(PatientStatus.ASSIGNED);
+        department.getWaitingList().add(p1);
+        department.getWaitingList().add(p2);
+        FeasibilityResult r = checker.check(department, Map.of("P1", p1, "P2", p2), new AssignmentState());
+        assertTrue(r.isFeasible());
     }
 }

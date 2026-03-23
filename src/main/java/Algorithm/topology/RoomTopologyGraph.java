@@ -1,6 +1,7 @@
-package Algorithm;
+package Algorithm.topology;
 
 import Model.entety.Room;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;

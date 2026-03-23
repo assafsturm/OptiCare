@@ -27,6 +27,15 @@ public class Department {
         return allBeds;
     }
 
+    /** Returns the room with the given id, or null if not found. */
+    public Room findRoomById(String roomId) {
+        if (roomId == null) return null;
+        for (Room r : rooms) {
+            if (roomId.equals(r.getId())) return r;
+        }
+        return null;
+    }
+
     public int getTotalCapacity() {
         return rooms.stream().mapToInt(Room::getCapacity).sum();
     }

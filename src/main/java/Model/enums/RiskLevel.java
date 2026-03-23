@@ -28,5 +28,25 @@ public enum RiskLevel {
      * הוא לא מדבק אחרים, אבל אחרים יהרגו אותו.
      * חייב להיות בחדר סטרילי לגמרי (אסור לשים לידו RESPIRATORY).
      */
-    IMMUNO_COMPROMISED
+    IMMUNO_COMPROMISED,
+
+    /**
+     * Unknown / missing risk data. Used for null-risk policy: conservative finite cohorting penalties,
+     * not treated as infectious for hard isolation rules unless explicitly set.
+     */
+    UNKNOWN;
+
+    /**
+     * Priority for global waiting-list min-heap (smaller = higher priority).
+     * IMMUNO_COMPROMISED=0, INFECTIOUS=1, RESPIRATORY=2, CLEAN=3, UNKNOWN=4.
+     */
+    public int waitingQueuePriority() {
+        return switch (this) {
+            case IMMUNO_COMPROMISED -> 0;
+            case INFECTIOUS -> 1;
+            case RESPIRATORY -> 2;
+            case CLEAN -> 3;
+            case UNKNOWN -> 4;
+        };
+    }
 }

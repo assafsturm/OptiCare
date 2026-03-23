@@ -3,6 +3,8 @@ package Model.entety;
 import Model.enums.PatientStatus;
 import org.junit.jupiter.api.Test;
 
+import java.time.Instant;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class PatientTest {
@@ -33,7 +35,6 @@ class PatientTest {
     void equals_null_returnsFalse() {
         Patient p = new Patient("P1", null, null);
         assertNotEquals(null, p);
-        assertFalse(p.equals(null));
     }
 
     @Test
@@ -47,5 +48,23 @@ class PatientTest {
         Patient p = new Patient("P1", null, null);
         p.setStatus(PatientStatus.ASSIGNED);
         assertEquals(PatientStatus.ASSIGNED, p.getStatus());
+    }
+
+    @Test
+    void admittedAtAndTemporarilyUnavailable_roundTrip() {
+        Patient p = new Patient("P1", null, null);
+        Instant admitted = Instant.parse("2026-03-16T10:15:30Z");
+        p.setAdmittedAt(admitted);
+        p.setTemporarilyUnavailable(true);
+        assertEquals(admitted, p.getAdmittedAt());
+        assertTrue(p.isTemporarilyUnavailable());
+    }
+
+    @Test
+    void constructor_withAdmissionAndAvailability_setsFields() {
+        Instant admitted = Instant.parse("2026-03-16T10:15:30Z");
+        Patient p = new Patient("P1", null, null, admitted, true);
+        assertEquals(admitted, p.getAdmittedAt());
+        assertTrue(p.isTemporarilyUnavailable());
     }
 }

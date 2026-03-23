@@ -1,4 +1,4 @@
-package Algorithm;
+package Algorithm.risk;
 
 import Model.enums.RiskLevel;
 
@@ -34,22 +34,36 @@ public class RiskMatrix {
      * RESPIRATORY next to IMMUNO_COMPROMISED = forbidden (per RiskLevel JavaDoc).
      */
     private double getDefaultPenalty(RiskLevel patient, RiskLevel roomOrCohort) {
+        // UNKNOWN: conservative finite penalties only (not automatically hard-forbidden).
+        if (patient == RiskLevel.UNKNOWN && roomOrCohort == RiskLevel.UNKNOWN) {
+            return 5_000;
+        }
+        if (patient == RiskLevel.UNKNOWN || roomOrCohort == RiskLevel.UNKNOWN) {
+            RiskLevel known = patient == RiskLevel.UNKNOWN ? roomOrCohort : patient;
+            return penaltyUnknownWith(known);
+        }
         if (patient == RiskLevel.INFECTIOUS && roomOrCohort == RiskLevel.IMMUNO_COMPROMISED) return bigM;
         if (patient == RiskLevel.IMMUNO_COMPROMISED && roomOrCohort == RiskLevel.INFECTIOUS) return bigM;
         if (patient == RiskLevel.RESPIRATORY && roomOrCohort == RiskLevel.IMMUNO_COMPROMISED) return bigM;
         if (patient == RiskLevel.IMMUNO_COMPROMISED && roomOrCohort == RiskLevel.RESPIRATORY) return bigM;
         if (patient == RiskLevel.INFECTIOUS && roomOrCohort == RiskLevel.CLEAN) return bigM;
         if (patient == RiskLevel.CLEAN && roomOrCohort == RiskLevel.INFECTIOUS) return bigM;
-        if (patient == RiskLevel.RESPIRATORY && roomOrCohort == RiskLevel.CLEAN) return 500; // soft: prefer separation
+        if (patient == RiskLevel.RESPIRATORY && roomOrCohort == RiskLevel.CLEAN) return 500;
         if (patient == RiskLevel.CLEAN && roomOrCohort == RiskLevel.RESPIRATORY) return 500;
         return 0;
     }
 
+    private double penaltyUnknownWith(RiskLevel known) {
+        return switch (known) {
+            case IMMUNO_COMPROMISED, INFECTIOUS -> 100_000;
+            case RESPIRATORY, CLEAN -> 30_000;
+            case UNKNOWN -> 5_000;
+        };
+    }
+
     public double getPenalty(RiskLevel patient, RiskLevel roomOrCohort) {
         if (patient == null || roomOrCohort == null) return 0;
-        int i = patient.ordinal();
-        int j = roomOrCohort.ordinal();
-        return matrix[i][j];
+        return matrix[patient.ordinal()][roomOrCohort.ordinal()];
     }
 
     /** Override penalty for a specific (patient, room/cohort) pair. */

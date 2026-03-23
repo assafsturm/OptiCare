@@ -8,7 +8,8 @@ This document is the final deterministic work plan for OptiCare. It is based on 
 
 - **Goal:** Dynamic, optimal assignment of patients to departments/wards, rooms, and beds in a hospital.
 - **Objective function:** Minimize  
-  \( Z = \sum_{i=1}^{P} (C_{safety}^i + C_{clinical}^i + C_{policy}^i + C_{transfer}^i) \).
+  \( Z = \sum_{i} (C_{safety}^i + C_{clinical}^i + C_{policy}^i + C_{transfer}^i) + C_{unassigned} \)  
+  with \( C_{unassigned} = W_{unassigned} \times \text{waitingCount} \) (eligible waiting patients not yet assigned).
 - **Constraints:** Hard constraints (violation is forbidden / Big M) and soft constraints (finite penalties).
 - **Core algorithm:** Simulated Annealing (SA) with three neighbor moves: **Assign**, **Move**, **Swap**.
 - **Greedy initial state:** **Mandatory** warm start (does not reset the ward; it extends the current assignment).
@@ -41,19 +42,31 @@ This document is the final deterministic work plan for OptiCare. It is based on 
 
 ## 4. Cost function components (deterministic)
 
-- **\(C_{safety}\)** (DECIDED): Cohorting within the same room. Pairwise sum using `RiskMatrix`.\n  - Forbidden pairs ⇒ Big M (hard constraint).\n  - Otherwise finite penalties (soft).\n- **\(C_{clinical}\)** (DECIDED): Bed fit (hard constraints): broken bed, required bed type mismatch, bariatric requirement, ventilator requirement, infectious requires negative-pressure room.\n- **\(C_{policy}\)** (DECIDED): Nurse-station distance × severity. Uses `policyPenaltyWeight * distanceToNurseStation(room) * severityScore`.\n- **\(C_{transfer}\)** (DECIDED): Transfer penalty relative to baseline assignment at SA start. Waiting-list assignments are not transfers.\n  - \(C_{transfer} = W_{move} \times |movedSinceBaseline|\) (one \(W_{move}\) per moved patient).\n\n---
+- **\(C_{safety}\)** (DECIDED): Cohorting within the same room. Pairwise sum using `RiskMatrix`.
+  - Forbidden pairs ⇒ Big M (hard constraint).
+  - Otherwise finite penalties (soft).
+  - `RiskLevel.UNKNOWN` uses conservative **finite** matrix entries (not Big M by default).
+- **\(C_{clinical}\)** (DECIDED): Bed fit (hard constraints): broken bed, required bed type mismatch, bariatric requirement, ventilator requirement; **explicit** `INFECTIOUS` requires negative-pressure room (null/UNKNOWN risk does not trigger that hard rule).
+- **\(C_{policy}\)** (DECIDED): Nurse-station distance × severity. Uses `policyPenaltyWeight * distanceToNurseStation(room) * severityScore`.
+- **\(C_{transfer}\)** (DECIDED): Transfer penalty relative to baseline assignment at SA start. Waiting-list assignments are not transfers.
+  - \(C_{transfer} = W_{move} \times |movedSinceBaseline|\) (one \(W_{move}\) per moved patient).
+- **\(C_{unassigned}\)** (DECIDED): `unassignedPenaltyWeight *` count of `WAITING` patients on the department waiting list who are **not** `isTemporarilyUnavailable` and have **no** bed in the current `AssignmentState`.
+
+---
 
 ## 5. Current project status (from the codebase)
 
 ### Implemented
-- **Model entities:** `Patient`, `PersonalDetails`, `ClinicalData`, `Bed`, `Room`, `Department`.
-- **Enums:** `RiskLevel`, `Gender`, `BedType`, `PatientStatus` (`WAITING`, `ASSIGNED`, `DISCHARGED`).
+- **Model entities:** `Patient`, `PersonalDetails`, `ClinicalData`, `Bed`, `Room`, `Department` (includes `findRoomById`).
+- **Enums:** `RiskLevel` (includes `UNKNOWN` + `waitingQueuePriority()` for future PQ), `Gender`, `BedType`, `PatientStatus` (`WAITING`, `ASSIGNED`, `DISCHARGED`).
+- **Patient (pre–Stage 3):** `admittedAt` (`Instant`), `isTemporarilyUnavailable` (boolean).
+- **Policy helper:** `PatientRiskPolicy` (null/missing risk → UNKNOWN for cohorting; isolation only if explicitly `INFECTIOUS`).
 - **Assignment representation:** `AssignmentState` (patient→bed + bed→patient, deep copy).
-- **Risk matrix:** `RiskMatrix` (2D penalties with Big M rules).
-- **Config:** `AlgorithmConfig` (Big M and penalty weights; SA parameters).
-- **Cost function:** `CostCalculator` computes \(Z\) and components, including baseline-aware transfer.
-- **Feasibility:** `FeasibilityChecker` + `FeasibilityResult`.
-- **Topology graph:** `RoomTopologyGraph` (room nodes).
+- **Risk matrix:** `Algorithm.risk.RiskMatrix` (2D penalties with Big M rules + UNKNOWN column/row); **`Algorithm.risk.RiskMatrixFactory.fromConfig(AlgorithmConfig)`** is the only intended construction path.
+- **Config:** `AlgorithmConfig` (Big M, transfer/policy/**unassigned** weights; SA parameters).
+- **Cost function:** `CostCalculator` orchestrates **Strategy** implementations under `Algorithm.cost.*` (`Safety`, `Clinical`, `Policy`, `Transfer`, `Unassigned`); computes full \(Z\) including \(C_{unassigned}\) and baseline-aware transfer.
+- **Feasibility:** `Algorithm.feasibility.FeasibilityChecker` + `Algorithm.feasibility.FeasibilityResult` (eligible waiting only: `WAITING`, not temporarily unavailable; capacity and legal-bed checks aligned with null/UNKNOWN clinical rules).
+- **Topology graph:** `Algorithm.topology.RoomTopologyGraph` (room nodes).
 - **Unit tests:** for the above components.
 
 ### Not implemented yet
@@ -136,24 +149,23 @@ These decisions must be treated as fixed requirements for implementation.
   - **Enforcement:** Authorization is enforced in **Controller/Service** (or a dedicated `AuthorizationService`) on every mutating or sensitive operation. UI may hide/disable buttons for UX only; **never** rely on UI alone for security.
   - **Implementation timing:** User model, persistence tables, and enforcement are implemented in **Stage 8** (not before). Stages 3–7 assume a single implicit “full access” user or test double until Stage 8 wires real users.
 
-### Stage 1: Complete Model + core data structures (mostly done)
-- Ensure all entities/enums above remain consistent with the locked decisions.
-- Add any missing fields required by decisions (e.g., `admittedAt`, `isTemporarilyUnavailable`) when implementing.
+### Stage 1: Complete Model + core data structures **(done for pre–Stage 3 scope)**
+- `RiskLevel.UNKNOWN`, `Patient.admittedAt`, `Patient.isTemporarilyUnavailable`, `Department.findRoomById`, `RiskLevel.waitingQueuePriority()` are implemented.
+- Further model fields only if Stage 3+ discovers a gap.
 
-### Stage 2: Cost function + feasibility (done, with one planned fix)
-- CostCalculator + FeasibilityChecker exist.
-- Remaining planned change: introduce `RiskLevel.UNKNOWN` and apply the null-risk policy deterministically.
-- Add `C_unassigned` to objective evaluation used by optimization.
-- **Strategy Pattern (DECIDED):** refactor cost-term computation into a modular `CostStrategy` interface with four implementations that match the objective terms:
-  - SafetyCostStrategy (C_safety)
-  - ClinicalCostStrategy (C_clinical)
-  - PolicyCostStrategy (C_policy)
-  - TransferCostStrategy (C_transfer)
-  - (and optionally UnassignedCostStrategy for C_unassigned)
-  CostCalculator becomes a small orchestrator that sums the strategies, improving readability and test isolation.
-- **Factory Pattern (DECIDED):** create `RiskMatrix` only through a `RiskMatrixFactory` that reads values from `AlgorithmConfig` (single source of truth for Big M and penalties).
+### Stage 2: Cost function + feasibility **(done)**
+- `RiskLevel.UNKNOWN`, null clinical / null risk policy, and `C_unassigned` are implemented in `CostCalculator` + strategies.
+- `PatientRiskPolicy` centralizes cohorting vs isolation interpretation.
+- **Strategy pattern:** `Algorithm.cost.CostStrategy` + `SafetyCostStrategy`, `ClinicalCostStrategy`, `PolicyCostStrategy`, `TransferCostStrategy`, `UnassignedCostStrategy`; `CostCalculator` sums them.
+- **Factory pattern:** `Algorithm.risk.RiskMatrixFactory.fromConfig(AlgorithmConfig)` builds `Algorithm.risk.RiskMatrix`.
+- `FeasibilityChecker` matches eligible-waiting and UNKNOWN/isolation rules above.
 
 ### Stage 3: Neighborhood + Simulated Annealing engine (core algorithm)
+- **Pre-Stage-3 preparation checkpoint (completed):**
+  - Deterministic waiting comparator utility (`Algorithm.queue.WaitingListComparatorFactory`) with tuple order from locked decisions.
+  - Canonical assignment hash utility (`Algorithm.determinism.AssignmentStateHasher`, SHA-256 over sorted `patientId=bedId` pairs).
+  - Move contract types (`Algorithm.neighborhood.MoveType`, `Algorithm.neighborhood.NeighborMove`) prepared for delta/undo integration.
+  - Reusable deterministic test fixtures (`Algorithm.fixtures.Stage3FixtureFactory`) and unit tests for comparator/hash/move contracts.
 - Implement neighbor generation: Assign/Move/Swap (legal-only neighbors).
 - Implement greedy warm start (mandatory): start from current baseline assignment and place waiting patients into legal free beds.
 - Implement SA engine: acceptance, cooling, stop conditions, seeded randomness, best-state tracking.
@@ -256,8 +268,9 @@ These decisions must be treated as fixed requirements for implementation.
 ## 8. Summary: what is complete vs remaining
 
 ### Completed (high priority)
-- Core entities/enums, AssignmentState, RiskMatrix, AlgorithmConfig.
-- CostCalculator (Z + components) and FeasibilityChecker.
+- Core entities/enums (including `UNKNOWN`, patient admission/unavailability), AssignmentState, RiskMatrix + factory, AlgorithmConfig (+ `W_unassigned`).
+- CostCalculator (strategy-based Z + components including `C_unassigned`) and FeasibilityChecker (eligible waiting, UNKNOWN isolation rules).
+- `PatientRiskPolicy`, `Department.findRoomById`.
 - Room-level topology graph structure.
 - Unit tests for the above.
 

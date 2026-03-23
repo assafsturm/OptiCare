@@ -1,5 +1,6 @@
 package Algorithm;
 
+import Algorithm.risk.RiskMatrix;
 import Model.enums.RiskLevel;
 import org.junit.jupiter.api.Test;
 
@@ -32,6 +33,14 @@ class RiskMatrixTest {
         RiskMatrix matrix = new RiskMatrix(BIG_M);
         assertEquals(0, matrix.getPenalty(RiskLevel.CLEAN, RiskLevel.CLEAN));
         assertEquals(0, matrix.getPenalty(RiskLevel.RESPIRATORY, RiskLevel.RESPIRATORY));
+    }
+
+    @Test
+    void unknownPairs_areFiniteNotBigM() {
+        RiskMatrix matrix = new RiskMatrix(BIG_M);
+        assertTrue(matrix.getPenalty(RiskLevel.UNKNOWN, RiskLevel.CLEAN) < BIG_M);
+        assertTrue(matrix.getPenalty(RiskLevel.UNKNOWN, RiskLevel.IMMUNO_COMPROMISED) < BIG_M);
+        assertEquals(5_000, matrix.getPenalty(RiskLevel.UNKNOWN, RiskLevel.UNKNOWN));
     }
 
     @Test

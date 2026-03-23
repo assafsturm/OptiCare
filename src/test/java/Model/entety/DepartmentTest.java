@@ -16,6 +16,7 @@ class DepartmentTest {
     private Room room2;
 
     @BeforeEach
+    @SuppressWarnings("unused")
     void setUp() {
         department = new Department();
         department.setId("D1");
@@ -61,5 +62,12 @@ class DepartmentTest {
         assertNotNull(d.getWaitingList());
         assertTrue(d.getRooms().isEmpty());
         assertTrue(d.getWaitingList().isEmpty());
+    }
+
+    @Test
+    void findRoomById_returnsMatchingRoomOrNull() {
+        assertEquals(room1, department.findRoomById("R1"));
+        assertNull(department.findRoomById("missing"));
+        assertNull(department.findRoomById(null));
     }
 }

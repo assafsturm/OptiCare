@@ -1,6 +1,8 @@
 package Model.entety;
 
 import Model.enums.PatientStatus;
+
+import java.time.Instant;
 import java.util.Objects;
 
 public class Patient {
@@ -8,6 +10,10 @@ public class Patient {
     private PersonalDetails personalDetails;
     private ClinicalData clinicalData;
     private PatientStatus status = PatientStatus.WAITING;
+    /** Admission time for deterministic waiting-list ordering; null sorts last in tie-breaks. */
+    private Instant admittedAt;
+    /** When true, patient is excluded from Assign / Move / Swap (persisted). */
+    private boolean temporarilyUnavailable;
 
     public Patient() {
     }
@@ -16,6 +22,15 @@ public class Patient {
         this.id = id;
         this.personalDetails = personalDetails;
         this.clinicalData = clinicalData;
+    }
+
+    public Patient(String id, PersonalDetails personalDetails, ClinicalData clinicalData,
+                   Instant admittedAt, boolean temporarilyUnavailable) {
+        this.id = id;
+        this.personalDetails = personalDetails;
+        this.clinicalData = clinicalData;
+        this.admittedAt = admittedAt;
+        this.temporarilyUnavailable = temporarilyUnavailable;
     }
 
     @Override
@@ -42,4 +57,12 @@ public class Patient {
 
     public PatientStatus getStatus() { return status; }
     public void setStatus(PatientStatus status) { this.status = status; }
+
+    public Instant getAdmittedAt() { return admittedAt; }
+    public void setAdmittedAt(Instant admittedAt) { this.admittedAt = admittedAt; }
+
+    public boolean isTemporarilyUnavailable() { return temporarilyUnavailable; }
+    public void setTemporarilyUnavailable(boolean temporarilyUnavailable) {
+        this.temporarilyUnavailable = temporarilyUnavailable;
+    }
 }

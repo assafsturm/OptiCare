@@ -1,6 +1,8 @@
 package Algorithm;
 
 import Config.AlgorithmConfig;
+import Algorithm.risk.RiskMatrix;
+import Algorithm.risk.RiskMatrixFactory;
 import Model.entety.*;
 import Model.enums.BedType;
 import Model.enums.RiskLevel;
@@ -20,9 +22,10 @@ class CostCalculatorTest {
     private Department department;
 
     @BeforeEach
+    @SuppressWarnings("unused")
     void setUp() {
         config = new AlgorithmConfig();
-        riskMatrix = new RiskMatrix(config.getBigM());
+        riskMatrix = RiskMatrixFactory.fromConfig(config);
         calculator = new CostCalculator(riskMatrix, config);
         department = new Department("D1", "Internal", new java.util.ArrayList<>(), List.of());
         Room r1 = new Room("R1", "D1", 2, new java.util.ArrayList<>(), 10.0, false, true);
@@ -81,8 +84,10 @@ class CostCalculatorTest {
         state.assign(infectious, department.getRooms().get(0).getBeds().get(0));
         state.assign(immuno, department.getRooms().get(0).getBeds().get(1));
         Map<String, Patient> byId = Map.of("P1", infectious, "P2", immuno);
-        double c1 = calculator.computeCSafety(infectious, department.getRooms().get(0), state, department, byId, "P1", department.getRooms().get(0).getBeds().get(0));
-        double c2 = calculator.computeCSafety(immuno, department.getRooms().get(0), state, department, byId, "P2", department.getRooms().get(0).getBeds().get(1));
+        double c1 = calculator.computeCSafety(infectious, department.getRooms().get(0), state, department, byId, "P1",
+                department.getRooms().get(0).getBeds().get(0));
+        double c2 = calculator.computeCSafety(immuno, department.getRooms().get(0), state, department, byId, "P2",
+                department.getRooms().get(0).getBeds().get(1));
         assertTrue(c1 >= config.getBigM() || c2 >= config.getBigM());
     }
 
@@ -131,5 +136,51 @@ class CostCalculatorTest {
         Map<String, Patient> byId = Map.of("P1", p);
         double z = calculator.computeZ(current, department, byId, initial);
         assertTrue(z >= config.getTransferPenaltyWeight());
+    }
+
+    @Test
+    void computeCClinical_nullClinicalData_noTypeOrVentPenalties_brokenBedStillBigM() {
+        Patient p = new Patient("P1", null, null);
+        Bed bed = new Bed("B1", "R1", BedType.REGULAR, false, false);
+        double c = calculator.computeCClinical(p, bed, department.getRooms().get(0));
+        assertEquals(0, c);
+        bed.setBroken(true);
+        assertEquals(config.getBigM(), calculator.computeCClinical(p, bed, department.getRooms().get(0)));
+    }
+
+    @Test
+    void computeCSafety_nullRisk_treatedAsUnknown_finitePenaltyVsClean() {
+        Patient unknownRisk = new Patient("P1", null, new ClinicalData(null, 0, false, null));
+        Patient clean = new Patient("P2", null, new ClinicalData(RiskLevel.CLEAN, 0, false, null));
+        AssignmentState state = new AssignmentState();
+        state.assign(unknownRisk, department.getRooms().get(0).getBeds().get(0));
+        state.assign(clean, department.getRooms().get(0).getBeds().get(1));
+        Map<String, Patient> byId = Map.of("P1", unknownRisk, "P2", clean);
+        double c = calculator.computeCSafety(unknownRisk, department.getRooms().get(0), state, department, byId, "P1",
+                department.getRooms().get(0).getBeds().get(0));
+        assertEquals(30_000, c, 1e-9);
+    }
+
+    @Test
+    void computeCUnassigned_waitingPatientNotInState_addsWeightedCost() {
+        Patient waiting = new Patient("W1", null, new ClinicalData(RiskLevel.CLEAN, 0, false, null));
+        department.getWaitingList().add(waiting);
+        AssignmentState state = new AssignmentState();
+        double cu = calculator.computeCUnassigned(state, department);
+        assertEquals(config.getUnassignedPenaltyWeight(), cu);
+        double z = calculator.computeZ(state, department, Map.of("W1", waiting));
+        assertEquals(cu, z);
+    }
+
+    @Test
+    void computeZ_includesUnassignedAlongsideAssigned() {
+        Patient assigned = new Patient("A1", null, new ClinicalData(RiskLevel.CLEAN, 0, false, null));
+        Patient waiting = new Patient("W1", null, new ClinicalData(RiskLevel.CLEAN, 0, false, null));
+        department.getWaitingList().add(waiting);
+        AssignmentState state = new AssignmentState();
+        state.assign(assigned, department.getRooms().get(0).getBeds().get(0));
+        Map<String, Patient> byId = Map.of("A1", assigned, "W1", waiting);
+        double z = calculator.computeZ(state, department, byId);
+        assertTrue(z >= config.getUnassignedPenaltyWeight());
     }
 }

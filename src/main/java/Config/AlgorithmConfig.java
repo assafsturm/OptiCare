@@ -24,6 +24,8 @@ public class AlgorithmConfig {
     private double bigM = 1_000_000.0;// מספר גדול מאוד
     private double transferPenaltyWeight = 5_000.0;// משקולת העברה
     private double policyPenaltyWeight = 500.0;// משקולת מדיניות
+    /** C_unassigned = W_unassigned × waitingCount; large but finite (below {@link #bigM}). */
+    private double unassignedPenaltyWeight = 900_000.0;
 
     public AlgorithmConfig() {
     }
@@ -60,4 +62,9 @@ public class AlgorithmConfig {
 
     public double getPolicyPenaltyWeight() { return policyPenaltyWeight; }
     public void setPolicyPenaltyWeight(double policyPenaltyWeight) { this.policyPenaltyWeight = policyPenaltyWeight; }// מחזיר את המספר האיטרציות הכולל
+
+    public double getUnassignedPenaltyWeight() { return unassignedPenaltyWeight; }
+    public void setUnassignedPenaltyWeight(double unassignedPenaltyWeight) {
+        this.unassignedPenaltyWeight = unassignedPenaltyWeight;
+    }
 }
