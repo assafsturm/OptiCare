@@ -30,7 +30,9 @@ class FeasibilityCheckerTest {
         Room r1 = new Room("R1", "D1", 2, new ArrayList<>(), 0, false, false);
         r1.getBeds().add(new Bed("B1", "R1", BedType.REGULAR, false, false));
         r1.getBeds().add(new Bed("B2", "R1", BedType.REGULAR, false, false));
-        department = new Department("D1", "Internal", List.of(r1), new ArrayList<>());
+        List<Room> roomList = new ArrayList<>();
+        roomList.add(r1);
+        department = new Department("D1", "Internal", roomList, new ArrayList<>());
     }
 
     @Test

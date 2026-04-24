@@ -1,15 +1,12 @@
 package Algorithm.feasibility;
 
 import Algorithm.AssignmentState;
+import Algorithm.risk.RiskMatrixFactory;
 import Config.AlgorithmConfig;
 import Model.entety.Bed;
-import Model.entety.ClinicalData;
 import Model.entety.Department;
 import Model.entety.Patient;
-import Model.entety.Room;
-import Model.enums.BedType;
 import Model.enums.PatientStatus;
-import Model.policy.PatientRiskPolicy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +18,6 @@ import java.util.Map;
  */
 public class FeasibilityChecker {
 
-    @SuppressWarnings("unused")
     private final AlgorithmConfig config;
 
     public FeasibilityChecker(AlgorithmConfig config) {
@@ -33,6 +29,7 @@ public class FeasibilityChecker {
      * (excluding {@link Patient#isTemporarilyUnavailable()}) plus any already in {@code currentState}.
      */
     public FeasibilityResult check(Department department, Map<String, Patient> patientById, AssignmentState currentState) {
+        HardConstraints hc = new HardConstraints(RiskMatrixFactory.fromConfig(config), department);
         List<String> violations = new ArrayList<>();
         List<Bed> allBeds = department.getAllBeds();
         List<Patient> eligibleWaiting = new ArrayList<>();
@@ -52,11 +49,11 @@ public class FeasibilityChecker {
         for (Patient p : eligibleWaiting) {
             long legalFreeBeds = allBeds.stream()
                     .filter(bed -> (currentState == null || !currentState.isBedOccupied(bed))
-                            && isBedLegalForPatient(p, bed, department))
+                            && hc.isLegalAssignOrMoveToFreeBed(p, bed, currentState, patientById))
                     .count();
             if (legalFreeBeds == 0) {
                 violations.add("No legal bed for patient " + p.getId()
-                        + " (constraints: bed type, ventilator, negative pressure, or bariatric)");
+                        + " (clinical, isolation, or cohort constraints)");
             }
         }
 
@@ -65,22 +62,12 @@ public class FeasibilityChecker {
                 String pid = e.getKey();
                 Bed bed = e.getValue();
                 Patient p = patientById != null ? patientById.get(pid) : null;
-                if (p != null && bed != null && !isBedLegalForPatient(p, bed, department)) {
+                if (p != null && bed != null && !hc.isCurrentAssignmentHardValid(p, bed, currentState, patientById)) {
                     violations.add("Current assignment invalid: patient " + pid + " in bed " + bed.getId()
                             + " violates hard constraints");
                 }
             }
         }
         return violations.isEmpty() ? FeasibilityResult.feasible() : new FeasibilityResult(false, violations);
-    }
-
-    private boolean isBedLegalForPatient(Patient patient, Bed bed, Department department) {
-        if (bed.isBroken()) return false;
-        Room room = department.findRoomById(bed.getRoomId());
-        ClinicalData cd = patient != null ? patient.getClinicalData() : null;
-        if (cd != null && cd.getRequiredBedType() != null && !cd.getRequiredBedType().equals(bed.getType())) return false;
-        if (cd != null && cd.needsBariatricBed() && bed.getType() != BedType.BARIATRIC) return false;
-        if (cd != null && cd.isNeedsVentilator() && !bed.isHasVentilator()) return false;
-        return !PatientRiskPolicy.requiresNegativePressureRoom(patient) || (room != null && room.isHasNegativePressure());
     }
 }

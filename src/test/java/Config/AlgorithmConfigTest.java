@@ -17,6 +17,8 @@ class AlgorithmConfigTest {
         assertEquals(1_000_000.0, config.getBigM());
         assertEquals(5_000.0, config.getTransferPenaltyWeight());
         assertEquals(500.0, config.getPolicyPenaltyWeight());
+        assertEquals(0L, config.getMaxTimeMillis());
+        assertEquals(80, config.getNeighborSampleAttemptsPerIteration());
     }
 
     @Test

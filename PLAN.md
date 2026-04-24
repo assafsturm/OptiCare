@@ -57,6 +57,7 @@ This document is the final deterministic work plan for OptiCare. It is based on 
 ## 5. Current project status (from the codebase)
 
 ### Implemented
+- **Stage 3 (core optimizer):** `GreedyWarmStart`, `SimulatedAnnealingEngine`, `RandomLegalNeighborSampler`, `NeighborMoveExecutor`, `BedEquivalence`, `HardConstraints`, `SaResult`.
 - **Model entities:** `Patient`, `PersonalDetails`, `ClinicalData`, `Bed`, `Room`, `Department` (includes `findRoomById`).
 - **Enums:** `RiskLevel` (includes `UNKNOWN` + `waitingQueuePriority()` for future PQ), `Gender`, `BedType`, `PatientStatus` (`WAITING`, `ASSIGNED`, `DISCHARGED`).
 - **Patient (pre–Stage 3):** `admittedAt` (`Instant`), `isTemporarilyUnavailable` (boolean).
@@ -70,8 +71,6 @@ This document is the final deterministic work plan for OptiCare. It is based on 
 - **Unit tests:** for the above components.
 
 ### Not implemented yet
-- Simulated Annealing engine (neighbors + accept/reject + cooling loop).
-- Greedy warm-start builder (mandatory).
 - Controller/service workflow (admit/discharge, propose, preview, approve/reject).
 - UI/UX (async run, cancel, preview/diff, manual overrides).
 - MySQL persistence layer (repositories + schema + integration tests) — **implemented later** after core works end-to-end in-memory.
@@ -160,18 +159,19 @@ These decisions must be treated as fixed requirements for implementation.
 - **Factory pattern:** `Algorithm.risk.RiskMatrixFactory.fromConfig(AlgorithmConfig)` builds `Algorithm.risk.RiskMatrix`.
 - `FeasibilityChecker` matches eligible-waiting and UNKNOWN/isolation rules above.
 
-### Stage 3: Neighborhood + Simulated Annealing engine (core algorithm)
+### Stage 3: Neighborhood + Simulated Annealing engine (core algorithm) **(done)**
 - **Pre-Stage-3 preparation checkpoint (completed):**
   - Deterministic waiting comparator utility (`Algorithm.queue.WaitingListComparatorFactory`) with tuple order from locked decisions.
   - Canonical assignment hash utility (`Algorithm.determinism.AssignmentStateHasher`, SHA-256 over sorted `patientId=bedId` pairs).
   - Move contract types (`Algorithm.neighborhood.MoveType`, `Algorithm.neighborhood.NeighborMove`) prepared for delta/undo integration.
   - Reusable deterministic test fixtures (`Algorithm.fixtures.Stage3FixtureFactory`) and unit tests for comparator/hash/move contracts.
-- Implement neighbor generation: Assign/Move/Swap (legal-only neighbors).
-- Implement greedy warm start (mandatory): start from current baseline assignment and place waiting patients into legal free beds.
-- Implement SA engine: acceptance, cooling, stop conditions, seeded randomness, best-state tracking.
-- Implement delta/undo execution path and avoid per-neighbor deep copies.
-- Add symmetry elimination in neighborhood generation (skip equivalent same-room bed permutations).
-- Implement greedy fallback: if full legal greedy placement is impossible, continue from partial legal state with `C_unassigned` instead of aborting.
+- Neighbor generation: `RandomLegalNeighborSampler` (Assign/Move/Swap, legal-only via `HardConstraints` + apply/validate/undo).
+- Greedy warm start: `Algorithm.greedy.GreedyWarmStart` (deterministic queue order, partial placement allowed).
+- SA engine: `Algorithm.sa.SimulatedAnnealingEngine` + `SaResult` (accept/reject, geometric cooling, seeded RNG, best state snapshot).
+- In-place apply/undo: `Algorithm.neighborhood.NeighborMoveExecutor` (no per-neighbor map copies; best state deep-copied only on improvement).
+- Symmetry: `Algorithm.neighborhood.BedEquivalence` filters zero-information Move/Swap in `RandomLegalNeighborSampler`.
+- Shared hard rules: `Algorithm.feasibility.HardConstraints`; `FeasibilityChecker` delegates cohort + clinical checks.
+- Config: `AlgorithmConfig` adds `maxTimeMillis`, `neighborSampleAttemptsPerIteration`.
 
 ### Stage 4: Controller/service workflow (core system, in-memory persistence)
 - Implement: admit/discharge, build waiting PQ view, propose assignment, preview/diff, approve/reject.

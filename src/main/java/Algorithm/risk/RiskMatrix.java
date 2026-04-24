@@ -71,4 +71,13 @@ public class RiskMatrix {
         if (patient == null || roomOrCohort == null) return;
         matrix[patient.ordinal()][roomOrCohort.ordinal()] = penalty;
     }
+
+    /**
+     * True when cohorting this pair is a hard violation (matrix uses {@link #bigM}).
+     * Soft penalties ({@code << bigM}) are not forbidden here.
+     */
+    public boolean isForbiddenCohortPair(RiskLevel a, RiskLevel b) {
+        if (a == null || b == null) return false;
+        return getPenalty(a, b) >= bigM * 0.5;
+    }
 }

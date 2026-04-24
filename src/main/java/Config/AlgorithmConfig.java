@@ -16,6 +16,10 @@ public class AlgorithmConfig {
     // --- Early termination (optional) ---
     private int noImprovementStepsToStop = 0;// מספר הצעדים שלא נעשו שיפורים
     private double targetEnergyThreshold = 0.0;// תנאי עצירה
+    /** 0 = no wall-clock limit. */
+    private long maxTimeMillis = 0L;
+    /** Rejection sampling budget for one neighbor draw in SA. */
+    private int neighborSampleAttemptsPerIteration = 80;
 
     // --- Reproducibility ---
     private long randomSeed = 0;// זריקת רנדומלית
@@ -66,5 +70,13 @@ public class AlgorithmConfig {
     public double getUnassignedPenaltyWeight() { return unassignedPenaltyWeight; }
     public void setUnassignedPenaltyWeight(double unassignedPenaltyWeight) {
         this.unassignedPenaltyWeight = unassignedPenaltyWeight;
+    }
+
+    public long getMaxTimeMillis() { return maxTimeMillis; }
+    public void setMaxTimeMillis(long maxTimeMillis) { this.maxTimeMillis = maxTimeMillis; }
+
+    public int getNeighborSampleAttemptsPerIteration() { return neighborSampleAttemptsPerIteration; }
+    public void setNeighborSampleAttemptsPerIteration(int neighborSampleAttemptsPerIteration) {
+        this.neighborSampleAttemptsPerIteration = neighborSampleAttemptsPerIteration;
     }
 }

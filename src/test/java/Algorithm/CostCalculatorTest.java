@@ -27,7 +27,7 @@ class CostCalculatorTest {
         config = new AlgorithmConfig();
         riskMatrix = RiskMatrixFactory.fromConfig(config);
         calculator = new CostCalculator(riskMatrix, config);
-        department = new Department("D1", "Internal", new java.util.ArrayList<>(), List.of());
+        department = new Department("D1", "Internal", new java.util.ArrayList<>(), new java.util.ArrayList<>());
         Room r1 = new Room("R1", "D1", 2, new java.util.ArrayList<>(), 10.0, false, true);
         r1.getBeds().add(new Bed("B1", "R1", BedType.REGULAR, false, false));
         r1.getBeds().add(new Bed("B2", "R1", BedType.REGULAR, false, false));
