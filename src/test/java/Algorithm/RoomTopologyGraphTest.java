@@ -67,4 +67,24 @@ class RoomTopologyGraphTest {
         RoomTopologyGraph g = RoomTopologyGraph.fromRooms(null);
         assertTrue(g.getRoomIds().isEmpty());
     }
+
+    @Test
+    void precomputeAllPairsShortestPaths_findsIndirectShortestRoute() {
+        RoomTopologyGraph g = new RoomTopologyGraph();
+        g.addEdge("R1", "R2", 3.0);
+        g.addEdge("R2", "R3", 4.0);
+        g.addEdge("R1", "R3", 10.0);
+
+        g.precomputeAllPairsShortestPaths();
+
+        assertEquals(7.0, g.getShortestPathDistance("R1", "R3"), 1e-9);
+        assertEquals(0.0, g.getShortestPathDistance("R2", "R2"), 1e-9);
+    }
+
+    @Test
+    void getShortestPathDistance_withoutPrecompute_returnsInfinity() {
+        RoomTopologyGraph g = new RoomTopologyGraph();
+        g.addEdge("R1", "R2", 1.0);
+        assertTrue(Double.isInfinite(g.getShortestPathDistance("R1", "R2")));
+    }
 }

@@ -3,13 +3,13 @@ package Algorithm;
 import Config.AlgorithmConfig;
 import Algorithm.risk.RiskMatrix;
 import Algorithm.risk.RiskMatrixFactory;
+import Algorithm.topology.RoomTopologyGraph;
 import Model.entety.*;
 import Model.enums.BedType;
 import Model.enums.RiskLevel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -122,6 +122,30 @@ class CostCalculatorTest {
         current.assign(p, b1);
         double c = calculator.computeCTransfer("P1", b1, current, initial);
         assertEquals(0, c);
+    }
+
+    @Test
+    void computeCTransfer_whenMovedAcrossRooms_scalesByShortestPathDistance() {
+        Room r2 = new Room("R2", "D1", 1, new java.util.ArrayList<>(), 5.0, false, true);
+        Bed b3 = new Bed("B3", "R2", BedType.REGULAR, false, false);
+        r2.getBeds().add(b3);
+        department.addRoom(r2);
+
+        RoomTopologyGraph graph = new RoomTopologyGraph();
+        graph.addEdge("R1", "R2", 4.0);
+        graph.precomputeAllPairsShortestPaths();
+
+        CostCalculator distanceAware = new CostCalculator(riskMatrix, config, graph);
+        AssignmentState initial = new AssignmentState();
+        AssignmentState current = new AssignmentState();
+        Patient p = new Patient("P1", null, null);
+        Bed b1 = department.getRooms().get(0).getBeds().get(0);
+        initial.assign(p, b1);
+        current.assign(p, b3);
+
+        double c = distanceAware.computeCTransfer("P1", b3, current, initial);
+        double expected = config.getTransferPenaltyWeight() * (1.0 + config.getTransferDistanceScale() * 4.0);
+        assertEquals(expected, c, 1e-9);
     }
 
     @Test

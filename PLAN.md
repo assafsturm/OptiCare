@@ -14,7 +14,7 @@ This document is the final deterministic work plan for OptiCare. It is based on 
 - **Core algorithm:** Simulated Annealing (SA) with three neighbor moves: **Assign**, **Move**, **Swap**.
 - **Greedy initial state:** **Mandatory** warm start (does not reset the ward; it extends the current assignment).
 
-**End product:** A **ward management application (UI/UX)** connected to **MySQL**. The app maintains a persistent, always-available ward state, provides one-click assignment recommendations, shows feasibility + a clear quality score, and supports approve/reject. Optimization runs asynchronously (progress, cancel, timeout/iteration limits) so the UI never freezes.
+**End product:** A **ward management application (UI/UX)** with **persistent storage** (default: JSON file-based; optional: MySQL at the final stage). The app maintains a persistent, always-available ward state, provides one-click assignment recommendations, shows feasibility + a clear quality score, and supports approve/reject. Optimization runs asynchronously (progress, cancel, timeout/iteration limits) so the UI never freezes.
 
 ---
 
@@ -48,8 +48,9 @@ This document is the final deterministic work plan for OptiCare. It is based on 
   - `RiskLevel.UNKNOWN` uses conservative **finite** matrix entries (not Big M by default).
 - **\(C_{clinical}\)** (DECIDED): Bed fit (hard constraints): broken bed, required bed type mismatch, bariatric requirement, ventilator requirement; **explicit** `INFECTIOUS` requires negative-pressure room (null/UNKNOWN risk does not trigger that hard rule).
 - **\(C_{policy}\)** (DECIDED): Nurse-station distance × severity. Uses `policyPenaltyWeight * distanceToNurseStation(room) * severityScore`.
-- **\(C_{transfer}\)** (DECIDED): Transfer penalty relative to baseline assignment at SA start. Waiting-list assignments are not transfers.
-  - \(C_{transfer} = W_{move} \times |movedSinceBaseline|\) (one \(W_{move}\) per moved patient).
+- **\(C_{transfer}\)** (DECIDED): Transfer penalty relative to baseline assignment at SA start, scaled by spatial transport distance. Waiting-list assignments are not transfers.
+  - Distance-aware form: \(C_{transfer} = W_{move} \times (1 + \alpha \cdot d_{shortest}(room_{baseline}, room_{current}))\) per moved patient.
+  - Distances are looked up from precomputed shortest paths (no pathfinding inside SA iterations).
 - **\(C_{unassigned}\)** (DECIDED): `unassignedPenaltyWeight *` count of `WAITING` patients on the department waiting list who are **not** `isTemporarilyUnavailable` and have **no** bed in the current `AssignmentState`.
 
 ---
@@ -73,7 +74,8 @@ This document is the final deterministic work plan for OptiCare. It is based on 
 ### Not implemented yet
 - Controller/service workflow (admit/discharge, propose, preview, approve/reject).
 - UI/UX (async run, cancel, preview/diff, manual overrides).
-- MySQL persistence layer (repositories + schema + integration tests) — **implemented later** after core works end-to-end in-memory.
+- File-based persistence layer (JSON repositories + serialization/integration tests) — implemented after core works end-to-end in-memory.
+- Optional MySQL persistence layer (repositories + schema + integration tests) — only if time allows, as a final stage.
 - Audit trail and role-based access (explicitly last).
 
 ---
@@ -172,10 +174,14 @@ These decisions must be treated as fixed requirements for implementation.
 - Symmetry: `Algorithm.neighborhood.BedEquivalence` filters zero-information Move/Swap in `RandomLegalNeighborSampler`.
 - Shared hard rules: `Algorithm.feasibility.HardConstraints`; `FeasibilityChecker` delegates cohort + clinical checks.
 - Config: `AlgorithmConfig` adds `maxTimeMillis`, `neighborSampleAttemptsPerIteration`.
+- **Pre-Stage-4 extension (completed):**
+  - `RoomTopologyGraph` computes all-pairs shortest paths once at startup (Floyd-Warshall), then serves O(1) distance lookups.
+  - Startup requirement: after loading department topology (rooms/edges), call `precomputeAllPairsShortestPaths()` before any optimization run; shortest-path algorithms must not run inside SA iteration loops.
+  - `C_transfer` is distance-aware via graph shortest-path multiplier (same SA loop; no per-iteration pathfinding).
 
 ### Stage 4: Controller/service workflow (core system, in-memory persistence)
 - Implement: admit/discharge, build waiting PQ view, propose assignment, preview/diff, approve/reject.
-- Use repository interfaces with **in-memory implementations** so the system works end-to-end without MySQL.
+- Use repository interfaces with **in-memory implementations** so the system works end-to-end without external DB dependencies.
 
 ### Stage 5: View + UI/UX (core workflow)
 - Ward map view, real-time state, indicators.
@@ -189,15 +195,13 @@ These decisions must be treated as fixed requirements for implementation.
 - **Convergence Graph (DECIDED):** add a live chart plotting `iteration` (x-axis) vs `bestZ` (y-axis), and optionally `currentZ` as a second line.
   - Update the chart only from the Observer events at fixed cadence (same cadence as snapshots) to avoid UI stutter.
 
-### Stage 6: MySQL persistence (after core works)
-- Add schema + JDBC repositories + integration tests.
-- Swap in-memory repositories with MySQL implementations without changing Controller/UI logic.
-- Add optimistic locking for state-changing writes (approve assignment, manual override, discharge):
-  - Use `version` (preferred) or `updated_at` checks on write.
-  - If data changed since optimization started, reject commit and require re-run.
-- Prevent N+1 loading in ward read-model paths:
-  - Load department/ward state with a bounded-query strategy (single joined fetch or fixed small query set), not per-room/per-bed/per-patient loops.
-  - Add integration tests that enforce query-count upper bounds for full-ward load.
+### Stage 6: Persistence layer (JSON file-based, required)
+- Add JSON repositories + serialization/deserialization tests + integration tests.
+- Swap in-memory repositories with JSON implementations without changing Controller/UI logic.
+- Implement atomic write strategy for state-changing operations (approve assignment, manual override, discharge):
+  - Write to temp file + fsync + atomic rename to avoid partial/corrupted files.
+  - If persisted data changed since optimization started (snapshot/version token mismatch), reject commit and require re-run.
+- Keep repository interfaces storage-agnostic so a DB backend can be added later without changing domain/controller code.
 
 ### Stage 7: Quality, performance, and tuning
 - Unit tests for all cost components, SA behavior, and corner cases.
@@ -209,11 +213,11 @@ These decisions must be treated as fixed requirements for implementation.
   - Logging: remove `System.out.println` usage; use SLF4J + Logback with levels (`INFO`, `DEBUG`, `ERROR`).
 
 ### Stage 8: Audit trail + role-based access (last)
-- **8.1 User and RBAC model (code + DB):**
+- **8.1 User and RBAC model (code + persistence):**
   - Add `User` entity (id, username, password hash or external auth id, active flag, timestamps as needed).
   - Add `Role` enum or table; map users to roles (many-to-many if schema uses join table).
   - Add `Permission` enum; map roles to permissions in code (single source) or via seed data in DB—pick one: **role→permission mapping lives in code** (deterministic, versioned with app).
-  - Persist users/roles in MySQL (tables: `users`, `user_roles`, optional `roles` if not enum-only).
+  - Persist users/roles in the active persistence backend (JSON in baseline implementation).
 - **8.2 AuthorizationService:**
   - Single entry: `assertPermission(User user, Permission p)` throws on deny.
   - Controller/service calls this before `RUN_OPTIMIZATION`, `APPROVE_ASSIGNMENT`, `MANUAL_OVERRIDE`, `ADMIT_PATIENT`, `DISCHARGE_PATIENT`, `MANAGE_USERS`, `MANAGE_CONFIG`.
@@ -237,9 +241,9 @@ These decisions must be treated as fixed requirements for implementation.
     - `ci-core.yml` runs `mvn -B clean test` and fails on any test failure.
     - Introduce **`determinism.yml`** and mark it required.
     - `determinism.yml` runs SA 3 times on the same fixed fixture with the same `randomSeed`, and must produce identical final canonical assignment (or identical canonical hash).
-  - **Stage 6 (DB stage):**
-    - Introduce **`db-integration.yml`** and mark it required.
-    - `db-integration.yml` starts MySQL via Testcontainers, runs repository/schema integration tests, and enforces the N+1 guard (bounded query count for full ward load).
+  - **Stage 6 (persistence stage):**
+    - Introduce **`persistence-integration.yml`** and mark it required.
+    - `persistence-integration.yml` runs JSON repository/integration tests (including atomic write and snapshot/version conflict cases).
   - **Stage 7 (quality/performance stage):**
     - Introduce **`quality.yml`** and mark it required.
     - `quality.yml` runs Checkstyle and SpotBugs; violations fail build.
@@ -260,7 +264,7 @@ These decisions must be treated as fixed requirements for implementation.
 - **Cohorting enforcement:** forbidden risk pairs are hard constraints; do not generate such neighbors.
 - **Transfers:** transfer penalty is relative to baseline; it stabilizes assignments over time.
 - **UI responsiveness:** SA runs in background; provide progress + cancel + cap.
-- **Repository boundary:** keep Controller/UI DB-agnostic; persistence is swapped in later.
+- **Repository boundary:** keep Controller/UI storage-agnostic; persistence backend is swapped via repository implementations.
 - **CI/CD policy:** GitHub Actions is mandatory for merge quality gates from Stage 3 onward, with required checks enabled progressively by stage (Stage 3/6/7) and finalized in Stage 9.
 
 ---
@@ -278,7 +282,8 @@ These decisions must be treated as fixed requirements for implementation.
 - Stage 3: SA engine + greedy warm start + legal neighbors.
 - Stage 4: Controller/service workflow (admit/discharge, propose, preview, approve/reject) in-memory.
 - Stage 5: UI/UX (async, cancel, preview, manual overrides).
-- Stage 6: MySQL persistence (repositories + integration tests).
+- Stage 6: JSON persistence (repositories + integration tests).
 - Stage 7: tuning + profiling.
 - Stage 8: audit + RBAC (`User`, roles/permissions, `AuthorizationService`, UI gating, tests).
 - Stage 9: CI/CD finalization and release workflow enforcement.
+- Stage 10 (optional): MySQL backend as a drop-in persistence implementation (schema + JDBC + DB integration tests).

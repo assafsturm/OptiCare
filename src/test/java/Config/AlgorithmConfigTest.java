@@ -16,6 +16,8 @@ class AlgorithmConfigTest {
         assertEquals(100_000, config.getMaxTotalIterations());
         assertEquals(1_000_000.0, config.getBigM());
         assertEquals(5_000.0, config.getTransferPenaltyWeight());
+        assertEquals(0.1, config.getTransferDistanceScale());
+        assertEquals(10.0, config.getTransferNoPathMultiplier());
         assertEquals(500.0, config.getPolicyPenaltyWeight());
         assertEquals(0L, config.getMaxTimeMillis());
         assertEquals(80, config.getNeighborSampleAttemptsPerIteration());
@@ -27,8 +29,12 @@ class AlgorithmConfigTest {
         config.setInitialTemperature(5000);
         config.setBigM(2_000_000);
         config.setTransferPenaltyWeight(10_000);
+        config.setTransferDistanceScale(0.25);
+        config.setTransferNoPathMultiplier(20.0);
         assertEquals(5000, config.getInitialTemperature());
         assertEquals(2_000_000, config.getBigM());
         assertEquals(10_000, config.getTransferPenaltyWeight());
+        assertEquals(0.25, config.getTransferDistanceScale());
+        assertEquals(20.0, config.getTransferNoPathMultiplier());
     }
 }

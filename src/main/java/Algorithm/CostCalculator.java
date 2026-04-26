@@ -7,6 +7,7 @@ import Algorithm.cost.SafetyCostStrategy;
 import Algorithm.cost.TransferCostStrategy;
 import Algorithm.cost.UnassignedCostStrategy;
 import Algorithm.risk.RiskMatrix;
+import Algorithm.topology.RoomTopologyGraph;
 import Config.AlgorithmConfig;
 import Model.entety.Bed;
 import Model.entety.Department;
@@ -30,11 +31,15 @@ public class CostCalculator {
     private final AlgorithmConfig config;
 
     public CostCalculator(RiskMatrix riskMatrix, AlgorithmConfig config) {
+        this(riskMatrix, config, null);
+    }
+
+    public CostCalculator(RiskMatrix riskMatrix, AlgorithmConfig config, RoomTopologyGraph topologyGraph) {
         this.config = config;
         this.safety = new SafetyCostStrategy(riskMatrix);
         this.clinical = new ClinicalCostStrategy(config);
         this.policy = new PolicyCostStrategy(config);
-        this.transfer = new TransferCostStrategy(config);
+        this.transfer = new TransferCostStrategy(config, topologyGraph);
         this.strategies = List.of(
                 safety,
                 clinical,

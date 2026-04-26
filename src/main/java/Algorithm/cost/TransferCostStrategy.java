@@ -1,6 +1,7 @@
 package Algorithm.cost;
 
 import Algorithm.AssignmentState;
+import Algorithm.topology.RoomTopologyGraph;
 import Config.AlgorithmConfig;
 import Model.entety.Bed;
 import Model.entety.Department;
@@ -13,9 +14,15 @@ import java.util.Objects;
 public class TransferCostStrategy implements CostStrategy {
 
     private final AlgorithmConfig config;
+    private final RoomTopologyGraph topologyGraph;
 
     public TransferCostStrategy(AlgorithmConfig config) {
+        this(config, null);
+    }
+
+    public TransferCostStrategy(AlgorithmConfig config, RoomTopologyGraph topologyGraph) {
         this.config = config;
+        this.topologyGraph = topologyGraph;
     }
 
     @Override
@@ -34,6 +41,14 @@ public class TransferCostStrategy implements CostStrategy {
         Bed initialBed = initialState.getBed(patientId);
         if (initialBed == null) return 0;
         if (Objects.equals(initialBed.getId(), currentBed != null ? currentBed.getId() : null)) return 0;
-        return config.getTransferPenaltyWeight();
+        if (currentBed == null) return config.getTransferPenaltyWeight();
+        if (topologyGraph == null) return config.getTransferPenaltyWeight();
+
+        double shortestPath = topologyGraph.getShortestPathDistance(initialBed.getRoomId(), currentBed.getRoomId());
+        if (!Double.isFinite(shortestPath)) {
+            return config.getTransferPenaltyWeight() * config.getTransferNoPathMultiplier();
+        }
+        double multiplier = 1.0 + config.getTransferDistanceScale() * Math.max(0.0, shortestPath);
+        return config.getTransferPenaltyWeight() * multiplier;
     }
 }

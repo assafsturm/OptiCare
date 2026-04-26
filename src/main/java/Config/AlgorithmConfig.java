@@ -27,6 +27,10 @@ public class AlgorithmConfig {
     // --- Cost function constants ---
     private double bigM = 1_000_000.0;// מספר גדול מאוד
     private double transferPenaltyWeight = 5_000.0;// משקולת העברה
+    /** C_transfer multiplier = 1 + transferDistanceScale * shortestPathDistance. */
+    private double transferDistanceScale = 0.1;
+    /** Multiplier used when no graph route is available. */
+    private double transferNoPathMultiplier = 10.0;
     private double policyPenaltyWeight = 500.0;// משקולת מדיניות
     /** C_unassigned = W_unassigned × waitingCount; large but finite (below {@link #bigM}). */
     private double unassignedPenaltyWeight = 900_000.0;
@@ -63,6 +67,12 @@ public class AlgorithmConfig {
 
     public double getTransferPenaltyWeight() { return transferPenaltyWeight; }
     public void setTransferPenaltyWeight(double transferPenaltyWeight) { this.transferPenaltyWeight = transferPenaltyWeight; }// מחזיר את המספר האיטרציות הכולל
+
+    public double getTransferDistanceScale() { return transferDistanceScale; }
+    public void setTransferDistanceScale(double transferDistanceScale) { this.transferDistanceScale = transferDistanceScale; }
+
+    public double getTransferNoPathMultiplier() { return transferNoPathMultiplier; }
+    public void setTransferNoPathMultiplier(double transferNoPathMultiplier) { this.transferNoPathMultiplier = transferNoPathMultiplier; }
 
     public double getPolicyPenaltyWeight() { return policyPenaltyWeight; }
     public void setPolicyPenaltyWeight(double policyPenaltyWeight) { this.policyPenaltyWeight = policyPenaltyWeight; }// מחזיר את המספר האיטרציות הכולל
