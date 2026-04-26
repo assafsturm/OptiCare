@@ -176,12 +176,14 @@ These decisions must be treated as fixed requirements for implementation.
 - Config: `AlgorithmConfig` adds `maxTimeMillis`, `neighborSampleAttemptsPerIteration`.
 - **Pre-Stage-4 extension (completed):**
   - `RoomTopologyGraph` computes all-pairs shortest paths once at startup (Floyd-Warshall), then serves O(1) distance lookups.
-  - Startup requirement: after loading department topology (rooms/edges), call `precomputeAllPairsShortestPaths()` before any optimization run; shortest-path algorithms must not run inside SA iteration loops.
+  - Startup requirement (mandatory): after loading department topology (rooms/edges) and before any call to `proposeAssignment` / SA optimization, call `precomputeAllPairsShortestPaths()` exactly once for the active topology snapshot.
+  - If topology changes later (rooms/edges updated), recompute all-pairs shortest paths before the next optimization run.
+  - Shortest-path algorithms must not run inside SA iteration loops.
   - `C_transfer` is distance-aware via graph shortest-path multiplier (same SA loop; no per-iteration pathfinding).
 
 ### Stage 4: Controller/service workflow (core system, in-memory persistence)
 - Implement: admit/discharge, build waiting PQ view, propose assignment, preview/diff, approve/reject.
-- Use repository interfaces with **in-memory implementations** so the system works end-to-end without external DB dependencies.
+- Keep this stage focused on end-to-end workflow behavior in-memory; repository interface extraction can be deferred if needed.
 
 ### Stage 5: View + UI/UX (core workflow)
 - Ward map view, real-time state, indicators.
@@ -194,6 +196,11 @@ These decisions must be treated as fixed requirements for implementation.
   - UI subscribes to these events and updates the screen without direct access to SA working memory.
 - **Convergence Graph (DECIDED):** add a live chart plotting `iteration` (x-axis) vs `bestZ` (y-axis), and optionally `currentZ` as a second line.
   - Update the chart only from the Observer events at fixed cadence (same cadence as snapshots) to avoid UI stutter.
+
+### Pre-Stage-6 hardening checkpoint (deferred architectural cleanup)
+- Extract explicit repository interfaces and add in-memory repository implementations behind them.
+- Refactor controller/workflow services to depend on repository interfaces (not direct object mutation paths).
+- Keep behavior unchanged; this is an architectural boundary step before file persistence work.
 
 ### Stage 6: Persistence layer (JSON file-based, required)
 - Add JSON repositories + serialization/deserialization tests + integration tests.
@@ -279,9 +286,8 @@ These decisions must be treated as fixed requirements for implementation.
 - Unit tests for the above.
 
 ### Remaining (by stage)
-- Stage 3: SA engine + greedy warm start + legal neighbors.
-- Stage 4: Controller/service workflow (admit/discharge, propose, preview, approve/reject) in-memory.
 - Stage 5: UI/UX (async, cancel, preview, manual overrides).
+- Pre-Stage-6 hardening: repository interfaces + in-memory repository adapters + controller wiring to interfaces.
 - Stage 6: JSON persistence (repositories + integration tests).
 - Stage 7: tuning + profiling.
 - Stage 8: audit + RBAC (`User`, roles/permissions, `AuthorizationService`, UI gating, tests).
