@@ -186,16 +186,28 @@ These decisions must be treated as fixed requirements for implementation.
 - Keep this stage focused on end-to-end workflow behavior in-memory; repository interface extraction can be deferred if needed.
 
 ### Stage 5: View + UI/UX (core workflow)
-- Ward map view, real-time state, indicators.
+- **UI stack (DECIDED):** JavaFX (`javafx-controls`, `javafx-fxml`, `javafx-concurrent`, `javafx-charts`).
+- Ward map view (top-level), real-time state, indicators.
+- Room view (drill-down from ward map).
+- Bed view with per-bed patient details panel.
 - “Find assignment” async run with cancel and timeout.
 - Preview/diff screen.
 - Manual overrides (validated).
+- **Added for Stage 5 core (low effort / high impact):**
+  - Top KPI bar: occupancy %, waiting count, unassigned count, current Z / best Z.
+  - Conflict/warning panel: hard-block reasons + soft-penalty warnings before approve.
+  - "Why this assignment?" tooltip/panel for selected patient with compact cost breakdown (`C_safety`, `C_clinical`, `C_policy`, `C_transfer`).
 - **Thread-safety rule:** UI must only consume immutable snapshots of `bestState` published by SA at fixed cadence (recommended 300–500 ms), never the mutable working state.
 - **Observer Pattern (DECIDED):** implement a typed progress event stream from the SA engine to the UI (Observable/Observer).
   - Events include at minimum: iteration index, current temperature (T), current Z, best Z.
   - UI subscribes to these events and updates the screen without direct access to SA working memory.
 - **Convergence Graph (DECIDED):** add a live chart plotting `iteration` (x-axis) vs `bestZ` (y-axis), and optionally `currentZ` as a second line.
   - Update the chart only from the Observer events at fixed cadence (same cadence as snapshots) to avoid UI stutter.
+- **Follow-up Stage 5 backlog (optional after core UI is stable):**
+  - Filter/search panel (risk level, room, patient id/name, status).
+  - Legend + richer color coding for risk/isolation/bed-type states.
+  - Session action history pane (optimize/approve/reject/manual override timeline).
+  - Pending proposal / unsaved-change badge and related UX polish.
 
 ### Pre-Stage-6 hardening checkpoint (deferred architectural cleanup)
 - Extract explicit repository interfaces and add in-memory repository implementations behind them.
@@ -293,3 +305,4 @@ These decisions must be treated as fixed requirements for implementation.
 - Stage 8: audit + RBAC (`User`, roles/permissions, `AuthorizationService`, UI gating, tests).
 - Stage 9: CI/CD finalization and release workflow enforcement.
 - Stage 10 (optional): MySQL backend as a drop-in persistence implementation (schema + JDBC + DB integration tests).
+- Post-Stage-9 optimization backlog (optional): add a soft fragmentation/consolidation policy term to reduce unnecessary same-cohort room spread while preserving future isolation flexibility.

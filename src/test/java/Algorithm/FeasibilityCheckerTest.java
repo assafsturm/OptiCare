@@ -111,4 +111,25 @@ class FeasibilityCheckerTest {
         FeasibilityResult r = checker.check(department, Map.of("P1", p1, "P2", p2), new AssignmentState());
         assertTrue(r.isFeasible());
     }
+
+    @Test
+    void check_waitingPatientAlreadyAssigned_notDoubleCountedForCapacity() {
+        Department oneBedDepartment = new Department("D2", "OneBed", new ArrayList<>(), new ArrayList<>());
+        Room room = new Room("R1", "D2", 1, new ArrayList<>(), 0, false, false);
+        Bed bed = new Bed("B1", "R1", BedType.REGULAR, false, false);
+        room.getBeds().add(bed);
+        oneBedDepartment.addRoom(room);
+
+        Patient p1 = new Patient("P1", null, new ClinicalData(RiskLevel.CLEAN, 0, false, null));
+        p1.setStatus(PatientStatus.WAITING);
+        oneBedDepartment.getWaitingList().add(p1);
+
+        AssignmentState current = new AssignmentState();
+        current.assign(p1, bed);
+
+        FeasibilityResult r = checker.check(oneBedDepartment, Map.of("P1", p1), current);
+
+        assertTrue(r.isFeasible(), "Patient already assigned should not be counted again from waiting list.");
+        assertTrue(r.getViolations().isEmpty());
+    }
 }

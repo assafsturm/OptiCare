@@ -37,6 +37,7 @@ public class FeasibilityChecker {
             if (p == null) continue;
             if (p.getStatus() != PatientStatus.WAITING) continue;
             if (p.isTemporarilyUnavailable()) continue;
+            if (currentState != null && currentState.getBed(p.getId()) != null) continue;
             eligibleWaiting.add(p);
         }
 

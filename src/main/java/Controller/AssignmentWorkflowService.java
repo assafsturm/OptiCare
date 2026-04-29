@@ -1,11 +1,13 @@
 package Controller;
 
-import Algorithm.AssignmentState;
-import Model.entety.Department;
-import Model.entety.Patient;
-
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
+
+import Algorithm.AssignmentState;
+import Algorithm.sa.SaProgressEvent;
+import Model.entety.Department;
+import Model.entety.Patient;
 
 /**
  * Stage-4 controller/service contract for optimization workflow operations.
@@ -17,6 +19,13 @@ public interface AssignmentWorkflowService {
      */
     AssignmentProposal proposeAssignment(Department department, Map<String, Patient> patientById,
                                         AssignmentState currentState);
+
+    /**
+     * Same as proposeAssignment, with SA progress observer callbacks.
+     */
+    AssignmentProposal proposeAssignment(Department department, Map<String, Patient> patientById,
+                                        AssignmentState currentState,
+                                        Consumer<SaProgressEvent> progressConsumer);
 
     /**
      * Builds patient-level diff and score summary for preview/approval UI.

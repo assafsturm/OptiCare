@@ -286,6 +286,32 @@ class DefaultAssignmentWorkflowServiceTest {
         assertNull(service.getPendingProposal(department.getId()));
     }
 
+    @Test
+    void proposeAssignment_assignedPatientStillMarkedWaiting_doesNotFailCapacity() {
+        AlgorithmConfig config = new AlgorithmConfig();
+        config.setRandomSeed(42L);
+        DefaultAssignmentWorkflowService service = new DefaultAssignmentWorkflowService(config);
+
+        Department department = new Department("D1", "Internal", new ArrayList<>(), new ArrayList<>());
+        Room room = new Room("R1", "D1", 1, new ArrayList<>(), 5.0, true, true);
+        Bed bed = new Bed("B1", "R1", BedType.REGULAR, false, false);
+        room.getBeds().add(bed);
+        department.addRoom(room);
+
+        Patient p1 = waiting("P1");
+        department.getWaitingList().add(p1);
+        Map<String, Patient> patientById = new LinkedHashMap<>();
+        patientById.put(p1.getId(), p1);
+
+        AssignmentState current = new AssignmentState();
+        current.assign(p1, bed);
+
+        AssignmentProposal proposal = service.proposeAssignment(department, patientById, current);
+
+        assertTrue(proposal.feasible(), "Already-assigned patient should not be counted again from waiting list.");
+        assertTrue(proposal.feasibilityViolations().isEmpty());
+    }
+
     private static Patient waiting(String id) {
         Patient p = new Patient(id, null,
                 new ClinicalData(RiskLevel.CLEAN, 1, false, null),

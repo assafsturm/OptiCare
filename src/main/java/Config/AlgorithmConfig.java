@@ -20,6 +20,8 @@ public class AlgorithmConfig {
     private long maxTimeMillis = 0L;
     /** Rejection sampling budget for one neighbor draw in SA. */
     private int neighborSampleAttemptsPerIteration = 80;
+    /** UI observer snapshot cadence while SA is running. */
+    private long saProgressSnapshotCadenceMillis = 350L;
 
     // --- Reproducibility ---
     private long randomSeed = 0;// זריקת רנדומלית
@@ -88,5 +90,10 @@ public class AlgorithmConfig {
     public int getNeighborSampleAttemptsPerIteration() { return neighborSampleAttemptsPerIteration; }
     public void setNeighborSampleAttemptsPerIteration(int neighborSampleAttemptsPerIteration) {
         this.neighborSampleAttemptsPerIteration = neighborSampleAttemptsPerIteration;
+    }
+
+    public long getSaProgressSnapshotCadenceMillis() { return saProgressSnapshotCadenceMillis; }
+    public void setSaProgressSnapshotCadenceMillis(long saProgressSnapshotCadenceMillis) {
+        this.saProgressSnapshotCadenceMillis = saProgressSnapshotCadenceMillis;
     }
 }

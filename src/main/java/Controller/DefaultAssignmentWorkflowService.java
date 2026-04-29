@@ -9,6 +9,7 @@ import Algorithm.greedy.GreedyWarmStart;
 import Algorithm.queue.WaitingListComparatorFactory;
 import Algorithm.risk.RiskMatrix;
 import Algorithm.risk.RiskMatrixFactory;
+import Algorithm.sa.SaProgressEvent;
 import Algorithm.sa.SaResult;
 import Algorithm.sa.SimulatedAnnealingEngine;
 import Config.AlgorithmConfig;
@@ -23,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  * Default Stage-4 workflow service (slice 1): propose assignment only.
@@ -49,6 +51,13 @@ public class DefaultAssignmentWorkflowService implements AssignmentWorkflowServi
     @Override
     public AssignmentProposal proposeAssignment(Department department, Map<String, Patient> patientById,
                                                 AssignmentState currentState) {
+        return proposeAssignment(department, patientById, currentState, null);
+    }
+
+    @Override
+    public AssignmentProposal proposeAssignment(Department department, Map<String, Patient> patientById,
+                                                AssignmentState currentState,
+                                                Consumer<SaProgressEvent> progressConsumer) {
         AssignmentState baselineInput = currentState != null ? currentState : new AssignmentState();
         FeasibilityResult feasibility = feasibilityChecker.check(department, patientById, baselineInput);
         if (!feasibility.isFeasible()) {
@@ -78,7 +87,8 @@ public class DefaultAssignmentWorkflowService implements AssignmentWorkflowServi
                 baselineForTransfer,
                 costCalculator,
                 config,
-                hardConstraints
+                hardConstraints,
+                progressConsumer == null ? null : progressConsumer::accept
         );
         double proposedZ = result.bestZ();
         return new AssignmentProposal(

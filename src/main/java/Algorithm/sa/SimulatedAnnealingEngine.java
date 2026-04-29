@@ -27,6 +27,13 @@ public final class SimulatedAnnealingEngine {
     public SaResult run(Department department, Map<String, Patient> patientById,
                         AssignmentState warmStartState, AssignmentState baselineForTransfer,
                         CostCalculator calculator, AlgorithmConfig config, HardConstraints hardConstraints) {
+        return run(department, patientById, warmStartState, baselineForTransfer, calculator, config, hardConstraints, null);
+    }
+
+    public SaResult run(Department department, Map<String, Patient> patientById,
+                        AssignmentState warmStartState, AssignmentState baselineForTransfer,
+                        CostCalculator calculator, AlgorithmConfig config, HardConstraints hardConstraints,
+                        SaProgressListener progressListener) {
         Random rng = new Random(config.getRandomSeed());
         RandomLegalNeighborSampler sampler = new RandomLegalNeighborSampler(
                 department, hardConstraints, config.getNeighborSampleAttemptsPerIteration());
@@ -39,15 +46,22 @@ public final class SimulatedAnnealingEngine {
         int iter = 0;
         int noImprove = 0;
         long start = System.currentTimeMillis();
+        long lastSnapshotAt = start;
         long timeLimit = config.getMaxTimeMillis();
         boolean stoppedByTime = false;
 
         while (iter < config.getMaxTotalIterations() && t >= config.getMinTemperature()) {
+            if (Thread.currentThread().isInterrupted()) {
+                break;
+            }
             if (timeLimit > 0 && System.currentTimeMillis() - start > timeLimit) {
                 stoppedByTime = true;
                 break;
             }
             for (int k = 0; k < config.getIterationsPerTemperature() && iter < config.getMaxTotalIterations(); k++) {
+                if (Thread.currentThread().isInterrupted()) {
+                    break;
+                }
                 if (timeLimit > 0 && System.currentTimeMillis() - start > timeLimit) {
                     stoppedByTime = true;
                     break;
@@ -75,16 +89,36 @@ public final class SimulatedAnnealingEngine {
                     noImprove++;
                 }
                 if (config.getTargetEnergyThreshold() > 0.0 && zBest <= config.getTargetEnergyThreshold()) {
+                    publishProgress(progressListener, iter, t, zCurrent, zBest, best);
                     return new SaResult(best, zBest, iter, t, stoppedByTime);
                 }
                 if (config.getNoImprovementStepsToStop() > 0
                         && noImprove >= config.getNoImprovementStepsToStop()) {
+                    publishProgress(progressListener, iter, t, zCurrent, zBest, best);
                     return new SaResult(best, zBest, iter, t, stoppedByTime);
+                }
+                long now = System.currentTimeMillis();
+                if (progressListener != null && now - lastSnapshotAt >= Math.max(1L, config.getSaProgressSnapshotCadenceMillis())) {
+                    publishProgress(progressListener, iter, t, zCurrent, zBest, best);
+                    lastSnapshotAt = now;
                 }
             }
             if (stoppedByTime) break;
             t *= config.getCoolingRate();
         }
+        publishProgress(progressListener, iter, t, zCurrent, zBest, best);
         return new SaResult(best, zBest, iter, t, stoppedByTime);
+    }
+
+    private static void publishProgress(SaProgressListener listener, int iteration, double temperature,
+                                        double currentZ, double bestZ, AssignmentState bestState) {
+        if (listener == null) return;
+        listener.onProgress(new SaProgressEvent(
+                iteration,
+                temperature,
+                currentZ,
+                bestZ,
+                new AssignmentState(bestState)
+        ));
     }
 }
