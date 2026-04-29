@@ -35,3 +35,6 @@ bin/
 ### JVM crash / replay logs (local only) ###
 hs_err_pid*.log
 replay_pid*.log
+
+### Local tooling ###
+.tools/
