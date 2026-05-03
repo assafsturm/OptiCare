@@ -55,11 +55,10 @@ public final class RandomLegalNeighborSampler {
     private NeighborMove tryAssign(Random rng, AssignmentState state, Map<String, Patient> patientById) {
         List<Patient> candidates = new ArrayList<>();
         for (Patient p : department.getWaitingList()) {
-            if (p == null) continue;
-            if (p.getStatus() != PatientStatus.WAITING) continue;
-            if (p.isTemporarilyUnavailable()) continue;
-            if (state.getBed(p.getId()) != null) continue;
-            candidates.add(p);
+            if (p != null && p.getStatus() == PatientStatus.WAITING && !p.isTemporarilyUnavailable()
+                    && state.getBed(p.getId()) == null) {
+                candidates.add(p);
+            }
         }
         List<Bed> free = new ArrayList<>();
         for (Bed b : bedsInDeterministicOrder()) {

@@ -85,26 +85,30 @@ public class RoomTopologyGraph {
         for (Map.Entry<String, Map<String, Double>> fromEntry : adjacency.entrySet()) {
             String from = fromEntry.getKey();
             Map<String, Double> row = allPairsShortestPaths.get(from);
-            if (row == null) continue;
-            for (Map.Entry<String, Double> edge : fromEntry.getValue().entrySet()) {
-                Double w = edge.getValue();
-                if (w == null) continue;
-                String to = edge.getKey();
-                row.put(to, Math.min(row.getOrDefault(to, inf), w));
+            if (row != null) {
+                for (Map.Entry<String, Double> edge : fromEntry.getValue().entrySet()) {
+                    Double w = edge.getValue();
+                    if (w != null) {
+                        String to = edge.getKey();
+                        row.put(to, Math.min(row.getOrDefault(to, inf), w));
+                    }
+                }
             }
         }
 
         for (String k : nodeIds) {
             for (String i : nodeIds) {
                 double dik = allPairsShortestPaths.get(i).getOrDefault(k, inf);
-                if (!Double.isFinite(dik)) continue;
-                for (String j : nodeIds) {
-                    double dkj = allPairsShortestPaths.get(k).getOrDefault(j, inf);
-                    if (!Double.isFinite(dkj)) continue;
-                    double candidate = dik + dkj;
-                    double current = allPairsShortestPaths.get(i).getOrDefault(j, inf);
-                    if (candidate < current) {
-                        allPairsShortestPaths.get(i).put(j, candidate);
+                if (Double.isFinite(dik)) {
+                    for (String j : nodeIds) {
+                        double dkj = allPairsShortestPaths.get(k).getOrDefault(j, inf);
+                        if (Double.isFinite(dkj)) {
+                            double candidate = dik + dkj;
+                            double current = allPairsShortestPaths.get(i).getOrDefault(j, inf);
+                            if (candidate < current) {
+                                allPairsShortestPaths.get(i).put(j, candidate);
+                            }
+                        }
                     }
                 }
             }

@@ -47,11 +47,13 @@ public final class HardConstraints {
         RiskLevel rp = PatientRiskPolicy.effectiveRiskLevelForCohorting(patient);
         for (Bed b : room.getBeds()) {
             String pid = state.getPatientIdInBed(b);
-            if (pid == null) continue;
-            if (ignorePatientId != null && ignorePatientId.equals(pid)) continue;
-            Patient other = patientById != null ? patientById.get(pid) : null;
-            RiskLevel ro = PatientRiskPolicy.effectiveRiskLevelForCohorting(other);
-            if (riskMatrix.isForbiddenCohortPair(rp, ro)) return false;
+            if (pid != null && (ignorePatientId == null || !ignorePatientId.equals(pid))) {
+                Patient other = patientById != null ? patientById.get(pid) : null;
+                RiskLevel ro = PatientRiskPolicy.effectiveRiskLevelForCohorting(other);
+                if (riskMatrix.isForbiddenCohortPair(rp, ro)) {
+                    return false;
+                }
+            }
         }
         return true;
     }

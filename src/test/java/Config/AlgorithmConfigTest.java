@@ -21,7 +21,6 @@ class AlgorithmConfigTest {
         assertEquals(500.0, config.getPolicyPenaltyWeight());
         assertEquals(0L, config.getMaxTimeMillis());
         assertEquals(80, config.getNeighborSampleAttemptsPerIteration());
-        assertEquals(350L, config.getSaProgressSnapshotCadenceMillis());
     }
 
     @Test
@@ -32,12 +31,10 @@ class AlgorithmConfigTest {
         config.setTransferPenaltyWeight(10_000);
         config.setTransferDistanceScale(0.25);
         config.setTransferNoPathMultiplier(20.0);
-        config.setSaProgressSnapshotCadenceMillis(450L);
         assertEquals(5000, config.getInitialTemperature());
         assertEquals(2_000_000, config.getBigM());
         assertEquals(10_000, config.getTransferPenaltyWeight());
         assertEquals(0.25, config.getTransferDistanceScale());
         assertEquals(20.0, config.getTransferNoPathMultiplier());
-        assertEquals(450L, config.getSaProgressSnapshotCadenceMillis());
     }
 }

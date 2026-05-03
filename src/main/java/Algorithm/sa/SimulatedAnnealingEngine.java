@@ -27,13 +27,6 @@ public final class SimulatedAnnealingEngine {
     public SaResult run(Department department, Map<String, Patient> patientById,
                         AssignmentState warmStartState, AssignmentState baselineForTransfer,
                         CostCalculator calculator, AlgorithmConfig config, HardConstraints hardConstraints) {
-        return run(department, patientById, warmStartState, baselineForTransfer, calculator, config, hardConstraints, null);
-    }
-
-    public SaResult run(Department department, Map<String, Patient> patientById,
-                        AssignmentState warmStartState, AssignmentState baselineForTransfer,
-                        CostCalculator calculator, AlgorithmConfig config, HardConstraints hardConstraints,
-                        SaProgressListener progressListener) {
         Random rng = new Random(config.getRandomSeed());
         RandomLegalNeighborSampler sampler = new RandomLegalNeighborSampler(
                 department, hardConstraints, config.getNeighborSampleAttemptsPerIteration());
@@ -46,79 +39,74 @@ public final class SimulatedAnnealingEngine {
         int iter = 0;
         int noImprove = 0;
         long start = System.currentTimeMillis();
-        long lastSnapshotAt = start;
         long timeLimit = config.getMaxTimeMillis();
         boolean stoppedByTime = false;
 
-        while (iter < config.getMaxTotalIterations() && t >= config.getMinTemperature()) {
+        boolean stopOuter = false;
+        while (!stopOuter && iter < config.getMaxTotalIterations() && t >= config.getMinTemperature()) {
             if (Thread.currentThread().isInterrupted()) {
-                break;
-            }
-            if (timeLimit > 0 && System.currentTimeMillis() - start > timeLimit) {
+                stopOuter = true;
+            } else if (timeLimit > 0 && System.currentTimeMillis() - start > timeLimit) {
                 stoppedByTime = true;
-                break;
-            }
-            for (int k = 0; k < config.getIterationsPerTemperature() && iter < config.getMaxTotalIterations(); k++) {
-                if (Thread.currentThread().isInterrupted()) {
-                    break;
-                }
-                if (timeLimit > 0 && System.currentTimeMillis() - start > timeLimit) {
-                    stoppedByTime = true;
-                    break;
-                }
-                iter++;
-                NeighborMove move = sampler.sample(rng, warmStartState, patientById);
-                if (move == null) {
-                    continue;
-                }
-                NeighborMoveExecutor.UndoToken undo = executor.apply(move, warmStartState, department, patientById);
-                double zNew = calculator.computeZ(warmStartState, department, patientById, baselineForTransfer);
-                double delta = zNew - zCurrent;
-                boolean accept = delta <= 0.0 || rng.nextDouble() < Math.exp(-delta / t);
-                if (accept) {
-                    zCurrent = zNew;
-                    if (zCurrent < zBest) {
-                        zBest = zCurrent;
-                        best = new AssignmentState(warmStartState);
-                        noImprove = 0;
+                stopOuter = true;
+            } else {
+                int k = 0;
+                boolean innerDone = false;
+                while (!innerDone && k < config.getIterationsPerTemperature() && iter < config.getMaxTotalIterations()) {
+                    if (Thread.currentThread().isInterrupted()) {
+                        innerDone = true;
+                    } else if (timeLimit > 0 && System.currentTimeMillis() - start > timeLimit) {
+                        stoppedByTime = true;
+                        innerDone = true;
                     } else {
-                        noImprove++;
+                        iter++;
+                        NeighborMove move = sampler.sample(rng, warmStartState, patientById);
+                        if (move != null) {
+                            NeighborMoveExecutor.UndoToken undo = executor.apply(move, warmStartState, department, patientById);
+                            double zNew = calculator.computeZ(warmStartState, department, patientById, baselineForTransfer);
+                            double delta = zNew - zCurrent;
+                            boolean accept = delta <= 0.0 || rng.nextDouble() < Math.exp(-delta / t);
+                            if (accept) {
+                                zCurrent = zNew;
+                                if (zCurrent < zBest) {
+                                    zBest = zCurrent;
+                                    best = new AssignmentState(warmStartState);
+                                    noImprove = 0;
+                                } else {
+                                    noImprove++;
+                                }
+                            } else {
+                                executor.undo(undo, warmStartState, department, patientById);
+                                noImprove++;
+                            }
+                            SaResult cutoff = cutoffIfConfigured(config, best, zBest, iter, t, stoppedByTime,
+                                    noImprove);
+                            if (cutoff != null) {
+                                return cutoff;
+                            }
+                        }
+                        k++;
                     }
+                }
+                if (stoppedByTime) {
+                    stopOuter = true;
                 } else {
-                    executor.undo(undo, warmStartState, department, patientById);
-                    noImprove++;
-                }
-                if (config.getTargetEnergyThreshold() > 0.0 && zBest <= config.getTargetEnergyThreshold()) {
-                    publishProgress(progressListener, iter, t, zCurrent, zBest, best);
-                    return new SaResult(best, zBest, iter, t, stoppedByTime);
-                }
-                if (config.getNoImprovementStepsToStop() > 0
-                        && noImprove >= config.getNoImprovementStepsToStop()) {
-                    publishProgress(progressListener, iter, t, zCurrent, zBest, best);
-                    return new SaResult(best, zBest, iter, t, stoppedByTime);
-                }
-                long now = System.currentTimeMillis();
-                if (progressListener != null && now - lastSnapshotAt >= Math.max(1L, config.getSaProgressSnapshotCadenceMillis())) {
-                    publishProgress(progressListener, iter, t, zCurrent, zBest, best);
-                    lastSnapshotAt = now;
+                    t *= config.getCoolingRate();
                 }
             }
-            if (stoppedByTime) break;
-            t *= config.getCoolingRate();
         }
-        publishProgress(progressListener, iter, t, zCurrent, zBest, best);
         return new SaResult(best, zBest, iter, t, stoppedByTime);
     }
 
-    private static void publishProgress(SaProgressListener listener, int iteration, double temperature,
-                                        double currentZ, double bestZ, AssignmentState bestState) {
-        if (listener == null) return;
-        listener.onProgress(new SaProgressEvent(
-                iteration,
-                temperature,
-                currentZ,
-                bestZ,
-                new AssignmentState(bestState)
-        ));
+    private static SaResult cutoffIfConfigured(AlgorithmConfig config, AssignmentState best, double zBest, int iter,
+                                               double temperature, boolean stoppedByTime, int noImproveSteps) {
+        if (config.getTargetEnergyThreshold() > 0.0 && zBest <= config.getTargetEnergyThreshold()) {
+            return new SaResult(best, zBest, iter, temperature, stoppedByTime);
+        }
+        int cap = config.getNoImprovementStepsToStop();
+        if (cap > 0 && noImproveSteps >= cap) {
+            return new SaResult(best, zBest, iter, temperature, stoppedByTime);
+        }
+        return null;
     }
 }

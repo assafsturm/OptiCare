@@ -14,7 +14,7 @@ This document is the final deterministic work plan for OptiCare. It is based on 
 - **Core algorithm:** Simulated Annealing (SA) with three neighbor moves: **Assign**, **Move**, **Swap**.
 - **Greedy initial state:** **Mandatory** warm start (does not reset the ward; it extends the current assignment).
 
-**End product:** A **ward management application (UI/UX)** with **persistent storage** (default: JSON file-based; optional: MySQL at the final stage). The app maintains a persistent, always-available ward state, provides one-click assignment recommendations, shows feasibility + a clear quality score, and supports approve/reject. Optimization runs asynchronously (progress, cancel, timeout/iteration limits) so the UI never freezes.
+**End product:** A **ward management application (UI/UX)** with **persistent storage** (default: JSON file-based; optional: MySQL at the final stage). The app maintains a persistent, always-available ward state, provides one-click assignment recommendations, shows feasibility + a clear quality score, and supports approve/reject. Optimization runs asynchronously (**cancel**, plus iteration / optional wall-clock limits from configuration) so the UI never freezes. There is no live intra-run SA callback stream in the current UI—it consumes the finished proposal only.
 
 ---
 
@@ -71,10 +71,12 @@ This document is the final deterministic work plan for OptiCare. It is based on 
 - **Topology graph:** `Algorithm.topology.RoomTopologyGraph` (room nodes).
 - **Unit tests:** for the above components.
 
+### Implemented (Stages 4–5 core — in-memory snapshot)
+- **Controller/service:** `DefaultAssignmentWorkflowService` (and contract `AssignmentWorkflowService`) — propose, preview/diff, pending proposal, approve/reject, admit/discharge, waiting-queue view projection.
+- **JavaFX Stage 5 shell:** drill-down dept/room/bed + waiting list, async optimize + cancel, preview/diff list, KPI + warnings + “why” panel, chart by optimize run ordinal, validated manual assignment override toward a free legal bed.
+
 ### Not implemented yet
-- Controller/service workflow (admit/discharge, propose, preview, approve/reject).
-- UI/UX (async run, cancel, preview/diff, manual overrides).
-- File-based persistence layer (JSON repositories + serialization/integration tests) — implemented after core works end-to-end in-memory.
+- File-based persistence layer (JSON repositories + serialization/integration tests) — Stage 6; after repositories harden Stage 5 optional polish (badges/versioning against stale proposes).
 - Optional MySQL persistence layer (repositories + schema + integration tests) — only if time allows, as a final stage.
 - Audit trail and role-based access (explicitly last).
 
@@ -88,6 +90,7 @@ All stages are **TDD-first**: write tests before implementation.
 
 These decisions must be treated as fixed requirements for implementation.
 
+- **Control flow (DECIDED):** do not use `break` or `continue` **to control loops** (no early loop exit / skip-it). Prefer boolean flags, guarded `if`/`else`, early `return` from small helpers, or `Stream`/`Optional` when it stays readable. Prefer **`switch` expressions** (or arrow labels) instead of labeled fall-through `break` chains.
 - **Canonical state (DECIDED):** baseline assignment at SA start + current candidate assignment.
   - Do not throw away the current ward state on new admissions.
 - **Hard constraints (DECIDED):** never generate (or manually apply) moves that violate:
@@ -187,27 +190,23 @@ These decisions must be treated as fixed requirements for implementation.
 
 ### Stage 5: View + UI/UX (core workflow)
 - **UI stack (DECIDED):** JavaFX (`javafx-controls`, `javafx-fxml`, `javafx-concurrent`, `javafx-charts`).
-- Ward map view (top-level), real-time state, indicators.
-- Room view (drill-down from ward map).
-- Bed view with per-bed patient details panel.
-- “Find assignment” async run with cancel and timeout.
-- Preview/diff screen.
-- Manual overrides (validated).
+- **Navigation (implemented):** top-level lists with drill-down — **department → rooms → beds**; waiting-patient list tied to eligibility rules. Indicator-style labels (occupancy KPIs, occupancy on beds, feasibility text). This is **not** a graphical floor-plan viewer.
+- Bed selection shows assigning patient id (from current `AssignmentState`); complementary “why” text for cohorting/equipment/transfer wording at high level when a occupied bed is selected.
+- **“Find assignment”:** async (`javafx.concurrent.Task`) with **Cancel**; limits are **iteration count** and optionally **`AlgorithmConfig.maxTimeMillis`** inside the SA engine—not a distinct UI-driven progress channel. Result is consumed when the task **completes** (final `AssignmentProposal` / preview); the running SA working state is not surfaced to JavaFX controls mid-flight.
+- **Preview/diff:** text summary plus per-row **patient assignment diff** (`PatientAssignmentDiff`): change type + from/to beds for non-unchanged patients.
+- **Manual override (validated):** pick eligible **WAITING** patient + **free** target bed whose room satisfies hard rules; mutate in-memory assignment + statuses and waiting list consistency. Caller should discard any **stale pending** optimizer proposal whenever the ward state diverges outside Approve/Reject (e.g. after an override)—see Stage 5 optional polish.
 - **Added for Stage 5 core (low effort / high impact):**
-  - Top KPI bar: occupancy %, waiting count, unassigned count, current Z / best Z.
-  - Conflict/warning panel: hard-block reasons + soft-penalty warnings before approve.
-  - "Why this assignment?" tooltip/panel for selected patient with compact cost breakdown (`C_safety`, `C_clinical`, `C_policy`, `C_transfer`).
-- **Thread-safety rule:** UI must only consume immutable snapshots of `bestState` published by SA at fixed cadence (recommended 300–500 ms), never the mutable working state.
-- **Observer Pattern (DECIDED):** implement a typed progress event stream from the SA engine to the UI (Observable/Observer).
-  - Events include at minimum: iteration index, current temperature (T), current Z, best Z.
-  - UI subscribes to these events and updates the screen without direct access to SA working memory.
-- **Convergence Graph (DECIDED):** add a live chart plotting `iteration` (x-axis) vs `bestZ` (y-axis), and optionally `currentZ` as a second line.
-  - Update the chart only from the Observer events at fixed cadence (same cadence as snapshots) to avoid UI stutter.
+  - Top KPI bar: occupancy %, waiting count, unassigned estimate, **current/best Z** (last completed optimization for that pairing; rerun after manual ward edits if KPI Z must reflect the mutated graph).
+  - Conflict/warning panel: hard feasibility violations / preview narrative.
+  - “Why this assignment?” tooltip/title hint + textarea for qualitative breakdown when a patient is selected from a bed row.
+- **Convergence chart (implemented):** `javafx-chart` adds a point per **successful** “Find assignment” completion (x = **run ordinal**, not SA iteration inside a run); y-values are **`baseline Z` vs `proposed/best Z`** from that outcome. Plotting is batch-style at run end—not streaming from intra-SA telemetry.
 - **Follow-up Stage 5 backlog (optional after core UI is stable):**
+  - **Graphical ward map:** spatial/topology canvas (beyond list drill-down); current product uses lists only.
+  - Live per-iteration SA telemetry + chart updates (explicitly deferred; contrasts with convergence-by-run-number above).
   - Filter/search panel (risk level, room, patient id/name, status).
   - Legend + richer color coding for risk/isolation/bed-type states.
   - Session action history pane (optimize/approve/reject/manual override timeline).
-  - Pending proposal / unsaved-change badge and related UX polish.
+  - Pending proposal / unsaved-change badge and related UX polish (today: clear stale pending proposal when overriding—must stay correct when persistence arrives).
 
 ### Pre-Stage-6 hardening checkpoint (deferred architectural cleanup)
 - Extract explicit repository interfaces and add in-memory repository implementations behind them.
@@ -282,7 +281,7 @@ These decisions must be treated as fixed requirements for implementation.
 - **Performance:** per-iteration work must be small; avoid full-department scans when generating a neighbor.
 - **Cohorting enforcement:** forbidden risk pairs are hard constraints; do not generate such neighbors.
 - **Transfers:** transfer penalty is relative to baseline; it stabilizes assignments over time.
-- **UI responsiveness:** SA runs in background; provide progress + cancel + cap.
+- **UI responsiveness:** SA runs in background; cancel + iteration/time caps are supported inside the SA engine; UI shows results when each async run completes.
 - **Repository boundary:** keep Controller/UI storage-agnostic; persistence backend is swapped via repository implementations.
 - **CI/CD policy:** GitHub Actions is mandatory for merge quality gates from Stage 3 onward, with required checks enabled progressively by stage (Stage 3/6/7) and finalized in Stage 9.
 
@@ -295,10 +294,12 @@ These decisions must be treated as fixed requirements for implementation.
 - CostCalculator (strategy-based Z + components including `C_unassigned`) and FeasibilityChecker (eligible waiting, UNKNOWN isolation rules).
 - `PatientRiskPolicy`, `Department.findRoomById`.
 - Room-level topology graph structure.
-- Unit tests for the above.
+- **Stage 4 (in-memory):** `AssignmentWorkflowService` / `DefaultAssignmentWorkflowService` — propose, preview/diff, pending proposal, approve/reject, admit/discharge hooks, deterministic waiting-queue view comparator.
+- **Stage 5 (core JavaFX):** `OptiCareApp` + `OptiCareViewFactory` — drill-down navigation, async optimize + cancel, preview/diff list, KPI bar, warnings/why panels, convergence chart by optimize **run ordinal**, validated manual assignment override (waiting → free legal bed).
+- Unit tests including algorithm correctness smoke, brute-force micro optimum checks, scaled smoke, and Stage-4-style integration tests.
 
 ### Remaining (by stage)
-- Stage 5: UI/UX (async, cancel, preview, manual overrides).
+- Stage 5: optional UI polish listed under **Follow-up Stage 5 backlog** (graphical ward map, search/filters, history, richer styling, optional live telemetry); core async workflow + preview + manual override + convergence-by-run chart are implemented in code.
 - Pre-Stage-6 hardening: repository interfaces + in-memory repository adapters + controller wiring to interfaces.
 - Stage 6: JSON persistence (repositories + integration tests).
 - Stage 7: tuning + profiling.

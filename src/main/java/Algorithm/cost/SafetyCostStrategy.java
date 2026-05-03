@@ -53,11 +53,15 @@ public class SafetyCostStrategy implements CostStrategy {
         List<Patient> others = new ArrayList<>();
         if (room == null || state == null) return others;
         for (Bed b : room.getBeds()) {
-            if (b == excludeBed) continue;
-            String pid = state.getPatientIdInBed(b);
-            if (pid == null || pid.equals(excludePatientId)) continue;
-            Patient p = patientById != null ? patientById.get(pid) : null;
-            if (p != null) others.add(p);
+            if (b != excludeBed) {
+                String pid = state.getPatientIdInBed(b);
+                if (pid != null && !pid.equals(excludePatientId)) {
+                    Patient p = patientById != null ? patientById.get(pid) : null;
+                    if (p != null) {
+                        others.add(p);
+                    }
+                }
+            }
         }
         return others;
     }

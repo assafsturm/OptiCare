@@ -1,5 +1,6 @@
 package View;
 
+import Controller.PatientAssignmentDiff;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.chart.LineChart;
@@ -8,7 +9,6 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
@@ -69,13 +69,18 @@ final class OptiCareViewFactory {
         return box;
     }
 
-    static VBox buildInsightsPanel(TextArea warningsArea, TextArea whyArea,
+    static VBox buildInsightsPanel(TextArea warningsArea, ListView<PatientAssignmentDiff> previewDiffList, TextArea whyArea,
                                    XYChart.Series<Number, Number> bestZSeries,
                                    XYChart.Series<Number, Number> currentZSeries) {
         Label warningsTitle = new Label("Conflict / Warning Panel");
         warningsArea.setEditable(false);
         warningsArea.setWrapText(true);
-        warningsArea.setPrefRowCount(10);
+        warningsArea.setPrefRowCount(6);
+
+        Label previewTitle = new Label("Proposal: per-patient changes");
+        previewDiffList.setPrefHeight(140);
+        VBox.setVgrow(previewDiffList, Priority.SOMETIMES);
+        Tooltip.install(previewTitle, new Tooltip("Baseline → proposed bed moves (waiting patients appear as ASSIGNED)"));
 
         Label whyTitle = new Label("Why this assignment?");
         whyArea.setEditable(false);
@@ -98,16 +103,14 @@ final class OptiCareViewFactory {
         chart.getData().add(currentZSeries);
         chart.setPrefHeight(250);
 
-        VBox box = new VBox(8, warningsTitle, warningsArea, whyTitle, whyArea, chart);
+        VBox box = new VBox(8, warningsTitle, warningsArea, previewTitle, previewDiffList, whyTitle, whyArea, chart);
         box.setPrefWidth(430);
         return box;
     }
 
-    static HBox buildActionsPanel(Button findAssignmentButton, Button cancelButton, ProgressIndicator optimizeSpinner,
+    static HBox buildActionsPanel(Button findAssignmentButton, Button cancelButton,
                                   Button approveButton, Button rejectButton, Button manualOverrideButton) {
-        optimizeSpinner.setVisible(false);
-        optimizeSpinner.setPrefSize(22, 22);
-        HBox row = new HBox(10, findAssignmentButton, cancelButton, optimizeSpinner, approveButton, rejectButton, manualOverrideButton);
+        HBox row = new HBox(10, findAssignmentButton, cancelButton, approveButton, rejectButton, manualOverrideButton);
         row.setAlignment(Pos.CENTER_LEFT);
         return row;
     }

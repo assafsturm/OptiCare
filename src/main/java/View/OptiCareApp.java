@@ -3,11 +3,12 @@ package View;
 import Algorithm.AssignmentState;
 import Algorithm.feasibility.HardConstraints;
 import Algorithm.risk.RiskMatrixFactory;
-import Algorithm.sa.SaProgressEvent;
 import Config.AlgorithmConfig;
+import Controller.AssignmentChangeType;
 import Controller.AssignmentPreview;
 import Controller.AssignmentProposal;
 import Controller.DefaultAssignmentWorkflowService;
+import Controller.PatientAssignmentDiff;
 import Model.entety.Bed;
 import Model.entety.ClinicalData;
 import Model.entety.Department;
@@ -17,7 +18,6 @@ import Model.enums.BedType;
 import Model.enums.PatientStatus;
 import Model.enums.RiskLevel;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -26,18 +26,20 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Stage 5 JavaFX shell: department/ward/room/bed drill-down + KPI + warnings + async optimize.
@@ -69,11 +71,11 @@ public class OptiCareApp extends Application {
     private final Label departmentCapacityLabel = new Label("Capacity: -");
     private final TextArea warningsArea = new TextArea();
     private final TextArea whyArea = new TextArea();
+    private final ListView<PatientAssignmentDiff> previewDiffList = new ListView<>();
     private final ListView<Department> departmentList = new ListView<>();
     private final ListView<Patient> waitingPatientList = new ListView<>();
     private final ListView<Room> roomList = new ListView<>();
     private final ListView<Bed> bedList = new ListView<>();
-    private final ProgressIndicator optimizeSpinner = new ProgressIndicator();
     private final XYChart.Series<Number, Number> bestZSeries = new XYChart.Series<>();
     private final XYChart.Series<Number, Number> currentZSeries = new XYChart.Series<>();
 
@@ -158,15 +160,50 @@ public class OptiCareApp extends Application {
                 super.updateItem(bed, empty);
                 if (empty || bed == null) {
                     setText(null);
+                    setStyle("");
+                    setTooltip(null);
+                    return;
+                }
+                Department selectedDepartment = selectedDepartment();
+                String pid = selectedDepartment == null
+                        ? null
+                        : currentStateFor(selectedDepartment).getPatientIdInBed(bed);
+                if (pid == null) {
+                    setText(bed.getId() + " | " + bed.getType() + " | EMPTY — available");
+                    setStyle("-fx-background-color: #eaf6ea;");
+                    setTooltip(new Tooltip("No patient assigned; valid target for manual assignment."));
                 } else {
-                    Department selectedDepartment = selectedDepartment();
-                    String pid = selectedDepartment == null
-                            ? null
-                            : currentStateFor(selectedDepartment).getPatientIdInBed(bed);
-                    setText(bed.getId() + " | " + bed.getType() + (pid == null ? " | FREE" : " | " + pid));
+                    setText(bed.getId() + " | " + bed.getType() + " | OCCUPIED (" + pid + ")");
+                    setStyle("-fx-background-color: #fff0f0;");
+                    setTooltip(new Tooltip("Already assigned to " + pid + ". Manual override needs an EMPTY bed."));
                 }
             }
         });
+
+        previewDiffList.setCellFactory(list -> new ListCell<>() {
+            @Override
+            protected void updateItem(PatientAssignmentDiff d, boolean empty) {
+                super.updateItem(d, empty);
+                setText(empty || d == null ? null : formatPatientDiffLine(d));
+            }
+        });
+    }
+
+    private static String formatPatientDiffLine(PatientAssignmentDiff d) {
+        String from = d.fromBedId() != null ? d.fromBedId() : "\u2014";
+        String to = d.toBedId() != null ? d.toBedId() : "\u2014";
+        return d.patientId() + " | " + d.changeType() + " | " + from + " \u2192 " + to;
+    }
+
+    /** Lists only rows that differ from baseline (excludes UNCHANGED). */
+    private static List<PatientAssignmentDiff> visiblePreviewDiffs(AssignmentPreview preview) {
+        if (preview == null || preview.patientDiffs() == null) {
+            return List.of();
+        }
+        return preview.patientDiffs().stream()
+                .filter(d -> d.changeType() != AssignmentChangeType.UNCHANGED)
+                .sorted(Comparator.comparing(PatientAssignmentDiff::patientId, Comparator.nullsLast(String::compareTo)))
+                .collect(Collectors.toList());
     }
 
     private javafx.scene.layout.VBox buildDepartmentWardAndRoomPanel() {
@@ -188,7 +225,7 @@ public class OptiCareApp extends Application {
     }
 
     private javafx.scene.layout.VBox buildInsightsPanel() {
-        return OptiCareViewFactory.buildInsightsPanel(warningsArea, whyArea, bestZSeries, currentZSeries);
+        return OptiCareViewFactory.buildInsightsPanel(warningsArea, previewDiffList, whyArea, bestZSeries, currentZSeries);
     }
 
     private HBox buildActionsPanel() {
@@ -207,6 +244,7 @@ public class OptiCareApp extends Application {
             currentStateByDepartmentId.put(selectedDepartment.getId(), approved);
             reconcileDepartmentAfterApproval(selectedDepartment, approved);
             warningsArea.setText("Approved pending proposal.");
+            previewDiffList.getItems().clear();
             refreshKpis();
             refreshBeds();
             refreshWaitingPatients();
@@ -218,13 +256,14 @@ public class OptiCareApp extends Application {
             AssignmentState rejected = workflowService.rejectPendingProposal(selectedDepartment.getId(), current);
             currentStateByDepartmentId.put(selectedDepartment.getId(), rejected);
             warningsArea.setText("Rejected pending proposal.");
+            previewDiffList.getItems().clear();
             refreshKpis();
             refreshBeds();
             refreshWaitingPatients();
         });
         manualOverrideButton.setOnAction(e -> applyManualOverride());
         return OptiCareViewFactory.buildActionsPanel(
-                findAssignmentButton, cancelButton, optimizeSpinner, approveButton, rejectButton, manualOverrideButton
+                findAssignmentButton, cancelButton, approveButton, rejectButton, manualOverrideButton
         );
     }
 
@@ -245,6 +284,7 @@ public class OptiCareApp extends Application {
             refreshBeds();
             refreshWaitingPatients();
             warningsArea.setText(dept == null ? "No department selected." : "Department switched to " + dept.getName() + ".");
+            previewDiffList.getItems().clear();
             whyArea.clear();
             selectedRoomLabel.setText("Room: -");
             selectedBedLabel.setText("Bed: -");
@@ -272,7 +312,7 @@ public class OptiCareApp extends Application {
             selectedBedLabel.setText("Bed: " + bed.getId() + " (" + bed.getType() + ")");
             Department selectedDepartment = selectedDepartment();
             String pid = selectedDepartment == null ? null : currentStateFor(selectedDepartment).getPatientIdInBed(bed);
-            selectedPatientLabel.setText("Patient: " + (pid == null ? "FREE" : pid));
+            selectedPatientLabel.setText(pid == null ? "Status: EMPTY (bed available)" : "Status: OCCUPIED — " + pid);
             renderWhyPanel(pid);
         });
         refreshBeds();
@@ -280,7 +320,12 @@ public class OptiCareApp extends Application {
 
     private void refreshWaitingPatients() {
         Department selectedDepartment = selectedDepartment();
-        waitingPatientList.getItems().setAll(selectedDepartment == null ? List.of() : workflowService.buildWaitingQueueView(selectedDepartment));
+        waitingPatientList.getSelectionModel().clearSelection();
+        waitingPatientList.getItems().clear();
+        if (selectedDepartment != null) {
+            waitingPatientList.getItems().addAll(workflowService.buildWaitingQueueView(selectedDepartment));
+        }
+        waitingPatientList.refresh();
         if (!waitingPatientList.getItems().isEmpty()) {
             waitingPatientList.getSelectionModel().select(0);
         }
@@ -288,7 +333,12 @@ public class OptiCareApp extends Application {
 
     private void refreshBeds() {
         Room selected = roomList.getSelectionModel().getSelectedItem();
-        bedList.getItems().setAll(selected == null ? List.of() : selected.getBeds());
+        bedList.getSelectionModel().clearSelection();
+        bedList.getItems().clear();
+        if (selected != null) {
+            bedList.getItems().addAll(selected.getBeds());
+        }
+        bedList.refresh();
         if (!bedList.getItems().isEmpty()) {
             bedList.getSelectionModel().select(0);
         }
@@ -337,7 +387,6 @@ public class OptiCareApp extends Application {
             warningsArea.setText("Select a department before optimization.");
             return;
         }
-        optimizeSpinner.setVisible(true);
         warningsArea.setText("Running optimization asynchronously...");
         Task<AssignmentProposal> task = new Task<>() {
             @Override
@@ -345,14 +394,12 @@ public class OptiCareApp extends Application {
                 return workflowService.proposeAssignment(
                         selectedDepartment,
                         patientByDepartmentId.getOrDefault(selectedDepartment.getId(), Map.of()),
-                        currentStateFor(selectedDepartment),
-                        event -> handleSaProgressEvent(event, selectedDepartment)
+                        currentStateFor(selectedDepartment)
                 );
             }
         };
         runningOptimizationTask = task;
         task.setOnSucceeded(evt -> {
-            optimizeSpinner.setVisible(false);
             AssignmentProposal proposal = task.getValue();
             workflowService.setPendingProposal(selectedDepartment.getId(), proposal);
             AssignmentPreview preview = workflowService.buildPreview(proposal);
@@ -362,17 +409,18 @@ public class OptiCareApp extends Application {
             currentZLabel.setText(String.format("Current Z: %.2f", preview.baselineZ()));
             bestZLabel.setText(String.format("Best Z: %.2f", preview.proposedZ()));
             warningsArea.setText(buildWarningText(proposal, preview));
+            previewDiffList.getItems().setAll(visiblePreviewDiffs(preview));
             runningOptimizationTask = null;
         });
         task.setOnFailed(evt -> {
-            optimizeSpinner.setVisible(false);
             Throwable ex = task.getException();
             warningsArea.setText("Optimization failed: " + (ex == null ? "unknown error" : ex.getMessage()));
+            previewDiffList.getItems().clear();
             runningOptimizationTask = null;
         });
         task.setOnCancelled(evt -> {
-            optimizeSpinner.setVisible(false);
             warningsArea.setText("Optimization cancelled.");
+            previewDiffList.getItems().clear();
             runningOptimizationTask = null;
         });
         Thread worker = new Thread(task, "opticare-optimizer");
@@ -388,22 +436,19 @@ public class OptiCareApp extends Application {
         }
     }
 
-    private void handleSaProgressEvent(SaProgressEvent event, Department department) {
-        if (event == null || department == null) return;
-        Platform.runLater(() -> {
-            currentStateByDepartmentId.put(department.getId(), new AssignmentState(event.bestStateSnapshot()));
-            currentZLabel.setText(String.format("Current Z: %.2f", event.currentZ()));
-            bestZLabel.setText(String.format("Best Z: %.2f", event.bestZ()));
-        });
-    }
-
     private String buildWarningText(AssignmentProposal proposal, AssignmentPreview preview) {
         if (!proposal.feasible()) {
             return "Hard constraint violations:\n- " + String.join("\n- ", proposal.feasibilityViolations());
         }
+        int listed = (int) preview.patientDiffs().stream()
+                .filter(d -> d.changeType() != AssignmentChangeType.UNCHANGED)
+                .count();
         return "Preview ready.\nChanged patients: " + preview.changedPatients()
                 + "\nUnchanged patients: " + preview.unchangedPatients()
                 + "\nDelta Z: " + String.format("%.2f", preview.deltaZ())
+                + (listed == 0 && preview.changedPatients() == 0
+                        ? "\n(No bed changes from baseline.)"
+                        : "\nPer-patient moves: " + listed + " row(s) below (unchanged hidden).")
                 + "\nUse Approve/Reject to apply.";
     }
 
@@ -415,17 +460,18 @@ public class OptiCareApp extends Application {
         if (department == null || approvedState == null) return;
         Map<String, Patient> patientById = patientByDepartmentId.getOrDefault(department.getId(), Map.of());
         for (Patient p : patientById.values()) {
-            if (p == null || p.getId() == null) continue;
-            boolean assigned = approvedState.getBed(p.getId()) != null;
-            if (assigned) {
-                p.setStatus(PatientStatus.ASSIGNED);
-                department.getWaitingList().removeIf(w -> w != null && p.getId().equals(w.getId()));
-            } else if (p.getStatus() != PatientStatus.DISCHARGED) {
-                p.setStatus(PatientStatus.WAITING);
-                boolean alreadyWaiting = department.getWaitingList().stream()
-                        .anyMatch(w -> w != null && p.getId().equals(w.getId()));
-                if (!alreadyWaiting) {
-                    department.getWaitingList().add(p);
+            if (p != null && p.getId() != null) {
+                boolean assigned = approvedState.getBed(p.getId()) != null;
+                if (assigned) {
+                    p.setStatus(PatientStatus.ASSIGNED);
+                    department.getWaitingList().removeIf(w -> w != null && p.getId().equals(w.getId()));
+                } else if (p.getStatus() != PatientStatus.DISCHARGED) {
+                    p.setStatus(PatientStatus.WAITING);
+                    boolean alreadyWaiting = department.getWaitingList().stream()
+                            .anyMatch(w -> w != null && p.getId().equals(w.getId()));
+                    if (!alreadyWaiting) {
+                        department.getWaitingList().add(p);
+                    }
                 }
             }
         }
@@ -465,7 +511,10 @@ public class OptiCareApp extends Application {
         }
         AssignmentState state = currentStateFor(selectedDepartment);
         if (state.isBedOccupied(selectedBed)) {
-            warningsArea.setText("Manual override blocked: target bed is already occupied.");
+            String occ = state.getPatientIdInBed(selectedBed);
+            warningsArea.setText("Manual override blocked: this bed is already OCCUPIED"
+                    + (occ != null ? " (" + occ + ")." : ".")
+                    + " In the bed list, choose a row that says EMPTY — available.");
             return;
         }
         HardConstraints hardConstraints = new HardConstraints(
@@ -479,8 +528,13 @@ public class OptiCareApp extends Application {
         }
         state.assign(selectedPatient, selectedBed);
         selectedPatient.setStatus(PatientStatus.ASSIGNED);
-        selectedDepartment.getWaitingList().removeIf(p -> p != null && selectedPatient.getId().equals(p.getId()));
-        warningsArea.setText("Manual override applied for patient " + selectedPatient.getId() + " -> bed " + selectedBed.getId() + ".");
+        if (!selectedDepartment.getWaitingList().remove(selectedPatient)) {
+            selectedDepartment.getWaitingList().removeIf(
+                    p -> p != null && selectedPatient.getId() != null && selectedPatient.getId().equals(p.getId()));
+        }
+        workflowService.setPendingProposal(selectedDepartment.getId(), null);
+        previewDiffList.getItems().clear();
+        warningsArea.setText("Manual override applied for patient " + selectedPatient.getId() + " -> bed " + selectedBed.getId() + ". Pending optimizer proposal cleared—run Find Assignment again before Approve.");
         refreshKpis();
         refreshBeds();
         refreshWaitingPatients();
@@ -525,12 +579,11 @@ public class OptiCareApp extends Application {
         currentStateByDepartmentId.put(d1.getId(), stateD1);
         currentStateByDepartmentId.put(d2.getId(), stateD2);
 
-        Platform.runLater(() -> {
-            stateD1.assign(p2, r1.getBeds().get(0));
-            p2.setStatus(PatientStatus.ASSIGNED);
-            d1.getWaitingList().removeIf(p -> p != null && p2.getId().equals(p.getId()));
-            refreshKpis();
-        });
+        /* Apply seeded assignment before lists bind / paint so occupancy matches reality on first view.
+           (Deferring via runLater mutated state without refreshing beds—cells showed EMPTY until selection changed.) */
+        stateD1.assign(p2, r1.getBeds().get(0));
+        p2.setStatus(PatientStatus.ASSIGNED);
+        d1.getWaitingList().removeIf(p -> p != null && p2.getId().equals(p.getId()));
     }
 
     private Department selectedDepartment() {

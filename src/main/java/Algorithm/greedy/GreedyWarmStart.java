@@ -27,10 +27,9 @@ public final class GreedyWarmStart {
         AssignmentState state = new AssignmentState(baseline);
         List<Patient> ordered = new ArrayList<>();
         for (Patient p : department.getWaitingList()) {
-            if (p == null) continue;
-            if (p.getStatus() != PatientStatus.WAITING) continue;
-            if (p.isTemporarilyUnavailable()) continue;
-            ordered.add(p);
+            if (p != null && p.getStatus() == PatientStatus.WAITING && !p.isTemporarilyUnavailable()) {
+                ordered.add(p);
+            }
         }
         ordered.sort(WaitingListComparatorFactory.forGlobalQueue());
         Comparator<Bed> bedOrder = Comparator.comparing(Bed::getRoomId, Comparator.nullsLast(String::compareTo))
@@ -42,12 +41,14 @@ public final class GreedyWarmStart {
             beds.addAll(rb);
         }
         for (Patient p : ordered) {
-            if (state.getBed(p.getId()) != null) continue;
-            for (Bed b : beds) {
-                if (state.isBedOccupied(b)) continue;
-                if (hardConstraints.isLegalAssignOrMoveToFreeBed(p, b, state, patientById)) {
-                    state.assign(p, b);
-                    break;
+            if (state.getBed(p.getId()) == null) {
+                boolean placed = false;
+                for (Bed b : beds) {
+                    if (!placed && !state.isBedOccupied(b)
+                            && hardConstraints.isLegalAssignOrMoveToFreeBed(p, b, state, patientById)) {
+                        state.assign(p, b);
+                        placed = true;
+                    }
                 }
             }
         }

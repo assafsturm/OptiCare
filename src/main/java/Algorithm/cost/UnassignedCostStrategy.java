@@ -31,11 +31,10 @@ public class UnassignedCostStrategy implements CostStrategy {
         if (department == null || department.getWaitingList() == null) return 0;
         int c = 0;
         for (Patient p : department.getWaitingList()) {
-            if (p == null) continue;
-            if (p.getStatus() != PatientStatus.WAITING) continue;
-            if (p.isTemporarilyUnavailable()) continue;
-            if (state != null && state.getBed(p.getId()) != null) continue;
-            c++;
+            if (p != null && p.getStatus() == PatientStatus.WAITING && !p.isTemporarilyUnavailable()
+                    && (state == null || state.getBed(p.getId()) == null)) {
+                c++;
+            }
         }
         return c;
     }
