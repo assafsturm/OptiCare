@@ -1,0 +1,16 @@
+package Persistence;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+/** Canonical storage locations for file-backed persistence (Stage 6). */
+public final class PersistencePaths {
+
+    private PersistencePaths() {
+    }
+
+    /** User-scoped ward snapshot (JSON). Same directory suits future multi-file repos. */
+    public static Path defaultWardStateJsonPath() {
+        return Paths.get(System.getProperty("user.home"), ".opticare", "ward-state.json").toAbsolutePath();
+    }
+}

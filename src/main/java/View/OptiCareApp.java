@@ -17,6 +17,12 @@ import Model.entety.Room;
 import Model.enums.BedType;
 import Model.enums.PatientStatus;
 import Model.enums.RiskLevel;
+import Persistence.JsonFileWardStateRepository;
+import Persistence.PersistencePaths;
+import Persistence.PersistConcurrentModificationException;
+import Persistence.WardStateMapper;
+import Persistence.WardStateRepository;
+import Persistence.dto.WardStateDocument;
 import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.geometry.Insets;
@@ -33,7 +39,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.time.Instant;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -42,7 +50,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Stage 5 JavaFX shell: department/ward/room/bed drill-down + KPI + warnings + async optimize.
+ * Stage 6 JavaFX shell: ward drill-down + JSON persistence (CAS) after approve / manual override.
  */
 public class OptiCareApp extends Application {
 
@@ -57,6 +65,11 @@ public class OptiCareApp extends Application {
     private final Map<String, Map<String, Patient>> patientByDepartmentId = new HashMap<>();
     private final Map<String, AssignmentState> currentStateByDepartmentId = new HashMap<>();
     private Task<AssignmentProposal> runningOptimizationTask;
+
+    private WardStateRepository wardStateRepository;
+    /** Last {@link WardStateDocument#getPersistVersion()} applied or returned from a successful save; 0 when only seeded in memory. */
+    private long lastKnownPersistVersion;
+    private String bootstrapWarning;
 
     private final Label occupancyLabel = new Label();
     private final Label waitingLabel = new Label();
@@ -83,7 +96,7 @@ public class OptiCareApp extends Application {
 
     @Override
     public void start(Stage stage) {
-        seedDemoData();
+        loadOrSeedInitialState();
         configureListCellFactories();
         BorderPane root = new BorderPane();
         root.setTop(buildKpiBar());
@@ -100,10 +113,81 @@ public class OptiCareApp extends Application {
         refreshKpis();
         refreshDepartmentOverview();
 
+        if (bootstrapWarning != null && !bootstrapWarning.isBlank()) {
+            warningsArea.setText(bootstrapWarning);
+        }
+
         Scene scene = new Scene(root, 1300, 760);
-        stage.setTitle("OptiCare - Stage 5 UI");
+        stage.setTitle("OptiCare - Stage 6 UI");
         stage.setScene(scene);
         stage.show();
+    }
+
+    private void loadOrSeedInitialState() {
+        Path persistencePath = PersistencePaths.defaultWardStateJsonPath();
+        wardStateRepository = new JsonFileWardStateRepository(persistencePath);
+        try {
+            var opt = wardStateRepository.loadIfPresent();
+            if (opt.isEmpty()) {
+                seedDemoData();
+                lastKnownPersistVersion = 0L;
+                return;
+            }
+            WardStateMapper.WardHydration h = WardStateMapper.hydrate(opt.get());
+            if (h.departments().isEmpty()) {
+                seedDemoData();
+                lastKnownPersistVersion = 0L;
+                bootstrapWarning = "Persistence file was empty; loaded demo data instead.\n" + persistencePath;
+                return;
+            }
+            applyHydration(h);
+        } catch (IllegalArgumentException ex) {
+            seedDemoData();
+            lastKnownPersistVersion = 0L;
+            bootstrapWarning = "Could not load ward state (" + ex.getMessage() + "); using demo data.\n" + persistencePath;
+        } catch (IOException ex) {
+            seedDemoData();
+            lastKnownPersistVersion = 0L;
+            bootstrapWarning = "Could not read ward state file; using demo data.\n" + persistencePath + "\n" + ex.getMessage();
+        }
+    }
+
+    private void applyHydration(WardStateMapper.WardHydration h) {
+        departments.clear();
+        departments.addAll(h.departments());
+        patientByDepartmentId.clear();
+        for (var e : h.patientsByDepartmentId().entrySet()) {
+            patientByDepartmentId.put(e.getKey(), new HashMap<>(e.getValue()));
+        }
+        currentStateByDepartmentId.clear();
+        for (var e : h.assignmentStates().entrySet()) {
+            currentStateByDepartmentId.put(e.getKey(), e.getValue());
+        }
+        for (Department d : departments) {
+            workflowService.setPendingProposal(d.getId(), null);
+        }
+        lastKnownPersistVersion = h.persistVersionLoaded();
+    }
+
+    private void persistWardSnapshot() {
+        if (wardStateRepository == null) {
+            return;
+        }
+        try {
+            WardStateDocument draft = WardStateMapper.captureDraft(
+                    departments, patientByDepartmentId, currentStateByDepartmentId);
+            long v = wardStateRepository.saveCompareAndSwap(lastKnownPersistVersion, draft);
+            lastKnownPersistVersion = v;
+            String prior = warningsArea.getText();
+            String note = "Saved ward state (version " + v + ") to " + wardStateRepository.getPersistencePath() + ".";
+            warningsArea.setText(prior == null || prior.isBlank() ? note : prior + "\n" + note);
+        } catch (PersistConcurrentModificationException ex) {
+            lastKnownPersistVersion = ex.getDiskPersistVersion();
+            warningsArea.setText("Save conflict: file changed on disk (version " + ex.getDiskPersistVersion()
+                    + "). Reload the app to pick up the latest snapshot, or save again after reviewing.");
+        } catch (IOException ex) {
+            warningsArea.setText("Save failed: " + ex.getMessage());
+        }
     }
 
     private HBox buildKpiBar() {
@@ -248,6 +332,7 @@ public class OptiCareApp extends Application {
             refreshKpis();
             refreshBeds();
             refreshWaitingPatients();
+            persistWardSnapshot();
         });
         rejectButton.setOnAction(e -> {
             Department selectedDepartment = selectedDepartment();
@@ -538,6 +623,7 @@ public class OptiCareApp extends Application {
         refreshKpis();
         refreshBeds();
         refreshWaitingPatients();
+        persistWardSnapshot();
     }
 
     private void seedDemoData() {
