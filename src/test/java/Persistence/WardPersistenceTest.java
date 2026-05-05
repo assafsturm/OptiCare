@@ -32,14 +32,14 @@ class WardPersistenceTest {
     }
 
     @Test
-    void saveCompareAndSwap_firstWrite_writesVersionOne(@TempDir Path dir) throws Exception {
+    void save_firstWrite_writesVersionOne(@TempDir Path dir) throws Exception {
         Path file = dir.resolve("ward-state.json");
         JsonFileWardStateRepository repo = new JsonFileWardStateRepository(file);
         MinimalWardFixture f = demoTwoDeptFixture();
 
         WardStateDocument draft = WardStateMapper.captureDraft(
                 f.departments(), f.patientsByDepartmentId(), f.assignmentStates());
-        long v = repo.saveCompareAndSwap(0L, draft);
+        long v = repo.save(draft);
         assertEquals(1L, v);
         WardStateDocument loaded = repo.loadIfPresent().orElseThrow();
         assertEquals(1, loaded.getSchemaVersion());
@@ -47,20 +47,19 @@ class WardPersistenceTest {
     }
 
     @Test
-    void saveCompareAndSwap_staleVersion_throwsCas(@TempDir Path dir) throws Exception {
+    void save_twice_incrementsPersistVersion(@TempDir Path dir) throws Exception {
         Path file = dir.resolve("ward-state.json");
         JsonFileWardStateRepository repo = new JsonFileWardStateRepository(file);
         MinimalWardFixture f = demoTwoDeptFixture();
         WardStateDocument d1 = WardStateMapper.captureDraft(
                 f.departments(), f.patientsByDepartmentId(), f.assignmentStates());
-        repo.saveCompareAndSwap(0L, d1);
+        long v1 = repo.save(d1);
 
         WardStateDocument d2 = WardStateMapper.captureDraft(
                 f.departments(), f.patientsByDepartmentId(), f.assignmentStates());
-        PersistConcurrentModificationException ex = assertThrows(
-                PersistConcurrentModificationException.class,
-                () -> repo.saveCompareAndSwap(0L, d2));
-        assertEquals(1L, ex.getDiskPersistVersion());
+        long v2 = repo.save(d2);
+        assertEquals(1L, v1);
+        assertEquals(2L, v2);
     }
 
     @Test
@@ -70,7 +69,7 @@ class WardPersistenceTest {
         MinimalWardFixture f = demoTwoDeptFixture();
         WardStateDocument draft = WardStateMapper.captureDraft(
                 f.departments(), f.patientsByDepartmentId(), f.assignmentStates());
-        repo.saveCompareAndSwap(0L, draft);
+        repo.save(draft);
 
         WardStateDocument loaded = repo.loadIfPresent().orElseThrow();
         WardStateMapper.WardHydration h = WardStateMapper.hydrate(loaded);

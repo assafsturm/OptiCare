@@ -6,13 +6,12 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Optional;
 
-/** Load/save CAS contract for the ward JSON snapshot (Stage 6). */
+/** Load/save contract for the ward JSON snapshot (Stage 6). */
 public interface WardStateRepository {
 
     Path getPersistencePath();
 
     Optional<WardStateDocument> loadIfPresent() throws IOException;
 
-    long saveCompareAndSwap(long clientKnownPersistVersion, WardStateDocument draft)
-            throws IOException, PersistConcurrentModificationException;
+    long save(WardStateDocument draft) throws IOException;
 }

@@ -9,9 +9,7 @@ import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Optional;
 
-/**
- * File-backed CAS repository: load whole snapshot; atomic compare-and-set save with monotonic persistVersion.
- */
+/** File-backed repository: load whole snapshot and save atomically. */
 public final class JsonFileWardStateRepository implements WardStateRepository {
 
     private final Path persistencePath;
@@ -35,33 +33,13 @@ public final class JsonFileWardStateRepository implements WardStateRepository {
         return Optional.of(doc);
     }
 
-    /**
-     * @param clientKnownPersistVersion snapshot version observed by this JVM (0 after in-memory seed with no file)
-     * @param draft document body; {@code persistVersion} is overwritten here
-     * @return new persisted version
-     */
     @Override
-    public long saveCompareAndSwap(long clientKnownPersistVersion, WardStateDocument draft)
-            throws IOException, PersistConcurrentModificationException {
+    public long save(WardStateDocument draft) throws IOException {
         Objects.requireNonNull(draft, "draft");
-
-        long nextVersion;
+        long nextVersion = 1L;
         if (Files.isRegularFile(persistencePath)) {
             WardStateDocument disk = mapper.readValue(persistencePath.toFile(), WardStateDocument.class);
-            long diskVersion = disk.getPersistVersion();
-            if (diskVersion != clientKnownPersistVersion) {
-                throw new PersistConcurrentModificationException(
-                        "Expected persistVersion " + clientKnownPersistVersion + " on disk but found " + diskVersion,
-                        diskVersion);
-            }
-            nextVersion = diskVersion + 1;
-        } else {
-            if (clientKnownPersistVersion != 0L) {
-                throw new PersistConcurrentModificationException(
-                        "No persistence file yet but clientKnownPersistVersion was " + clientKnownPersistVersion,
-                        0L);
-            }
-            nextVersion = 1L;
+            nextVersion = Math.max(0L, disk.getPersistVersion()) + 1L;
         }
 
         draft.setSchemaVersion(WardStateDocument.CURRENT_SCHEMA_VERSION);

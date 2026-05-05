@@ -19,7 +19,6 @@ import Model.enums.PatientStatus;
 import Model.enums.RiskLevel;
 import Persistence.JsonFileWardStateRepository;
 import Persistence.PersistencePaths;
-import Persistence.PersistConcurrentModificationException;
 import Persistence.WardStateMapper;
 import Persistence.WardStateRepository;
 import Persistence.dto.WardStateDocument;
@@ -50,7 +49,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Stage 6 JavaFX shell: ward drill-down + JSON persistence (CAS) after approve / manual override.
+ * Stage 6 JavaFX shell: ward drill-down + JSON persistence after approve / manual override.
  */
 public class OptiCareApp extends Application {
 
@@ -67,8 +66,6 @@ public class OptiCareApp extends Application {
     private Task<AssignmentProposal> runningOptimizationTask;
 
     private WardStateRepository wardStateRepository;
-    /** Last {@link WardStateDocument#getPersistVersion()} applied or returned from a successful save; 0 when only seeded in memory. */
-    private long lastKnownPersistVersion;
     private String bootstrapWarning;
 
     private final Label occupancyLabel = new Label();
@@ -130,24 +127,20 @@ public class OptiCareApp extends Application {
             var opt = wardStateRepository.loadIfPresent();
             if (opt.isEmpty()) {
                 seedDemoData();
-                lastKnownPersistVersion = 0L;
                 return;
             }
             WardStateMapper.WardHydration h = WardStateMapper.hydrate(opt.get());
             if (h.departments().isEmpty()) {
                 seedDemoData();
-                lastKnownPersistVersion = 0L;
                 bootstrapWarning = "Persistence file was empty; loaded demo data instead.\n" + persistencePath;
                 return;
             }
             applyHydration(h);
         } catch (IllegalArgumentException ex) {
             seedDemoData();
-            lastKnownPersistVersion = 0L;
             bootstrapWarning = "Could not load ward state (" + ex.getMessage() + "); using demo data.\n" + persistencePath;
         } catch (IOException ex) {
             seedDemoData();
-            lastKnownPersistVersion = 0L;
             bootstrapWarning = "Could not read ward state file; using demo data.\n" + persistencePath + "\n" + ex.getMessage();
         }
     }
@@ -166,7 +159,6 @@ public class OptiCareApp extends Application {
         for (Department d : departments) {
             workflowService.setPendingProposal(d.getId(), null);
         }
-        lastKnownPersistVersion = h.persistVersionLoaded();
     }
 
     private void persistWardSnapshot() {
@@ -176,15 +168,10 @@ public class OptiCareApp extends Application {
         try {
             WardStateDocument draft = WardStateMapper.captureDraft(
                     departments, patientByDepartmentId, currentStateByDepartmentId);
-            long v = wardStateRepository.saveCompareAndSwap(lastKnownPersistVersion, draft);
-            lastKnownPersistVersion = v;
+            long v = wardStateRepository.save(draft);
             String prior = warningsArea.getText();
             String note = "Saved ward state (version " + v + ") to " + wardStateRepository.getPersistencePath() + ".";
             warningsArea.setText(prior == null || prior.isBlank() ? note : prior + "\n" + note);
-        } catch (PersistConcurrentModificationException ex) {
-            lastKnownPersistVersion = ex.getDiskPersistVersion();
-            warningsArea.setText("Save conflict: file changed on disk (version " + ex.getDiskPersistVersion()
-                    + "). Reload the app to pick up the latest snapshot, or save again after reviewing.");
         } catch (IOException ex) {
             warningsArea.setText("Save failed: " + ex.getMessage());
         }
