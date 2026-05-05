@@ -405,7 +405,7 @@ public class OptiCareApp extends Application {
             return;
         }
         Room room = new Room(x.roomId(), x.department().getId(), x.capacity(), new ArrayList<>(),
-                x.distanceFromNurseStation(), x.hasNegativePressure(), true);
+                x.distanceFromNurseStation(), x.hasNegativePressure());
         x.department().getRooms().add(room);
         refreshRoomAndBedUiAfterStructureChange(x.department());
         clearPendingProposalsAllDepartments();

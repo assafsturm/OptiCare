@@ -29,6 +29,9 @@ public final class JsonFileWardStateRepository implements WardStateRepository {
         if (!Files.isRegularFile(persistencePath)) {
             return Optional.empty();
         }
+        if (Files.size(persistencePath) == 0L) {
+            return Optional.empty();
+        }
         WardStateDocument doc = mapper.readValue(persistencePath.toFile(), WardStateDocument.class);
         return Optional.of(doc);
     }
@@ -37,7 +40,7 @@ public final class JsonFileWardStateRepository implements WardStateRepository {
     public long save(WardStateDocument draft) throws IOException {
         Objects.requireNonNull(draft, "draft");
         long nextVersion = 1L;
-        if (Files.isRegularFile(persistencePath)) {
+        if (Files.isRegularFile(persistencePath) && Files.size(persistencePath) > 0L) {
             WardStateDocument disk = mapper.readValue(persistencePath.toFile(), WardStateDocument.class);
             nextVersion = Math.max(0L, disk.getPersistVersion()) + 1L;
         }

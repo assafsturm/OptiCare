@@ -1,5 +1,6 @@
 package Persistence;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -17,6 +18,8 @@ public final class PersistenceJson {
         m.registerModule(new JavaTimeModule());
         m.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         m.enable(SerializationFeature.INDENT_OUTPUT);
+        // Older snapshots (e.g. pre–Stage-7) may contain removed fields such as hasBathroom on rooms.
+        m.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         return m;
     }
 }
