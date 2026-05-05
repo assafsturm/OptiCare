@@ -1,4 +1,4 @@
-package Algorithm.determinism;
+﻿package Algorithm.determinism;
 
 import Algorithm.AssignmentState;
 import Model.entety.Bed;
@@ -15,8 +15,8 @@ class AssignmentStateHasherTest {
     void sha256_sameAssignmentsDifferentInsertOrder_sameHash() {
         Patient p1 = new Patient("P1", null, null);
         Patient p2 = new Patient("P2", null, null);
-        Bed b1 = new Bed("B1", "R1", BedType.REGULAR, false, false);
-        Bed b2 = new Bed("B2", "R1", BedType.REGULAR, false, false);
+        Bed b1 = new Bed("B1", "R1", BedType.REGULAR, false);
+        Bed b2 = new Bed("B2", "R1", BedType.REGULAR, false);
 
         AssignmentState a = new AssignmentState();
         a.assign(p1, b1);
@@ -32,8 +32,8 @@ class AssignmentStateHasherTest {
     @Test
     void sha256_differentAssignments_differentHash() {
         Patient p1 = new Patient("P1", null, null);
-        Bed b1 = new Bed("B1", "R1", BedType.REGULAR, false, false);
-        Bed b2 = new Bed("B2", "R1", BedType.REGULAR, false, false);
+        Bed b1 = new Bed("B1", "R1", BedType.REGULAR, false);
+        Bed b2 = new Bed("B2", "R1", BedType.REGULAR, false);
 
         AssignmentState a = new AssignmentState();
         a.assign(p1, b1);

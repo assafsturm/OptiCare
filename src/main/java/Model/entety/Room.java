@@ -1,4 +1,4 @@
-package Model.entety;
+﻿package Model.entety;
 
 import exception.CapacityExceededException;
 
@@ -12,13 +12,12 @@ public class Room {
     private List<Bed> beds = new ArrayList<>();
     private double distanceFromNurseStation;
     private boolean hasNegativePressure;
-    private boolean hasBathroom;
 
     public Room() {
     }
 
     public Room(String id, String departmentId, int capacity, List<Bed> beds,
-                double distanceFromNurseStation, boolean hasNegativePressure, boolean hasBathroom) {
+                double distanceFromNurseStation, boolean hasNegativePressure) {
         this.id = id;
         this.departmentId = departmentId;
         this.capacity = capacity;
@@ -29,7 +28,6 @@ public class Room {
         this.beds = new ArrayList<>(initial);
         this.distanceFromNurseStation = distanceFromNurseStation;
         this.hasNegativePressure = hasNegativePressure;
-        this.hasBathroom = hasBathroom;
     }
 
     public void addBed(Bed bed) {
@@ -65,6 +63,4 @@ public class Room {
     public boolean isHasNegativePressure() { return hasNegativePressure; }
     public void setHasNegativePressure(boolean hasNegativePressure) { this.hasNegativePressure = hasNegativePressure; }
 
-    public boolean isHasBathroom() { return hasBathroom; }
-    public void setHasBathroom(boolean hasBathroom) { this.hasBathroom = hasBathroom; }
 }

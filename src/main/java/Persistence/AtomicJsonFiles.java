@@ -7,12 +7,12 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 
-final class AtomicJsonFiles {
+public final class AtomicJsonFiles {
 
     private AtomicJsonFiles() {
     }
 
-    static void writeAtomically(Path target, byte[] utf8Payload) throws IOException {
+    public static void writeAtomically(Path target, byte[] utf8Payload) throws IOException {
         Path parent = target.toAbsolutePath().getParent();
         if (parent != null) {
             Files.createDirectories(parent);

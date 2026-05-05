@@ -13,6 +13,10 @@ public class Bed {
     public Bed() {
     }
 
+    public Bed(String id, String roomId, BedType type, boolean hasVentilator) {
+        this(id, roomId, type, hasVentilator, false);
+    }
+
     public Bed(String id, String roomId, BedType type, boolean hasVentilator, boolean isBroken) {
         this.id = id;
         this.roomId = roomId;

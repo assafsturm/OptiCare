@@ -1,4 +1,4 @@
-package Algorithm;
+﻿package Algorithm;
 
 import Model.entety.Bed;
 import Model.entety.Patient;
@@ -18,8 +18,8 @@ class AssignmentStateTest {
     void setUp() {
         state = new AssignmentState();
         p1 = new Patient("P1", null, null);
-        b1 = new Bed("B1", "R1", BedType.REGULAR, false, false);
-        b2 = new Bed("B2", "R1", BedType.REGULAR, false, false);
+        b1 = new Bed("B1", "R1", BedType.REGULAR, false);
+        b2 = new Bed("B2", "R1", BedType.REGULAR, false);
     }
 
     @Test

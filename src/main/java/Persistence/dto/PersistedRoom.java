@@ -1,4 +1,4 @@
-package Persistence.dto;
+﻿package Persistence.dto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,6 @@ public final class PersistedRoom {
     private List<PersistedBed> beds = new ArrayList<>();
     private double distanceFromNurseStation;
     private boolean hasNegativePressure;
-    private boolean hasBathroom;
 
     public String getId() {
         return id;
@@ -61,11 +60,4 @@ public final class PersistedRoom {
         this.hasNegativePressure = hasNegativePressure;
     }
 
-    public boolean isHasBathroom() {
-        return hasBathroom;
-    }
-
-    public void setHasBathroom(boolean hasBathroom) {
-        this.hasBathroom = hasBathroom;
-    }
 }

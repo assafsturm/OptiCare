@@ -1,4 +1,4 @@
-package Algorithm.neighborhood;
+﻿package Algorithm.neighborhood;
 
 import Algorithm.AssignmentState;
 import Model.entety.Bed;
@@ -65,8 +65,8 @@ class NeighborMoveExecutorTest {
     }
 
     private static Department deptOneBed() {
-        Room r = new Room("R1", "D1", 1, new ArrayList<>(), 0, false, false);
-        r.addBed(new Bed("B1", "R1", BedType.REGULAR, false, false));
+        Room r = new Room("R1", "D1", 1, new ArrayList<>(), 0, false);
+        r.addBed(new Bed("B1", "R1", BedType.REGULAR, false));
         Department d = new Department("D1", "x", new ArrayList<>(List.of(r)), new ArrayList<>());
         Patient p = new Patient("P1", null, new Model.entety.ClinicalData(RiskLevel.CLEAN, 0, false, null));
         p.setStatus(PatientStatus.WAITING);
@@ -75,9 +75,9 @@ class NeighborMoveExecutorTest {
     }
 
     private static Department deptTwoBeds() {
-        Room r = new Room("R1", "D1", 2, new ArrayList<>(), 0, false, false);
-        r.addBed(new Bed("B1", "R1", BedType.REGULAR, false, false));
-        r.addBed(new Bed("B2", "R1", BedType.REGULAR, false, false));
+        Room r = new Room("R1", "D1", 2, new ArrayList<>(), 0, false);
+        r.addBed(new Bed("B1", "R1", BedType.REGULAR, false));
+        r.addBed(new Bed("B2", "R1", BedType.REGULAR, false));
         Department d = new Department("D1", "x", new ArrayList<>(List.of(r)), new ArrayList<>());
         Patient p1 = new Patient("P1", null, new Model.entety.ClinicalData(RiskLevel.CLEAN, 0, false, null));
         Patient p2 = new Patient("P2", null, new Model.entety.ClinicalData(RiskLevel.CLEAN, 0, false, null));

@@ -1,4 +1,4 @@
-package Controller;
+﻿package Controller;
 
 import Algorithm.AssignmentState;
 import Algorithm.fixtures.Stage3FixtureFactory;
@@ -58,8 +58,8 @@ class DefaultAssignmentWorkflowServiceTest {
     void proposeAssignment_infeasibleDepartment_returnsViolationsAndSkipsSa() {
         AlgorithmConfig config = new AlgorithmConfig();
         Department department = new Department("D1", "Internal", new ArrayList<>(), new ArrayList<>());
-        Room room = new Room("R1", "D1", 1, new ArrayList<>(), 5.0, false, true);
-        room.getBeds().add(new Bed("B1", "R1", BedType.REGULAR, false, false));
+        Room room = new Room("R1", "D1", 1, new ArrayList<>(), 5.0, false);
+        room.getBeds().add(new Bed("B1", "R1", BedType.REGULAR, false));
         department.addRoom(room);
 
         Patient p1 = waiting("W1");
@@ -86,9 +86,9 @@ class DefaultAssignmentWorkflowServiceTest {
         AlgorithmConfig config = new AlgorithmConfig();
         DefaultAssignmentWorkflowService service = new DefaultAssignmentWorkflowService(config);
 
-        Bed b1 = new Bed("B1", "R1", BedType.REGULAR, false, false);
-        Bed b2 = new Bed("B2", "R1", BedType.REGULAR, false, false);
-        Bed b3 = new Bed("B3", "R2", BedType.REGULAR, false, false);
+        Bed b1 = new Bed("B1", "R1", BedType.REGULAR, false);
+        Bed b2 = new Bed("B2", "R1", BedType.REGULAR, false);
+        Bed b3 = new Bed("B3", "R2", BedType.REGULAR, false);
 
         Patient p1 = waiting("P1");
         Patient p2 = waiting("P2");
@@ -139,8 +139,8 @@ class DefaultAssignmentWorkflowServiceTest {
         DefaultAssignmentWorkflowService service = new DefaultAssignmentWorkflowService(config);
         String departmentId = "D1";
 
-        Bed b1 = new Bed("B1", "R1", BedType.REGULAR, false, false);
-        Bed b2 = new Bed("B2", "R1", BedType.REGULAR, false, false);
+        Bed b1 = new Bed("B1", "R1", BedType.REGULAR, false);
+        Bed b2 = new Bed("B2", "R1", BedType.REGULAR, false);
         Patient p1 = waiting("P1");
 
         AssignmentState current = new AssignmentState();
@@ -164,8 +164,8 @@ class DefaultAssignmentWorkflowServiceTest {
         DefaultAssignmentWorkflowService service = new DefaultAssignmentWorkflowService(config);
         String departmentId = "D1";
 
-        Bed b1 = new Bed("B1", "R1", BedType.REGULAR, false, false);
-        Bed b2 = new Bed("B2", "R1", BedType.REGULAR, false, false);
+        Bed b1 = new Bed("B1", "R1", BedType.REGULAR, false);
+        Bed b2 = new Bed("B2", "R1", BedType.REGULAR, false);
         Patient p1 = waiting("P1");
 
         AssignmentState current = new AssignmentState();
@@ -203,8 +203,8 @@ class DefaultAssignmentWorkflowServiceTest {
         AlgorithmConfig config = new AlgorithmConfig();
         DefaultAssignmentWorkflowService service = new DefaultAssignmentWorkflowService(config);
         Department department = new Department("D1", "Internal", new ArrayList<>(), new ArrayList<>());
-        Room room = new Room("R1", "D1", 1, new ArrayList<>(), 5.0, false, true);
-        Bed bed = new Bed("B1", "R1", BedType.REGULAR, false, false);
+        Room room = new Room("R1", "D1", 1, new ArrayList<>(), 5.0, false);
+        Bed bed = new Bed("B1", "R1", BedType.REGULAR, false);
         room.getBeds().add(bed);
         department.addRoom(room);
 
@@ -259,8 +259,8 @@ class DefaultAssignmentWorkflowServiceTest {
 
         DefaultAssignmentWorkflowService service = new DefaultAssignmentWorkflowService(config);
         Department department = new Department("D1", "Internal", new ArrayList<>(), new ArrayList<>());
-        Room room = new Room("R1", "D1", 1, new ArrayList<>(), 5.0, true, true);
-        room.getBeds().add(new Bed("B1", "R1", BedType.REGULAR, false, false));
+        Room room = new Room("R1", "D1", 1, new ArrayList<>(), 5.0, true);
+        room.getBeds().add(new Bed("B1", "R1", BedType.REGULAR, false));
         department.addRoom(room);
 
         Patient admitted = waiting("P_ADMIT");
@@ -293,8 +293,8 @@ class DefaultAssignmentWorkflowServiceTest {
         DefaultAssignmentWorkflowService service = new DefaultAssignmentWorkflowService(config);
 
         Department department = new Department("D1", "Internal", new ArrayList<>(), new ArrayList<>());
-        Room room = new Room("R1", "D1", 1, new ArrayList<>(), 5.0, true, true);
-        Bed bed = new Bed("B1", "R1", BedType.REGULAR, false, false);
+        Room room = new Room("R1", "D1", 1, new ArrayList<>(), 5.0, true);
+        Bed bed = new Bed("B1", "R1", BedType.REGULAR, false);
         room.getBeds().add(bed);
         department.addRoom(room);
 

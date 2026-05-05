@@ -1,4 +1,4 @@
-package Algorithm;
+﻿package Algorithm;
 
 import Algorithm.feasibility.FeasibilityChecker;
 import Algorithm.feasibility.FeasibilityResult;
@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Proves solution quality—not only that the optimizer runs—with micro instances whose true optimum is known
+ * Proves solution qualityâ€”not only that the optimizer runsâ€”with micro instances whose true optimum is known
  * (exhaustive search) or deliberately worse than greedy.
  */
 class OptimizerQualityTest {
@@ -44,11 +44,11 @@ class OptimizerQualityTest {
     void bruteForceOptimal_isBetterThanGreedy_saConvergesToBruteMinimum() {
         Instant t0 = Instant.parse("2026-05-15T09:00:00Z");
 
-        Bed bFar = new Bed("BFar", "R_far", BedType.REGULAR, false, false);
-        Room rFar = new Room("R_far", "D_BF", 1, new ArrayList<>(List.of(bFar)), 100.0, false, true);
+        Bed bFar = new Bed("BFar", "R_far", BedType.REGULAR, false);
+        Room rFar = new Room("R_far", "D_BF", 1, new ArrayList<>(List.of(bFar)), 100.0, false);
 
-        Bed bNear = new Bed("BNear", "R_near", BedType.REGULAR, false, false);
-        Room rNear = new Room("R_near", "D_BF", 1, new ArrayList<>(List.of(bNear)), 10.0, false, true);
+        Bed bNear = new Bed("BNear", "R_near", BedType.REGULAR, false);
+        Room rNear = new Room("R_near", "D_BF", 1, new ArrayList<>(List.of(bNear)), 10.0, false);
 
         Patient pHighSeverity = Stage3FixtureFactory.waiting("P_hi", RiskLevel.CLEAN, 50, t0);
         Patient pLowSeverity = Stage3FixtureFactory.waiting("P_lo", RiskLevel.CLEAN, 1, t0.plusSeconds(60));
@@ -138,12 +138,12 @@ class OptimizerQualityTest {
         Instant t0 = Instant.parse("2026-06-01T10:00:00Z");
 
         List<Bed> beds = List.of(
-                new Bed("B0", "R0", BedType.REGULAR, false, false),
-                new Bed("B1", "R1", BedType.REGULAR, false, false),
-                new Bed("B2", "R2", BedType.REGULAR, false, false));
-        Room r0 = new Room("R0", "D3", 1, new ArrayList<>(List.of(beds.get(0))), 22.0, false, true);
-        Room r1 = new Room("R1", "D3", 1, new ArrayList<>(List.of(beds.get(1))), 8.0, false, true);
-        Room r2 = new Room("R2", "D3", 1, new ArrayList<>(List.of(beds.get(2))), 40.0, false, true);
+                new Bed("B0", "R0", BedType.REGULAR, false),
+                new Bed("B1", "R1", BedType.REGULAR, false),
+                new Bed("B2", "R2", BedType.REGULAR, false));
+        Room r0 = new Room("R0", "D3", 1, new ArrayList<>(List.of(beds.get(0))), 22.0, false);
+        Room r1 = new Room("R1", "D3", 1, new ArrayList<>(List.of(beds.get(1))), 8.0, false);
+        Room r2 = new Room("R2", "D3", 1, new ArrayList<>(List.of(beds.get(2))), 40.0, false);
 
         Patient pa = Stage3FixtureFactory.waiting("PA", RiskLevel.CLEAN, 40, t0);
         Patient pb = Stage3FixtureFactory.waiting("PB", RiskLevel.CLEAN, 35, t0.plusSeconds(30));

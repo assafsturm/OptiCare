@@ -1,4 +1,4 @@
-package Model.entety;
+﻿package Model.entety;
 
 import Model.enums.BedType;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,12 +22,12 @@ class DepartmentTest {
         department.setId("D1");
         department.setName("Internal");
 
-        room1 = new Room("R1", "D1", 2, new ArrayList<>(), 10, false, true);
-        room1.getBeds().add(new Bed("B1", "R1", BedType.REGULAR, false, false));
-        room1.getBeds().add(new Bed("B2", "R1", BedType.REGULAR, false, false));
+        room1 = new Room("R1", "D1", 2, new ArrayList<>(), 10, false);
+        room1.getBeds().add(new Bed("B1", "R1", BedType.REGULAR, false));
+        room1.getBeds().add(new Bed("B2", "R1", BedType.REGULAR, false));
 
-        room2 = new Room("R2", "D1", 1, new ArrayList<>(), 20, false, false);
-        room2.getBeds().add(new Bed("B3", "R2", BedType.REGULAR, false, false));
+        room2 = new Room("R2", "D1", 1, new ArrayList<>(), 20, false);
+        room2.getBeds().add(new Bed("B3", "R2", BedType.REGULAR, false));
 
         department.setRooms(List.of(room1, room2));
     }

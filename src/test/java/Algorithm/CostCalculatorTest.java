@@ -1,4 +1,4 @@
-package Algorithm;
+﻿package Algorithm;
 
 import Config.AlgorithmConfig;
 import Algorithm.risk.RiskMatrix;
@@ -28,9 +28,9 @@ class CostCalculatorTest {
         riskMatrix = RiskMatrixFactory.fromConfig(config);
         calculator = new CostCalculator(riskMatrix, config);
         department = new Department("D1", "Internal", new java.util.ArrayList<>(), new java.util.ArrayList<>());
-        Room r1 = new Room("R1", "D1", 2, new java.util.ArrayList<>(), 10.0, false, true);
-        r1.getBeds().add(new Bed("B1", "R1", BedType.REGULAR, false, false));
-        r1.getBeds().add(new Bed("B2", "R1", BedType.REGULAR, false, false));
+        Room r1 = new Room("R1", "D1", 2, new java.util.ArrayList<>(), 10.0, false);
+        r1.getBeds().add(new Bed("B1", "R1", BedType.REGULAR, false));
+        r1.getBeds().add(new Bed("B2", "R1", BedType.REGULAR, false));
         department.addRoom(r1);
     }
 
@@ -44,7 +44,7 @@ class CostCalculatorTest {
     @Test
     void computeCClinical_brokenBed_returnsBigM() {
         Patient p = new Patient("P1", null, new ClinicalData(RiskLevel.CLEAN, 0, false, null));
-        Bed broken = new Bed("B1", "R1", BedType.REGULAR, false, true);
+        Bed broken = new Bed("B1", "R1", BedType.REGULAR, false);
         broken.setBroken(true);
         double c = calculator.computeCClinical(p, broken, department.getRooms().get(0));
         assertEquals(config.getBigM(), c);
@@ -54,7 +54,7 @@ class CostCalculatorTest {
     void computeCClinical_ventilatorMismatch_returnsBigM() {
         ClinicalData cd = new ClinicalData(RiskLevel.CLEAN, 0, true, BedType.ICU);
         Patient p = new Patient("P1", null, cd);
-        Bed noVent = new Bed("B1", "R1", BedType.ICU, false, false);
+        Bed noVent = new Bed("B1", "R1", BedType.ICU, false);
         double c = calculator.computeCClinical(p, noVent, department.getRooms().get(0));
         assertEquals(config.getBigM(), c);
     }
@@ -62,8 +62,8 @@ class CostCalculatorTest {
     @Test
     void computeCClinical_infectiousWithoutNegativePressure_returnsBigM() {
         Patient p = new Patient("P1", null, new ClinicalData(RiskLevel.INFECTIOUS, 0, false, null));
-        Room noPressure = new Room("R2", "D1", 1, new java.util.ArrayList<>(), 0, false, false);
-        noPressure.getBeds().add(new Bed("B3", "R2", BedType.REGULAR, false, false));
+        Room noPressure = new Room("R2", "D1", 1, new java.util.ArrayList<>(), 0, false);
+        noPressure.getBeds().add(new Bed("B3", "R2", BedType.REGULAR, false));
         double c = calculator.computeCClinical(p, noPressure.getBeds().get(0), noPressure);
         assertEquals(config.getBigM(), c);
     }
@@ -71,7 +71,7 @@ class CostCalculatorTest {
     @Test
     void computeCClinical_goodMatch_returnsZero() {
         Patient p = new Patient("P1", null, new ClinicalData(RiskLevel.CLEAN, 0, false, BedType.REGULAR));
-        Bed bed = new Bed("B1", "R1", BedType.REGULAR, false, false);
+        Bed bed = new Bed("B1", "R1", BedType.REGULAR, false);
         double c = calculator.computeCClinical(p, bed, department.getRooms().get(0));
         assertEquals(0, c);
     }
@@ -94,7 +94,7 @@ class CostCalculatorTest {
     @Test
     void computeCPolicy_distanceAndSeverity_increasesCost() {
         Patient p = new Patient("P1", null, new ClinicalData(RiskLevel.CLEAN, 5, false, null));
-        Room far = new Room("R2", "D1", 1, new java.util.ArrayList<>(), 20.0, false, false);
+        Room far = new Room("R2", "D1", 1, new java.util.ArrayList<>(), 20.0, false);
         double c = calculator.computeCPolicy(p, far);
         assertEquals(config.getPolicyPenaltyWeight() * 20 * 5, c);
     }
@@ -126,8 +126,8 @@ class CostCalculatorTest {
 
     @Test
     void computeCTransfer_whenMovedAcrossRooms_scalesByShortestPathDistance() {
-        Room r2 = new Room("R2", "D1", 1, new java.util.ArrayList<>(), 5.0, false, true);
-        Bed b3 = new Bed("B3", "R2", BedType.REGULAR, false, false);
+        Room r2 = new Room("R2", "D1", 1, new java.util.ArrayList<>(), 5.0, false);
+        Bed b3 = new Bed("B3", "R2", BedType.REGULAR, false);
         r2.getBeds().add(b3);
         department.addRoom(r2);
 
@@ -165,7 +165,7 @@ class CostCalculatorTest {
     @Test
     void computeCClinical_nullClinicalData_noTypeOrVentPenalties_brokenBedStillBigM() {
         Patient p = new Patient("P1", null, null);
-        Bed bed = new Bed("B1", "R1", BedType.REGULAR, false, false);
+        Bed bed = new Bed("B1", "R1", BedType.REGULAR, false);
         double c = calculator.computeCClinical(p, bed, department.getRooms().get(0));
         assertEquals(0, c);
         bed.setBroken(true);

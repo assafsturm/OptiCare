@@ -1,4 +1,4 @@
-package Algorithm.fixtures;
+﻿package Algorithm.fixtures;
 
 import Model.entety.Bed;
 import Model.entety.ClinicalData;
@@ -24,15 +24,15 @@ public final class Stage3FixtureFactory {
     }
 
     public static Department mediumDepartment() {
-        Room r1 = new Room("R1", "D1", 2, new ArrayList<>(), 5, true, true);
-        Room r2 = new Room("R2", "D1", 2, new ArrayList<>(), 12, false, true);
-        Room r3 = new Room("R3", "D1", 1, new ArrayList<>(), 20, false, false);
+        Room r1 = new Room("R1", "D1", 2, new ArrayList<>(), 5, true);
+        Room r2 = new Room("R2", "D1", 2, new ArrayList<>(), 12, false);
+        Room r3 = new Room("R3", "D1", 1, new ArrayList<>(), 20, false);
 
-        r1.addBed(new Bed("B1", "R1", BedType.ICU, true, false));
-        r1.addBed(new Bed("B2", "R1", BedType.REGULAR, false, false));
-        r2.addBed(new Bed("B3", "R2", BedType.REGULAR, false, false));
-        r2.addBed(new Bed("B4", "R2", BedType.BARIATRIC, false, false));
-        r3.addBed(new Bed("B5", "R3", BedType.REGULAR, false, false));
+        r1.addBed(new Bed("B1", "R1", BedType.ICU, true));
+        r1.addBed(new Bed("B2", "R1", BedType.REGULAR, false));
+        r2.addBed(new Bed("B3", "R2", BedType.REGULAR, false));
+        r2.addBed(new Bed("B4", "R2", BedType.BARIATRIC, false));
+        r3.addBed(new Bed("B5", "R3", BedType.REGULAR, false));
 
         Department d = new Department("D1", "Internal", List.of(r1, r2, r3), new ArrayList<>());
         d.getWaitingList().add(waiting("W1", RiskLevel.IMMUNO_COMPROMISED, 9, Instant.parse("2026-03-01T10:00:00Z")));

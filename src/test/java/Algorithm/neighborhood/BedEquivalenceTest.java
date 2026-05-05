@@ -1,4 +1,4 @@
-package Algorithm.neighborhood;
+﻿    package Algorithm.neighborhood;
 
 import Model.entety.Bed;
 import Model.enums.BedType;
@@ -11,15 +11,15 @@ class BedEquivalenceTest {
 
     @Test
     void sameRoomSameSignature_areEquivalent() {
-        Bed a = new Bed("B1", "R1", BedType.REGULAR, false, false);
-        Bed b = new Bed("B2", "R1", BedType.REGULAR, false, false);
+        Bed a = new Bed("B1", "R1", BedType.REGULAR, false);
+        Bed b = new Bed("B2", "R1", BedType.REGULAR, false);
         assertTrue(BedEquivalence.areEquivalent(a, b));
     }
 
     @Test
     void differentRoom_notEquivalent() {
-        Bed a = new Bed("B1", "R1", BedType.REGULAR, false, false);
-        Bed b = new Bed("B2", "R2", BedType.REGULAR, false, false);
+        Bed a = new Bed("B1", "R1", BedType.REGULAR, false);
+        Bed b = new Bed("B2", "R2", BedType.REGULAR, false);
         assertFalse(BedEquivalence.areEquivalent(a, b));
     }
 }

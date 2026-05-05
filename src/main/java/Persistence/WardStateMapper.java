@@ -241,7 +241,6 @@ public final class WardStateMapper {
 
         pr.setHasNegativePressure(r.isHasNegativePressure());
 
-        pr.setHasBathroom(r.isHasBathroom());
 
 
 
@@ -407,72 +406,29 @@ public final class WardStateMapper {
 
 
     private static LinkedHashMap<String, Patient> hydratePatientRegistry(
-
-
             String departmentIdIgnored,
-
-
             Map<String, PersistedPatient> deptBlob
-
-
-
-
-
     ) {
 
         LinkedHashMap<String, Patient> outById = new LinkedHashMap<>();
-
         if (deptBlob == null) {
-
-
             return outById;
-
         }
-
-
-
         for (PersistedPatient raw : deptBlob.values()) {
-
-
             Patient rebuilt = patientFromPersisted(raw);
-
             if (rebuilt != null && rebuilt.getId() != null) {
-
-
                 outById.put(rebuilt.getId(), rebuilt);
-
             }
-
-
-
-
-
-
-
         }
-
-
-
         return outById;
-
-
-
     }
 
 
 
     private static Patient patientFromPersisted(PersistedPatient pp) {
-
-
-
         if (pp == null || pp.getId() == null) {
-
             return null;
-
         }
-
-
-
         PersonalDetails pdetails = patientDetailsFromPersisted(pp.getPersonalDetails());
 
         ClinicalData clinical = clinicalFromPersisted(pp.getClinicalData());
@@ -485,21 +441,10 @@ public final class WardStateMapper {
             p.setStatus(pp.getStatus());
 
         }
-
-
-
-
-
-
         return p;
 
     }
-
-
-
     private static ClinicalData clinicalFromPersisted(PersistedClinicalData c) {
-
-
 
         if (c == null) {
 
@@ -507,24 +452,10 @@ public final class WardStateMapper {
 
         }
 
-
-
         return new ClinicalData(c.getRiskLevel(), c.getSeverityScore(),
 
-
-
-
                 c.isNeedsVentilator(),
-
-
-
-
                 c.getRequiredBedType(),
-
-
-
-
-
                 c.getWeightKg());
 
     }
@@ -532,42 +463,17 @@ public final class WardStateMapper {
 
 
     private static PersonalDetails patientDetailsFromPersisted(PersistedPersonalDetails p) {
-
-
         if (p == null) {
-
-
             return null;
-
         }
-
-
-
         return new PersonalDetails(p.getFirstName(), p.getLastName(),
-
-
-
-
                 p.getDateOfBirth(),
-
-
-
-
-
                 p.getGender());
-
     }
-
-
 
     private static Department hydrateDepartmentShell(PersistedDepartment pd, LinkedHashMap<String, Patient> knownPatientsById) {
 
-
-
         ArrayList<Room> roomsBuilt = new ArrayList<>();
-
-
-
         if (pd.getRooms() != null) {
 
 
@@ -655,12 +561,8 @@ public final class WardStateMapper {
 
 
         return new Room(pr.getId(), pr.getDepartmentId(), pr.getCapacity(), bb,
-
                 pr.getDistanceFromNurseStation(),
-
-                pr.isHasNegativePressure(),
-
-                pr.isHasBathroom());
+                pr.isHasNegativePressure());
 
     }
 
@@ -676,23 +578,10 @@ public final class WardStateMapper {
 
 
     private static AssignmentState rebuildAssignmentState(
-
-
             Map<String, String> patientIdToBedId,
-
-
             Department department,
-
-
-
-
-
-            LinkedHashMap<String, Patient> patients
-
-
-
-
-    ) {
+            LinkedHashMap<String, Patient> patients) 
+    {
 
         AssignmentState st = new AssignmentState();
 

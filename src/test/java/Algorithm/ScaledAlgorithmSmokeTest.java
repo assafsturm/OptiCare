@@ -1,4 +1,4 @@
-package Algorithm;
+﻿package Algorithm;
 
 import Algorithm.feasibility.FeasibilityChecker;
 import Algorithm.feasibility.FeasibilityResult;
@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Tiered smoke tests for larger-but-budgeted runs (full 50×100-style stress is impractical for default CI timeouts).
+ * Tiered smoke tests for larger-but-budgeted runs (full 50Ã—100-style stress is impractical for default CI timeouts).
  */
 class ScaledAlgorithmSmokeTest {
 
@@ -45,9 +45,9 @@ class ScaledAlgorithmSmokeTest {
             List<Bed> beds = new ArrayList<>();
             for (int b = 0; b < bedsPerRoom; b++) {
                 String bedId = "SB_" + r + "_" + b;
-                beds.add(new Bed(bedId, roomId, BedType.REGULAR, false, false));
+                beds.add(new Bed(bedId, roomId, BedType.REGULAR, false));
             }
-            rooms.add(new Room(roomId, "D_SCALED", bedsPerRoom, beds, 3.0 + r * 0.5, false, true));
+            rooms.add(new Room(roomId, "D_SCALED", bedsPerRoom, beds, 3.0 + r * 0.5, false));
         }
 
         Instant base = Instant.parse("2026-04-01T08:00:00Z");

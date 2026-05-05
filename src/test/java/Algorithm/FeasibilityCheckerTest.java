@@ -1,4 +1,4 @@
-package Algorithm;
+﻿package Algorithm;
 
 import Config.AlgorithmConfig;
 import Algorithm.feasibility.FeasibilityChecker;
@@ -27,9 +27,9 @@ class FeasibilityCheckerTest {
     void setUp() {
         config = new AlgorithmConfig();
         checker = new FeasibilityChecker(config);
-        Room r1 = new Room("R1", "D1", 2, new ArrayList<>(), 0, false, false);
-        r1.getBeds().add(new Bed("B1", "R1", BedType.REGULAR, false, false));
-        r1.getBeds().add(new Bed("B2", "R1", BedType.REGULAR, false, false));
+        Room r1 = new Room("R1", "D1", 2, new ArrayList<>(), 0, false);
+        r1.getBeds().add(new Bed("B1", "R1", BedType.REGULAR, false));
+        r1.getBeds().add(new Bed("B2", "R1", BedType.REGULAR, false));
         List<Room> roomList = new ArrayList<>();
         roomList.add(r1);
         department = new Department("D1", "Internal", roomList, new ArrayList<>());
@@ -92,8 +92,8 @@ class FeasibilityCheckerTest {
 
     @Test
     void check_nullRisk_notForcedIntoNegativePressureBed() {
-        Room rIso = new Room("R2", "D1", 1, new ArrayList<>(), 0, true, false);
-        rIso.getBeds().add(new Bed("B3", "R2", BedType.REGULAR, false, false));
+        Room rIso = new Room("R2", "D1", 1, new ArrayList<>(), 0, true);
+        rIso.getBeds().add(new Bed("B3", "R2", BedType.REGULAR, false));
         department.addRoom(rIso);
         Patient p = new Patient("P1", null, new ClinicalData(null, 0, false, null));
         department.getWaitingList().add(p);
@@ -115,8 +115,8 @@ class FeasibilityCheckerTest {
     @Test
     void check_waitingPatientAlreadyAssigned_notDoubleCountedForCapacity() {
         Department oneBedDepartment = new Department("D2", "OneBed", new ArrayList<>(), new ArrayList<>());
-        Room room = new Room("R1", "D2", 1, new ArrayList<>(), 0, false, false);
-        Bed bed = new Bed("B1", "R1", BedType.REGULAR, false, false);
+        Room room = new Room("R1", "D2", 1, new ArrayList<>(), 0, false);
+        Bed bed = new Bed("B1", "R1", BedType.REGULAR, false);
         room.getBeds().add(bed);
         oneBedDepartment.addRoom(room);
 

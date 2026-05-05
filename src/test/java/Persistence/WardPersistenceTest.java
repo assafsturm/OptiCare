@@ -1,4 +1,4 @@
-package Persistence;
+﻿package Persistence;
 
 import Algorithm.AssignmentState;
 import Model.entety.Bed;
@@ -83,12 +83,12 @@ class WardPersistenceTest {
 
     /** Same shape as {@code OptiCareApp#seedDemoData} (compact) for integration-style round-trip checks. */
     private static MinimalWardFixture demoTwoDeptFixture() {
-        Room r1 = new Room("R1", "D1", 2, new ArrayList<>(), 5.0, true, true);
-        Room r2 = new Room("R2", "D1", 2, new ArrayList<>(), 12.0, false, true);
-        r1.getBeds().add(new Bed("B1", "R1", BedType.REGULAR, false, false));
-        r1.getBeds().add(new Bed("B2", "R1", BedType.ICU, true, false));
-        r2.getBeds().add(new Bed("B3", "R2", BedType.REGULAR, false, false));
-        r2.getBeds().add(new Bed("B4", "R2", BedType.BARIATRIC, false, false));
+        Room r1 = new Room("R1", "D1", 2, new ArrayList<>(), 5.0, true);
+        Room r2 = new Room("R2", "D1", 2, new ArrayList<>(), 12.0, false);
+        r1.getBeds().add(new Bed("B1", "R1", BedType.REGULAR, false));
+        r1.getBeds().add(new Bed("B2", "R1", BedType.ICU, true));
+        r2.getBeds().add(new Bed("B3", "R2", BedType.REGULAR, false));
+        r2.getBeds().add(new Bed("B4", "R2", BedType.BARIATRIC, false));
         Department d1 = new Department("D1", "Internal", new ArrayList<>(List.of(r1, r2)), new ArrayList<>());
 
         Patient p1 = waiting("P1", RiskLevel.RESPIRATORY, 7, Instant.parse("2026-03-01T10:00:00Z"));
@@ -104,11 +104,11 @@ class WardPersistenceTest {
         p2.setStatus(PatientStatus.ASSIGNED);
         d1.getWaitingList().removeIf(p -> p != null && p2.getId().equals(p.getId()));
 
-        Room r3 = new Room("R3", "D2", 2, new ArrayList<>(), 4.0, true, true);
-        Room r4 = new Room("R4", "D2", 1, new ArrayList<>(), 9.0, false, true);
-        r3.getBeds().add(new Bed("B5", "R3", BedType.ICU, true, false));
-        r3.getBeds().add(new Bed("B6", "R3", BedType.REGULAR, false, false));
-        r4.getBeds().add(new Bed("B7", "R4", BedType.REGULAR, false, false));
+        Room r3 = new Room("R3", "D2", 2, new ArrayList<>(), 4.0, true);
+        Room r4 = new Room("R4", "D2", 1, new ArrayList<>(), 9.0, false);
+        r3.getBeds().add(new Bed("B5", "R3", BedType.ICU, true));
+        r3.getBeds().add(new Bed("B6", "R3", BedType.REGULAR, false));
+        r4.getBeds().add(new Bed("B7", "R4", BedType.REGULAR, false));
         Department d2 = new Department("D2", "Surgery", new ArrayList<>(List.of(r3, r4)), new ArrayList<>());
         Patient p4 = waiting("P4", RiskLevel.INFECTIOUS, 6, Instant.parse("2026-03-01T08:30:00Z"));
         Patient p5 = waiting("P5", RiskLevel.CLEAN, 2, Instant.parse("2026-03-01T08:40:00Z"));

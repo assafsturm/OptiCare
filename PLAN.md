@@ -76,9 +76,8 @@ This document is the final deterministic work plan for OptiCare. It is based on 
 - **JavaFX Stage 5 shell:** drill-down dept/room/bed + waiting list, async optimize + cancel, preview/diff list, KPI + warnings + “why” panel, chart by optimize run ordinal, validated manual assignment override toward a free legal bed.
 
 ### Not implemented yet
-- File-based persistence layer (JSON repositories + serialization/integration tests) — Stage 6; after repositories harden Stage 5 optional polish (badges/versioning against stale proposes).
 - Optional MySQL persistence layer (repositories + schema + integration tests) — only if time allows, as a final stage.
-- Audit trail and role-based access (explicitly last).
+- Audit trail (explicitly deferred past minimal Stage 7 RBAC).
 
 ---
 
@@ -142,16 +141,13 @@ These decisions must be treated as fixed requirements for implementation.
   - Hard constraint violation: block.
   - Soft penalty increase: allow with warning + `deltaZ`.
 - **Preview/diff (DECIDED):** per-patient and per-bed diff + `Z`/`deltaZ` summary; approve/reject only (no partial apply).
-- **Users and access control (DECIDED):**
-  - **Model:** Use **one concrete `User` class** (no inheritance tree of `ViewerUser` / `AdminUser`). Roles are attached by **composition** (e.g. `Set<Role>` or join table), not by subclassing. This keeps RBAC flexible and avoids `instanceof` for security.
-  - **Roles (fixed set):** `VIEWER`, `NURSE_MANAGER`, `ADMIN`.
-  - **Permissions (fixed enum):** `VIEW_WARD`, `RUN_OPTIMIZATION`, `APPROVE_ASSIGNMENT`, `MANUAL_OVERRIDE`, `ADMIT_PATIENT`, `DISCHARGE_PATIENT`, `VIEW_AUDIT_LOG`, `MANAGE_USERS`, `MANAGE_CONFIG`.
-  - **Role → permission mapping (fixed):**
-    - `VIEWER` → `VIEW_WARD` only.
-    - `NURSE_MANAGER` → `VIEW_WARD`, `RUN_OPTIMIZATION`, `APPROVE_ASSIGNMENT`, `MANUAL_OVERRIDE`, `ADMIT_PATIENT`, `DISCHARGE_PATIENT`, `VIEW_AUDIT_LOG`.
-    - `ADMIN` → all permissions above (full set).
-  - **Enforcement:** Authorization is enforced in **Controller/Service** (or a dedicated `AuthorizationService`) on every mutating or sensitive operation. UI may hide/disable buttons for UX only; **never** rely on UI alone for security.
-  - **Implementation timing:** User model, persistence tables, and enforcement are implemented in **Stage 8** (not before). Stages 3–7 assume a single implicit “full access” user or test double until Stage 8 wires real users.
+- **Users and access control (DECIDED, minimal Stage 7):**
+  - **Roles (fixed set):** `GUEST` (implicit, not stored), `NURSE`, `ADMIN`.
+  - **GUEST:** ward drill-down view only (no optimization, no approve/reject, no manual override, no admit/discharge, no structure edits).
+  - **NURSE:** everything the Stage 5–6 workflow already exposes, plus **admit** and **discharge** patient (in-memory + persisted ward JSON).
+  - **ADMIN:** nurse capabilities plus **add department / room / bed** and **add user** (plaintext `users.json`; not production security).
+  - **Enforcement:** UI disables/hides actions by role; handlers re-check role (minimal, not a separate security product). Stages 3–6 algorithm/controller code stays unchanged.
+  - **Implementation timing:** minimal auth + UI gating is **Stage 7**; full audit trail / `AuthorizationService` / permission enum matrix remains optional backlog.
 
 ### Stage 1: Complete Model + core data structures **(done for pre–Stage 3 scope)**
 - `RiskLevel.UNKNOWN`, `Patient.admittedAt`, `Patient.isTemporarilyUnavailable`, `Department.findRoomById`, `RiskLevel.waitingQueuePriority()` are implemented.
@@ -221,7 +217,15 @@ These decisions must be treated as fixed requirements for implementation.
   - If persisted data changed since optimization started (snapshot/version token mismatch), reject commit and require re-run.
 - Keep repository interfaces storage-agnostic so a DB backend can be added later without changing domain/controller code.
 
-### Stage 7: Quality, performance, and tuning
+### Stage 7: Minimal RBAC + JavaFX auth (guest / nurse / admin)
+- **Default session:** user starts as **GUEST** (no login required).
+- **Login:** modal dialog (username + password only); credentials checked against `%USERPROFILE%\.opticare\users.json` (seed defaults `admin/admin`, `nurse/nurse` on first run; plaintext for coursework only).
+- **Nurse:** all Stage 5–6 workflow actions + **Admit patient** (modal → waiting list + registry) + **Discharge patient** (selected waiting patient or occupant of selected bed).
+- **Admin:** nurse capabilities + **Add department / room / bed** (modals; manual IDs) + **Add user** (modal → append to `users.json`).
+- **Persistence:** ward snapshot remains `ward-state.json`; users remain separate `users.json`.
+- **Tests:** users JSON round-trip + role capability helpers (minimal).
+
+### Stage 8: Quality, performance, and tuning (formerly Stage 7)
 - Unit tests for all cost components, SA behavior, and corner cases.
 - Parameter tuning and profiling.
 - Avoid recomputing expensive totals per iteration; prefer incremental updates where appropriate.
@@ -230,21 +234,8 @@ These decisions must be treated as fixed requirements for implementation.
   - JavaDoc: every public method in the SA engine, neighbor generation, and controller/workflow layer must have clear JavaDoc (purpose, inputs, outputs, and exceptions).
   - Logging: remove `System.out.println` usage; use SLF4J + Logback with levels (`INFO`, `DEBUG`, `ERROR`).
 
-### Stage 8: Audit trail + role-based access (last)
-- **8.1 User and RBAC model (code + persistence):**
-  - Add `User` entity (id, username, password hash or external auth id, active flag, timestamps as needed).
-  - Add `Role` enum or table; map users to roles (many-to-many if schema uses join table).
-  - Add `Permission` enum; map roles to permissions in code (single source) or via seed data in DB—pick one: **role→permission mapping lives in code** (deterministic, versioned with app).
-  - Persist users/roles in the active persistence backend (JSON in baseline implementation).
-- **8.2 AuthorizationService:**
-  - Single entry: `assertPermission(User user, Permission p)` throws on deny.
-  - Controller/service calls this before `RUN_OPTIMIZATION`, `APPROVE_ASSIGNMENT`, `MANUAL_OVERRIDE`, `ADMIT_PATIENT`, `DISCHARGE_PATIENT`, `MANAGE_USERS`, `MANAGE_CONFIG`.
-- **8.3 Audit trail:**
-  - Log approvals, overrides, discharge, and user id + timestamp; `VIEW_AUDIT_LOG` required to read.
-- **8.4 UI:**
-  - Bind visibility/enabled state to resolved permissions; duplicate checks still enforced server-side.
-- **8.5 Tests:**
-  - Unit/integration tests: Viewer cannot mutate; NurseManager can run/approve/override/admit/discharge; Admin can manage users/config; audit entries created on approve.
+### Stage 8b (optional backlog): Audit trail + hardened RBAC
+- Full `AuthorizationService`, permission enum matrix, password hashing, audit log persistence, and CI security gates — deferred until after core product + Stage 8 quality pass.
 
 ### Stage 9: CI/CD automation (GitHub Actions, DECIDED)
 - CI/CD is implemented with **GitHub Actions** in `.github/workflows/`.
@@ -262,7 +253,7 @@ These decisions must be treated as fixed requirements for implementation.
   - **Stage 6 (persistence stage):**
     - Introduce **`persistence-integration.yml`** and mark it required.
     - `persistence-integration.yml` runs JSON repository/integration tests (including atomic write and snapshot/version conflict cases).
-  - **Stage 7 (quality/performance stage):**
+  - **Stage 8 (quality/performance stage):**
     - Introduce **`quality.yml`** and mark it required.
     - `quality.yml` runs Checkstyle and SpotBugs; violations fail build.
     - Introduce **`security.yml`** and mark it required.
@@ -283,7 +274,7 @@ These decisions must be treated as fixed requirements for implementation.
 - **Transfers:** transfer penalty is relative to baseline; it stabilizes assignments over time.
 - **UI responsiveness:** SA runs in background; cancel + iteration/time caps are supported inside the SA engine; UI shows results when each async run completes.
 - **Repository boundary:** keep Controller/UI storage-agnostic; persistence backend is swapped via repository implementations.
-- **CI/CD policy:** GitHub Actions is mandatory for merge quality gates from Stage 3 onward, with required checks enabled progressively by stage (Stage 3/6/7) and finalized in Stage 9.
+- **CI/CD policy:** GitHub Actions is mandatory for merge quality gates from Stage 3 onward, with required checks enabled progressively by stage (Stage 3/6/8) and finalized in Stage 9.
 
 ---
 
@@ -296,14 +287,15 @@ These decisions must be treated as fixed requirements for implementation.
 - Room-level topology graph structure.
 - **Stage 4 (in-memory):** `AssignmentWorkflowService` / `DefaultAssignmentWorkflowService` — propose, preview/diff, pending proposal, approve/reject, admit/discharge hooks, deterministic waiting-queue view comparator.
 - **Stage 5 (core JavaFX):** `OptiCareApp` + `OptiCareViewFactory` — drill-down navigation, async optimize + cancel, preview/diff list, KPI bar, warnings/why panels, convergence chart by optimize **run ordinal**, validated manual assignment override (waiting → free legal bed).
+- **Stage 6:** JSON ward snapshot persistence (`ward-state.json`), atomic writes, DTO/mapper + persistence tests.
 - Unit tests including algorithm correctness smoke, brute-force micro optimum checks, scaled smoke, and Stage-4-style integration tests.
 
 ### Remaining (by stage)
 - Stage 5: optional UI polish listed under **Follow-up Stage 5 backlog** (graphical ward map, search/filters, history, richer styling, optional live telemetry); core async workflow + preview + manual override + convergence-by-run chart are implemented in code.
 - Pre-Stage-6 hardening: repository interfaces + in-memory repository adapters + controller wiring to interfaces.
-- Stage 6: JSON persistence (repositories + integration tests).
-- Stage 7: tuning + profiling.
-- Stage 8: audit + RBAC (`User`, roles/permissions, `AuthorizationService`, UI gating, tests).
+- Stage 7: minimal RBAC + login + nurse admit/discharge + admin ward/user modals (`users.json` + UI gating).
+- Stage 8: tuning + profiling + clean-code/logging hardening.
+- Stage 8b (optional): audit + hardened RBAC (`AuthorizationService`, hashed passwords, audit log).
 - Stage 9: CI/CD finalization and release workflow enforcement.
 - Stage 10 (optional): MySQL backend as a drop-in persistence implementation (schema + JDBC + DB integration tests).
 - Post-Stage-9 optimization backlog (optional): add a soft fragmentation/consolidation policy term to reduce unnecessary same-cohort room spread while preserving future isolation flexibility.

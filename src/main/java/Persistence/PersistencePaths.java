@@ -13,4 +13,9 @@ public final class PersistencePaths {
     public static Path defaultWardStateJsonPath() {
         return Paths.get(System.getProperty("user.home"), ".opticare", "ward-state.json").toAbsolutePath();
     }
+
+    /** Plaintext demo users for Stage 7 minimal login */
+    public static Path defaultUsersJsonPath() {
+        return Paths.get(System.getProperty("user.home"), ".opticare", "users.json").toAbsolutePath();
+    }
 }
