@@ -1,4 +1,4 @@
-﻿package View;
+package View;
 
 import Algorithm.AssignmentState;
 import Algorithm.feasibility.HardConstraints;
@@ -232,7 +232,7 @@ public class OptiCareApp extends Application {
         if (currentRole == Role.GUEST) {
             roleLabel.setText("Role: Guest (view only)");
         } else {
-            roleLabel.setText("Role: " + currentRole + (loggedInUsername == null ? "" : " â€” " + loggedInUsername));
+            roleLabel.setText("Role: " + currentRole + (loggedInUsername == null ? "" : " — " + loggedInUsername));
         }
         logoutButton.setDisable(currentRole == Role.GUEST);
     }
@@ -587,7 +587,7 @@ public class OptiCareApp extends Application {
                         ? null
                         : currentStateFor(selectedDepartment).getPatientIdInBed(bed);
                 if (pid == null) {
-                    setText(bed.getId() + " | " + bed.getType() + " | EMPTY â€” available");
+                    setText(bed.getId() + " | " + bed.getType() + " | EMPTY — available");
                     setStyle("-fx-background-color: #eaf6ea;");
                     setTooltip(new Tooltip("No patient assigned; valid target for manual assignment."));
                 } else {
@@ -691,7 +691,7 @@ public class OptiCareApp extends Application {
             selectedBedLabel.setText("Bed: " + bed.getId() + " (" + bed.getType() + ")");
             Department selectedDepartment = selectedDepartment();
             String pid = selectedDepartment == null ? null : currentStateFor(selectedDepartment).getPatientIdInBed(bed);
-            selectedPatientLabel.setText(pid == null ? "Status: EMPTY (bed available)" : "Status: OCCUPIED â€” " + pid);
+            selectedPatientLabel.setText(pid == null ? "Status: EMPTY (bed available)" : "Status: OCCUPIED — " + pid);
             renderWhyPanel(pid);
         });
         refreshBeds();
@@ -905,7 +905,7 @@ public class OptiCareApp extends Application {
             String occ = state.getPatientIdInBed(selectedBed);
             warningsArea.setText("Manual override blocked: this bed is already OCCUPIED"
                     + (occ != null ? " (" + occ + ")." : ".")
-                    + " In the bed list, choose a row that says EMPTY â€” available.");
+                    + " In the bed list, choose a row that says EMPTY — available.");
             return;
         }
         HardConstraints hardConstraints = new HardConstraints(
@@ -925,7 +925,7 @@ public class OptiCareApp extends Application {
         }
         workflowService.setPendingProposal(selectedDepartment.getId(), null);
         previewDiffList.getItems().clear();
-        warningsArea.setText("Manual override applied for patient " + selectedPatient.getId() + " -> bed " + selectedBed.getId() + ". Pending optimizer proposal clearedâ€”run Find Assignment again before Approve.");
+        warningsArea.setText("Manual override applied for patient " + selectedPatient.getId() + " -> bed " + selectedBed.getId() + ". Pending optimizer proposal cleared—run Find Assignment again before Approve.");
         refreshKpis();
         refreshBeds();
         refreshWaitingPatients();
@@ -976,7 +976,7 @@ public class OptiCareApp extends Application {
         currentStateByDepartmentId.put(d2.getId(), stateD2);
 
         /* Apply seeded assignment before lists bind / paint so occupancy matches reality on first view.
-           (Deferring via runLater mutated state without refreshing bedsâ€”cells showed EMPTY until selection changed.) */
+           (Deferring via runLater mutated state without refreshing beds—cells showed EMPTY until selection changed.) */
         stateD1.assign(p2, r1.getBeds().get(0));
         p2.setStatus(PatientStatus.ASSIGNED);
         d1.getWaitingList().removeIf(p -> p != null && p2.getId().equals(p.getId()));
