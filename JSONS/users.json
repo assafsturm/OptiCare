@@ -1,0 +1,12 @@
+{
+  "schemaVersion" : 1,
+  "users" : [ {
+    "username" : "admin",
+    "password" : "admin",
+    "role" : "ADMIN"
+  }, {
+    "username" : "nurse",
+    "password" : "nurse",
+    "role" : "NURSE"
+  } ]
+}

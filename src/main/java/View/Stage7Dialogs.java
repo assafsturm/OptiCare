@@ -19,6 +19,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
@@ -149,6 +150,7 @@ public final class Stage7Dialogs {
         grid.setPadding(new Insets(12));
 
         ComboBox<Department> deptBox = new ComboBox<>(FXCollections.observableArrayList(departments));
+        applyDepartmentComboFormatting(deptBox);
         TextField patientId = new TextField();
         ComboBox<RiskLevel> riskBox = new ComboBox<>(FXCollections.observableArrayList(RiskLevel.values()));
         riskBox.getSelectionModel().select(RiskLevel.UNKNOWN);
@@ -334,6 +336,7 @@ public final class Stage7Dialogs {
         grid.setVgap(8);
         grid.setPadding(new Insets(12));
         ComboBox<Department> deptBox = new ComboBox<>(FXCollections.observableArrayList(departments));
+        applyDepartmentComboFormatting(deptBox);
         TextField roomId = new TextField();
         TextField capacity = new TextField("1");
         TextField distance = new TextField("10");
@@ -398,6 +401,8 @@ public final class Stage7Dialogs {
 
         ComboBox<Department> deptBox = new ComboBox<>(FXCollections.observableArrayList(departments));
         ComboBox<Room> roomBox = new ComboBox<>();
+        applyDepartmentComboFormatting(deptBox);
+        applyRoomComboFormatting(roomBox);
         deptBox.setOnAction(e -> {
             Department d = deptBox.getValue();
             roomBox.setItems(FXCollections.observableArrayList(d == null ? List.of() : d.getRooms()));
@@ -515,5 +520,54 @@ public final class Stage7Dialogs {
         a.setHeaderText(null);
         a.setContentText(message);
         a.showAndWait();
+    }
+
+    private static void applyDepartmentComboFormatting(ComboBox<Department> box) {
+        box.setCellFactory(list -> new ListCell<>() {
+            @Override
+            protected void updateItem(Department item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(formatDepartment(item, empty));
+            }
+        });
+        box.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Department item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(formatDepartment(item, empty));
+            }
+        });
+    }
+
+    private static String formatDepartment(Department item, boolean empty) {
+        if (empty || item == null) {
+            return null;
+        }
+        String name = item.getName() == null ? "" : item.getName();
+        return name + " (" + item.getId() + ")";
+    }
+
+    private static void applyRoomComboFormatting(ComboBox<Room> box) {
+        box.setCellFactory(list -> new ListCell<>() {
+            @Override
+            protected void updateItem(Room item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(formatRoom(item, empty));
+            }
+        });
+        box.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Room item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(formatRoom(item, empty));
+            }
+        });
+    }
+
+    private static String formatRoom(Room item, boolean empty) {
+        if (empty || item == null) {
+            return null;
+        }
+        return item.getId() + " (beds: " + item.getBeds().size() + ")";
     }
 }

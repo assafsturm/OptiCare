@@ -15,8 +15,14 @@ public record AssignmentProposal(
         double baselineZ,
         double proposedZ,
         int iterations,
-        boolean stoppedByTimeLimit
+        boolean stoppedByTimeLimit,
+        /** Soft messages e.g. waiting patients still unassigned after SA (feasible runs only). */
+        List<String> warnings
 ) {
+    public AssignmentProposal {
+        warnings = warnings == null ? List.of() : List.copyOf(warnings);
+    }
+
     public double deltaZ() {
         return proposedZ - baselineZ;
     }

@@ -10,6 +10,7 @@ import Model.enums.BedType;
 import Model.enums.RiskLevel;
 import Model.policy.PatientRiskPolicy;
 import Algorithm.risk.RiskMatrix;
+import Algorithm.AlgorithmTrace;
 
 import java.util.Map;
 import java.util.Objects;
@@ -25,6 +26,7 @@ public final class HardConstraints {
     public HardConstraints(RiskMatrix riskMatrix, Department department) {
         this.riskMatrix = Objects.requireNonNull(riskMatrix);
         this.department = Objects.requireNonNull(department);
+        AlgorithmTrace.log("hard-constraints", "Initialized for department=" + department.getId());
     }
 
     /** Same rules as legacy {@link FeasibilityChecker} bed legality (clinical / isolation). */

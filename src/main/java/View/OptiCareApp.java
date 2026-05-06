@@ -1,4 +1,4 @@
-package View;
+﻿package View;
 
 import Algorithm.AssignmentState;
 import Algorithm.feasibility.HardConstraints;
@@ -830,13 +830,17 @@ public class OptiCareApp extends Application {
         int listed = (int) preview.patientDiffs().stream()
                 .filter(d -> d.changeType() != AssignmentChangeType.UNCHANGED)
                 .count();
-        return "Preview ready.\nChanged patients: " + preview.changedPatients()
+        String base = "Preview ready.\nChanged patients: " + preview.changedPatients()
                 + "\nUnchanged patients: " + preview.unchangedPatients()
                 + "\nDelta Z: " + String.format("%.2f", preview.deltaZ())
                 + (listed == 0 && preview.changedPatients() == 0
                         ? "\n(No bed changes from baseline.)"
                         : "\nPer-patient moves: " + listed + " row(s) below (unchanged hidden).")
                 + "\nUse Approve/Reject to apply.";
+        if (proposal.warnings() != null && !proposal.warnings().isEmpty()) {
+            base += "\nWarnings:\n- " + String.join("\n- ", proposal.warnings());
+        }
+        return base;
     }
 
     /**

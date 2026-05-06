@@ -1,6 +1,7 @@
 package Algorithm.greedy;
 
 import Algorithm.AssignmentState;
+import Algorithm.AlgorithmTrace;
 import Algorithm.feasibility.HardConstraints;
 import Algorithm.queue.WaitingListComparatorFactory;
 import Model.entety.Bed;
@@ -24,6 +25,8 @@ public final class GreedyWarmStart {
 
     public static AssignmentState build(Department department, Map<String, Patient> patientById,
                                         AssignmentState baseline, HardConstraints hardConstraints) {
+        AlgorithmTrace.log("greedy", "Starting warm start for department="
+                + (department != null ? department.getId() : "null"));
         AssignmentState state = new AssignmentState(baseline);
         List<Patient> ordered = new ArrayList<>();
         for (Patient p : department.getWaitingList()) {
@@ -32,6 +35,7 @@ public final class GreedyWarmStart {
             }
         }
         ordered.sort(WaitingListComparatorFactory.forGlobalQueue());
+        AlgorithmTrace.log("greedy", "Eligible waiting patients=" + ordered.size());
         Comparator<Bed> bedOrder = Comparator.comparing(Bed::getRoomId, Comparator.nullsLast(String::compareTo))
                 .thenComparing(Bed::getId, Comparator.nullsLast(String::compareTo));
         List<Bed> beds = new ArrayList<>();
@@ -47,11 +51,16 @@ public final class GreedyWarmStart {
                     if (!placed && !state.isBedOccupied(b)
                             && hardConstraints.isLegalAssignOrMoveToFreeBed(p, b, state, patientById)) {
                         state.assign(p, b);
+                        AlgorithmTrace.log("greedy", "Placed patient " + p.getId() + " into bed " + b.getId());
                         placed = true;
                     }
                 }
+                if (!placed) {
+                    AlgorithmTrace.log("greedy", "Could not place patient " + p.getId() + " (no legal free bed).");
+                }
             }
         }
+        AlgorithmTrace.log("greedy", "Warm start done. Total assignments=" + state.size());
         return state;
     }
 }

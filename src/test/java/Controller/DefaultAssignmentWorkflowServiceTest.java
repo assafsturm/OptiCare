@@ -113,7 +113,8 @@ class DefaultAssignmentWorkflowServiceTest {
                 100.0,
                 70.0,
                 10,
-                false
+                false,
+                List.of()
         );
 
         AssignmentPreview preview = service.buildPreview(proposal);
@@ -149,7 +150,7 @@ class DefaultAssignmentWorkflowServiceTest {
         proposed.assign(p1, b2);
 
         AssignmentProposal proposal = new AssignmentProposal(
-                true, List.of(), new AssignmentState(current), proposed, 100.0, 80.0, 10, false);
+                true, List.of(), new AssignmentState(current), proposed, 100.0, 80.0, 10, false, List.of());
         service.setPendingProposal(departmentId, proposal);
 
         AssignmentState approved = service.approvePendingProposal(departmentId, current);
@@ -174,7 +175,7 @@ class DefaultAssignmentWorkflowServiceTest {
         proposed.assign(p1, b2);
 
         AssignmentProposal proposal = new AssignmentProposal(
-                true, List.of(), new AssignmentState(current), proposed, 100.0, 80.0, 10, false);
+                true, List.of(), new AssignmentState(current), proposed, 100.0, 80.0, 10, false, List.of());
         service.setPendingProposal(departmentId, proposal);
 
         AssignmentState rejected = service.rejectPendingProposal(departmentId, current);
@@ -318,5 +319,56 @@ class DefaultAssignmentWorkflowServiceTest {
                 Instant.parse("2026-03-01T10:00:00Z"), false);
         p.setStatus(PatientStatus.WAITING);
         return p;
+    }
+
+    /**
+     * Greedy cannot place a ventilator-needing waiter on the only free non-vent bed; SA should move the
+     * occupant off the ventilator bed and assign the waiter there.
+     */
+    @Test
+    void proposeAssignment_waitingNeedsVentilator_reachesVentBedViaSa() {
+        AlgorithmConfig config = new AlgorithmConfig();
+        config.setRandomSeed(42L);
+        config.setMaxTotalIterations(200_000);
+        config.setIterationsPerTemperature(200);
+        config.setNeighborSampleAttemptsPerIteration(250);
+        config.setInitialTemperature(20_000.0);
+        config.setMinTemperature(0.01);
+        config.setCoolingRate(0.995);
+
+        Department department = new Department("DV", "VentTest", new ArrayList<>(), new ArrayList<>());
+        Room room = new Room("R1", "DV", 2, new ArrayList<>(), 5.0, false);
+        Bed bVent = new Bed("BV", "R1", BedType.REGULAR, true);
+        Bed bPlain = new Bed("BP", "R1", BedType.REGULAR, false);
+        room.getBeds().add(bVent);
+        room.getBeds().add(bPlain);
+        department.addRoom(room);
+
+        Patient occupant = new Patient("P_OCC", null,
+                new ClinicalData(RiskLevel.CLEAN, 2, false, null),
+                Instant.parse("2026-03-01T09:00:00Z"), false);
+        occupant.setStatus(PatientStatus.ASSIGNED);
+        Patient waiter = new Patient("P_WAIT", null,
+                new ClinicalData(RiskLevel.CLEAN, 5, true, null),
+                Instant.parse("2026-03-01T10:00:00Z"), false);
+        waiter.setStatus(PatientStatus.WAITING);
+        department.getWaitingList().add(waiter);
+
+        Map<String, Patient> patientById = new LinkedHashMap<>();
+        patientById.put(occupant.getId(), occupant);
+        patientById.put(waiter.getId(), waiter);
+
+        AssignmentState current = new AssignmentState();
+        current.assign(occupant, bVent);
+
+        DefaultAssignmentWorkflowService service = new DefaultAssignmentWorkflowService(config);
+        AssignmentProposal proposal = service.proposeAssignment(department, patientById, current);
+
+        assertTrue(proposal.feasible());
+        assertTrue(proposal.warnings().isEmpty(), proposal.warnings().toString());
+        AssignmentState proposed = proposal.proposedState();
+        assertNotNull(proposed.getBed("P_WAIT"));
+        assertEquals("BV", proposed.getBed("P_WAIT").getId());
+        assertEquals("BP", proposed.getBed("P_OCC").getId());
     }
 }

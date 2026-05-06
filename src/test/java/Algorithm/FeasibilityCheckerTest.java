@@ -56,12 +56,36 @@ class FeasibilityCheckerTest {
     }
 
     @Test
-    void check_patientNeedsVentilatorNoSuchBed_isInfeasible() {
+    void check_patientNeedsVentilatorNoSuchBed_stillFeasibleUnderCapacityOnly() {
         Patient p = new Patient("P1", null, new ClinicalData(RiskLevel.CLEAN, 0, true, BedType.ICU));
         department.getWaitingList().add(p);
         FeasibilityResult result = checker.check(department, Map.of("P1", p), new AssignmentState());
-        assertFalse(result.isFeasible());
-        assertTrue(result.getViolations().stream().anyMatch(s -> s.contains("No legal bed")));
+        assertTrue(result.isFeasible(), "Capacity-only feasibility allows SA to penalize impossible fits.");
+        assertTrue(result.getViolations().isEmpty());
+    }
+
+    @Test
+    void check_noDirectFreeVentilatorBed_butCapacityOk_isFeasible() {
+        Room r = department.getRooms().get(0);
+        Bed bVent = new Bed("BV", r.getId(), BedType.REGULAR, true);
+        Bed bPlain = new Bed("BP", r.getId(), BedType.REGULAR, false);
+        r.getBeds().clear();
+        r.getBeds().add(bVent);
+        r.getBeds().add(bPlain);
+
+        Patient occupant = new Patient("P0", null, new ClinicalData(RiskLevel.CLEAN, 1, false, null));
+        occupant.setStatus(PatientStatus.ASSIGNED);
+        Patient waiter = new Patient("P1", null, new ClinicalData(RiskLevel.CLEAN, 1, true, null));
+        waiter.setStatus(PatientStatus.WAITING);
+        department.getWaitingList().add(waiter);
+
+        AssignmentState current = new AssignmentState();
+        current.assign(occupant, bVent);
+
+        FeasibilityResult result = checker.check(department,
+                Map.of("P0", occupant, "P1", waiter), current);
+        assertTrue(result.isFeasible());
+        assertTrue(result.getViolations().isEmpty());
     }
 
     @Test

@@ -18,4 +18,9 @@ public final class PersistencePaths {
     public static Path defaultUsersJsonPath() {
         return Paths.get(System.getProperty("user.home"), ".opticare", "users.json").toAbsolutePath();
     }
+
+    /** Append-only algorithm trace log filename under {@code .opticare/}. */
+    public static Path defaultAlgorithmLogPath() {
+        return Paths.get(System.getProperty("user.home"), ".opticare", "algorithm.log").toAbsolutePath();
+    }
 }

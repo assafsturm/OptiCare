@@ -1,6 +1,7 @@
 package Algorithm.neighborhood;
 
 import Algorithm.AssignmentState;
+import Algorithm.AlgorithmTrace;
 import Algorithm.feasibility.HardConstraints;
 import Model.entety.Bed;
 import Model.entety.Department;
@@ -21,6 +22,7 @@ public final class RandomLegalNeighborSampler {
     private final HardConstraints hardConstraints;
     private final NeighborMoveExecutor executor;
     private final int maxAttemptsPerSample;
+    private int sampleCalls;
 
     public RandomLegalNeighborSampler(Department department, HardConstraints hardConstraints,
                                       int maxAttemptsPerSample) {
@@ -31,6 +33,7 @@ public final class RandomLegalNeighborSampler {
     }
 
     public NeighborMove sample(Random rng, AssignmentState state, Map<String, Patient> patientById) {
+        sampleCalls++;
         for (int attempt = 0; attempt < maxAttemptsPerSample; attempt++) {
             int kind = rng.nextInt(3);
             NeighborMove move = switch (kind) {
@@ -39,8 +42,15 @@ public final class RandomLegalNeighborSampler {
                 default -> trySwap(rng, state, patientById);
             };
             if (move != null && validate(move, state, patientById)) {
+                if (sampleCalls <= 20 || sampleCalls % 200 == 0) {
+                    AlgorithmTrace.log("neighborhood", "Sample #" + sampleCalls + " accepted move type=" + move.getType()
+                            + " on attempt=" + (attempt + 1));
+                }
                 return move;
             }
+        }
+        if (sampleCalls <= 20 || sampleCalls % 200 == 0) {
+            AlgorithmTrace.log("neighborhood", "Sample #" + sampleCalls + " found no legal move.");
         }
         return null;
     }

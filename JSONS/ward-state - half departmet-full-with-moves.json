@@ -1,0 +1,5165 @@
+{
+  "schemaVersion": 1,
+  "persistVersion": 18,
+  "departments": [
+    {
+      "id": "D28",
+      "name": "Department-D28",
+      "waitingPatientIds": [
+        "NX000001",
+        "NX000002",
+        "NX000003",
+        "NX000004",
+        "NX000005",
+        "NX000006",
+        "NX000007",
+        "NX000008",
+        "NX000009",
+        "NX000010",
+        "NX000011",
+        "NX000012",
+        "NX000013",
+        "NX000014",
+        "NX000015",
+        "NX000016",
+        "NX000017",
+        "NX000018",
+        "NX000019",
+        "NX000020",
+        "NX000021",
+        "NX000022",
+        "NX000023",
+        "NX000024",
+        "NX000025",
+        "NX000026",
+        "NX000027"
+      ],
+      "rooms": [
+        {
+          "id": "R190",
+          "departmentId": "D28",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B818",
+              "roomId": "R190",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B819",
+              "roomId": "R190",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B820",
+              "roomId": "R190",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B821",
+              "roomId": "R190",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B822",
+              "roomId": "R190",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 3.0,
+          "hasNegativePressure": true
+        },
+        {
+          "id": "R191",
+          "departmentId": "D28",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B823",
+              "roomId": "R191",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B824",
+              "roomId": "R191",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B825",
+              "roomId": "R191",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B826",
+              "roomId": "R191",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B827",
+              "roomId": "R191",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 4.2,
+          "hasNegativePressure": false
+        },
+        {
+          "id": "R192",
+          "departmentId": "D28",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B828",
+              "roomId": "R192",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B829",
+              "roomId": "R192",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B830",
+              "roomId": "R192",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B831",
+              "roomId": "R192",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B832",
+              "roomId": "R192",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 5.4,
+          "hasNegativePressure": false
+        },
+        {
+          "id": "R193",
+          "departmentId": "D28",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B833",
+              "roomId": "R193",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B834",
+              "roomId": "R193",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B835",
+              "roomId": "R193",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B836",
+              "roomId": "R193",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B837",
+              "roomId": "R193",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 6.6,
+          "hasNegativePressure": true
+        },
+        {
+          "id": "R194",
+          "departmentId": "D28",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B838",
+              "roomId": "R194",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B839",
+              "roomId": "R194",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B840",
+              "roomId": "R194",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B841",
+              "roomId": "R194",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B842",
+              "roomId": "R194",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 7.8,
+          "hasNegativePressure": false
+        },
+        {
+          "id": "R195",
+          "departmentId": "D28",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B843",
+              "roomId": "R195",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B844",
+              "roomId": "R195",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B845",
+              "roomId": "R195",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B846",
+              "roomId": "R195",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B847",
+              "roomId": "R195",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 9.0,
+          "hasNegativePressure": false
+        },
+        {
+          "id": "R196",
+          "departmentId": "D28",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B848",
+              "roomId": "R196",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B849",
+              "roomId": "R196",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B850",
+              "roomId": "R196",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B851",
+              "roomId": "R196",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B852",
+              "roomId": "R196",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 10.2,
+          "hasNegativePressure": true
+        },
+        {
+          "id": "R197",
+          "departmentId": "D28",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B853",
+              "roomId": "R197",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B854",
+              "roomId": "R197",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B855",
+              "roomId": "R197",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B856",
+              "roomId": "R197",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B857",
+              "roomId": "R197",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 11.4,
+          "hasNegativePressure": false
+        },
+        {
+          "id": "R198",
+          "departmentId": "D28",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B858",
+              "roomId": "R198",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B859",
+              "roomId": "R198",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B860",
+              "roomId": "R198",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B861",
+              "roomId": "R198",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B862",
+              "roomId": "R198",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 12.6,
+          "hasNegativePressure": false
+        },
+        {
+          "id": "R199",
+          "departmentId": "D28",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B863",
+              "roomId": "R199",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B864",
+              "roomId": "R199",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B865",
+              "roomId": "R199",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B866",
+              "roomId": "R199",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B867",
+              "roomId": "R199",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 13.799999999999999,
+          "hasNegativePressure": true
+        }
+      ]
+    },
+    {
+      "id": "D29",
+      "name": "Department-D29",
+      "waitingPatientIds": [
+        "P654",
+        "P655",
+        "P656",
+        "P643",
+        "P642",
+        "P653",
+        "P634",
+        "P645",
+        "P644",
+        "P650",
+        "P641",
+        "P652",
+        "P640",
+        "P651",
+        "P639",
+        "P636",
+        "P647",
+        "P635",
+        "P646",
+        "P638",
+        "P649",
+        "P637",
+        "P648",
+        "NX000028",
+        "NX000029",
+        "NX000030",
+        "NX000031",
+        "NX000032",
+        "NX000033",
+        "NX000034",
+        "NX000035",
+        "NX000036",
+        "NX000037",
+        "NX000038",
+        "NX000039",
+        "NX000040",
+        "NX000041",
+        "NX000042",
+        "NX000043",
+        "NX000044",
+        "NX000045",
+        "NX000046",
+        "NX000047",
+        "NX000048",
+        "NX000049",
+        "NX000050",
+        "NX000051",
+        "NX000052",
+        "NX000053",
+        "NX000054",
+        "NX000055",
+        "NX000056",
+        "NX000057",
+        "NX000058",
+        "NX000059",
+        "NX000060",
+        "NX000061",
+        "NX000062",
+        "NX000063",
+        "NX000064",
+        "NX000065",
+        "NX000066",
+        "NX000067",
+        "NX000068",
+        "NX000069",
+        "NX000070",
+        "NX000071",
+        "NX000072",
+        "NX000073",
+        "NX000074",
+        "NX000075",
+        "NX000076",
+        "NX000077"
+      ],
+      "rooms": [
+        {
+          "id": "R200",
+          "departmentId": "D29",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B868",
+              "roomId": "R200",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B869",
+              "roomId": "R200",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B870",
+              "roomId": "R200",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B871",
+              "roomId": "R200",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B872",
+              "roomId": "R200",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 3.0,
+          "hasNegativePressure": true
+        },
+        {
+          "id": "R201",
+          "departmentId": "D29",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B873",
+              "roomId": "R201",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B874",
+              "roomId": "R201",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B875",
+              "roomId": "R201",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B876",
+              "roomId": "R201",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B877",
+              "roomId": "R201",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 4.2,
+          "hasNegativePressure": false
+        },
+        {
+          "id": "R202",
+          "departmentId": "D29",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B878",
+              "roomId": "R202",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B879",
+              "roomId": "R202",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B880",
+              "roomId": "R202",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B881",
+              "roomId": "R202",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B882",
+              "roomId": "R202",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 5.4,
+          "hasNegativePressure": false
+        },
+        {
+          "id": "R203",
+          "departmentId": "D29",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B883",
+              "roomId": "R203",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B884",
+              "roomId": "R203",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B885",
+              "roomId": "R203",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B886",
+              "roomId": "R203",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B887",
+              "roomId": "R203",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 6.6,
+          "hasNegativePressure": true
+        },
+        {
+          "id": "R204",
+          "departmentId": "D29",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B888",
+              "roomId": "R204",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B889",
+              "roomId": "R204",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B890",
+              "roomId": "R204",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B891",
+              "roomId": "R204",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B892",
+              "roomId": "R204",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 7.8,
+          "hasNegativePressure": false
+        },
+        {
+          "id": "R205",
+          "departmentId": "D29",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B893",
+              "roomId": "R205",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B894",
+              "roomId": "R205",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B895",
+              "roomId": "R205",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B896",
+              "roomId": "R205",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B897",
+              "roomId": "R205",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 9.0,
+          "hasNegativePressure": false
+        },
+        {
+          "id": "R206",
+          "departmentId": "D29",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B898",
+              "roomId": "R206",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B899",
+              "roomId": "R206",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B900",
+              "roomId": "R206",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B901",
+              "roomId": "R206",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B902",
+              "roomId": "R206",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 10.2,
+          "hasNegativePressure": true
+        },
+        {
+          "id": "R207",
+          "departmentId": "D29",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B903",
+              "roomId": "R207",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B904",
+              "roomId": "R207",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B905",
+              "roomId": "R207",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B906",
+              "roomId": "R207",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B907",
+              "roomId": "R207",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 11.4,
+          "hasNegativePressure": false
+        },
+        {
+          "id": "R208",
+          "departmentId": "D29",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B908",
+              "roomId": "R208",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B909",
+              "roomId": "R208",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B910",
+              "roomId": "R208",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B911",
+              "roomId": "R208",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B912",
+              "roomId": "R208",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 12.6,
+          "hasNegativePressure": false
+        },
+        {
+          "id": "R209",
+          "departmentId": "D29",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B913",
+              "roomId": "R209",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B914",
+              "roomId": "R209",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B915",
+              "roomId": "R209",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B916",
+              "roomId": "R209",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B917",
+              "roomId": "R209",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 13.799999999999999,
+          "hasNegativePressure": true
+        }
+      ]
+    },
+    {
+      "id": "D30",
+      "name": "Department-D30",
+      "waitingPatientIds": [
+        "P677",
+        "P678",
+        "P679",
+        "P665",
+        "P676",
+        "P664",
+        "P675",
+        "P667",
+        "P666",
+        "P661",
+        "P672",
+        "P660",
+        "P671",
+        "P663",
+        "P674",
+        "P662",
+        "P673",
+        "P658",
+        "P669",
+        "P657",
+        "P668",
+        "P659",
+        "P670"
+      ],
+      "rooms": [
+        {
+          "id": "R210",
+          "departmentId": "D30",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B918",
+              "roomId": "R210",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B919",
+              "roomId": "R210",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B920",
+              "roomId": "R210",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B921",
+              "roomId": "R210",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B922",
+              "roomId": "R210",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 3.0,
+          "hasNegativePressure": true
+        },
+        {
+          "id": "R211",
+          "departmentId": "D30",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B923",
+              "roomId": "R211",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B924",
+              "roomId": "R211",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B925",
+              "roomId": "R211",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B926",
+              "roomId": "R211",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B927",
+              "roomId": "R211",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 4.2,
+          "hasNegativePressure": false
+        },
+        {
+          "id": "R212",
+          "departmentId": "D30",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B928",
+              "roomId": "R212",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B929",
+              "roomId": "R212",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B930",
+              "roomId": "R212",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B931",
+              "roomId": "R212",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B932",
+              "roomId": "R212",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 5.4,
+          "hasNegativePressure": false
+        },
+        {
+          "id": "R213",
+          "departmentId": "D30",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B933",
+              "roomId": "R213",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B934",
+              "roomId": "R213",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B935",
+              "roomId": "R213",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B936",
+              "roomId": "R213",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B937",
+              "roomId": "R213",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 6.6,
+          "hasNegativePressure": true
+        },
+        {
+          "id": "R214",
+          "departmentId": "D30",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B938",
+              "roomId": "R214",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B939",
+              "roomId": "R214",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B940",
+              "roomId": "R214",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B941",
+              "roomId": "R214",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B942",
+              "roomId": "R214",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 7.8,
+          "hasNegativePressure": false
+        },
+        {
+          "id": "R215",
+          "departmentId": "D30",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B943",
+              "roomId": "R215",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B944",
+              "roomId": "R215",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B945",
+              "roomId": "R215",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B946",
+              "roomId": "R215",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B947",
+              "roomId": "R215",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 9.0,
+          "hasNegativePressure": false
+        },
+        {
+          "id": "R216",
+          "departmentId": "D30",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B948",
+              "roomId": "R216",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B949",
+              "roomId": "R216",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B950",
+              "roomId": "R216",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B951",
+              "roomId": "R216",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B952",
+              "roomId": "R216",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 10.2,
+          "hasNegativePressure": true
+        },
+        {
+          "id": "R217",
+          "departmentId": "D30",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B953",
+              "roomId": "R217",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B954",
+              "roomId": "R217",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B955",
+              "roomId": "R217",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B956",
+              "roomId": "R217",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B957",
+              "roomId": "R217",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 11.4,
+          "hasNegativePressure": false
+        },
+        {
+          "id": "R218",
+          "departmentId": "D30",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B958",
+              "roomId": "R218",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B959",
+              "roomId": "R218",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B960",
+              "roomId": "R218",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B961",
+              "roomId": "R218",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B962",
+              "roomId": "R218",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 12.6,
+          "hasNegativePressure": false
+        },
+        {
+          "id": "R219",
+          "departmentId": "D30",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B963",
+              "roomId": "R219",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B964",
+              "roomId": "R219",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B965",
+              "roomId": "R219",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B966",
+              "roomId": "R219",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B967",
+              "roomId": "R219",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 13.799999999999999,
+          "hasNegativePressure": true
+        }
+      ]
+    },
+    {
+      "id": "D31",
+      "name": "Department-D31",
+      "waitingPatientIds": [
+        "P700",
+        "P701",
+        "P702",
+        "P687",
+        "P698",
+        "P686",
+        "P697",
+        "P689",
+        "P688",
+        "P699",
+        "P683",
+        "P694",
+        "P682",
+        "P693",
+        "P685",
+        "P696",
+        "P684",
+        "P695",
+        "P690",
+        "P681",
+        "P692",
+        "P680",
+        "P691"
+      ],
+      "rooms": [
+        {
+          "id": "R220",
+          "departmentId": "D31",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B968",
+              "roomId": "R220",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B969",
+              "roomId": "R220",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B970",
+              "roomId": "R220",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B971",
+              "roomId": "R220",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B972",
+              "roomId": "R220",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 3.0,
+          "hasNegativePressure": true
+        },
+        {
+          "id": "R221",
+          "departmentId": "D31",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B973",
+              "roomId": "R221",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B974",
+              "roomId": "R221",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B975",
+              "roomId": "R221",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B976",
+              "roomId": "R221",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B977",
+              "roomId": "R221",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 4.2,
+          "hasNegativePressure": false
+        },
+        {
+          "id": "R222",
+          "departmentId": "D31",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B978",
+              "roomId": "R222",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B979",
+              "roomId": "R222",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B980",
+              "roomId": "R222",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B981",
+              "roomId": "R222",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B982",
+              "roomId": "R222",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 5.4,
+          "hasNegativePressure": false
+        },
+        {
+          "id": "R223",
+          "departmentId": "D31",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B983",
+              "roomId": "R223",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B984",
+              "roomId": "R223",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B985",
+              "roomId": "R223",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B986",
+              "roomId": "R223",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B987",
+              "roomId": "R223",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 6.6,
+          "hasNegativePressure": true
+        },
+        {
+          "id": "R224",
+          "departmentId": "D31",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B988",
+              "roomId": "R224",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B989",
+              "roomId": "R224",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B990",
+              "roomId": "R224",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B991",
+              "roomId": "R224",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B992",
+              "roomId": "R224",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 7.8,
+          "hasNegativePressure": false
+        },
+        {
+          "id": "R225",
+          "departmentId": "D31",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B993",
+              "roomId": "R225",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B994",
+              "roomId": "R225",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B995",
+              "roomId": "R225",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B996",
+              "roomId": "R225",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B997",
+              "roomId": "R225",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 9.0,
+          "hasNegativePressure": false
+        },
+        {
+          "id": "R226",
+          "departmentId": "D31",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B998",
+              "roomId": "R226",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B999",
+              "roomId": "R226",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1000",
+              "roomId": "R226",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1001",
+              "roomId": "R226",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1002",
+              "roomId": "R226",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 10.2,
+          "hasNegativePressure": true
+        },
+        {
+          "id": "R227",
+          "departmentId": "D31",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B1003",
+              "roomId": "R227",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B1004",
+              "roomId": "R227",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1005",
+              "roomId": "R227",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1006",
+              "roomId": "R227",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1007",
+              "roomId": "R227",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 11.4,
+          "hasNegativePressure": false
+        },
+        {
+          "id": "R228",
+          "departmentId": "D31",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B1008",
+              "roomId": "R228",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B1009",
+              "roomId": "R228",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1010",
+              "roomId": "R228",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1011",
+              "roomId": "R228",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1012",
+              "roomId": "R228",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 12.6,
+          "hasNegativePressure": false
+        },
+        {
+          "id": "R229",
+          "departmentId": "D31",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B1013",
+              "roomId": "R229",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B1014",
+              "roomId": "R229",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1015",
+              "roomId": "R229",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1016",
+              "roomId": "R229",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1017",
+              "roomId": "R229",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 13.799999999999999,
+          "hasNegativePressure": true
+        }
+      ]
+    },
+    {
+      "id": "D32",
+      "name": "Department-D32",
+      "waitingPatientIds": [
+        "P723",
+        "P724",
+        "P725",
+        "P720",
+        "P711",
+        "P722",
+        "P710",
+        "P721",
+        "P706",
+        "P717",
+        "P705",
+        "P716",
+        "P708",
+        "P719",
+        "P707",
+        "P718",
+        "P713",
+        "P712",
+        "P704",
+        "P715",
+        "P703",
+        "P714",
+        "P709"
+      ],
+      "rooms": [
+        {
+          "id": "R230",
+          "departmentId": "D32",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B1018",
+              "roomId": "R230",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B1019",
+              "roomId": "R230",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1020",
+              "roomId": "R230",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1021",
+              "roomId": "R230",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1022",
+              "roomId": "R230",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 3.0,
+          "hasNegativePressure": true
+        },
+        {
+          "id": "R231",
+          "departmentId": "D32",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B1023",
+              "roomId": "R231",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B1024",
+              "roomId": "R231",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1025",
+              "roomId": "R231",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1026",
+              "roomId": "R231",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1027",
+              "roomId": "R231",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 4.2,
+          "hasNegativePressure": false
+        },
+        {
+          "id": "R232",
+          "departmentId": "D32",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B1028",
+              "roomId": "R232",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B1029",
+              "roomId": "R232",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1030",
+              "roomId": "R232",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1031",
+              "roomId": "R232",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1032",
+              "roomId": "R232",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 5.4,
+          "hasNegativePressure": false
+        },
+        {
+          "id": "R233",
+          "departmentId": "D32",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B1033",
+              "roomId": "R233",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B1034",
+              "roomId": "R233",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1035",
+              "roomId": "R233",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1036",
+              "roomId": "R233",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1037",
+              "roomId": "R233",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 6.6,
+          "hasNegativePressure": true
+        },
+        {
+          "id": "R234",
+          "departmentId": "D32",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B1038",
+              "roomId": "R234",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B1039",
+              "roomId": "R234",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1040",
+              "roomId": "R234",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1041",
+              "roomId": "R234",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1042",
+              "roomId": "R234",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 7.8,
+          "hasNegativePressure": false
+        },
+        {
+          "id": "R235",
+          "departmentId": "D32",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B1043",
+              "roomId": "R235",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B1044",
+              "roomId": "R235",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1045",
+              "roomId": "R235",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1046",
+              "roomId": "R235",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1047",
+              "roomId": "R235",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 9.0,
+          "hasNegativePressure": false
+        },
+        {
+          "id": "R236",
+          "departmentId": "D32",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B1048",
+              "roomId": "R236",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B1049",
+              "roomId": "R236",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1050",
+              "roomId": "R236",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1051",
+              "roomId": "R236",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1052",
+              "roomId": "R236",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 10.2,
+          "hasNegativePressure": true
+        },
+        {
+          "id": "R237",
+          "departmentId": "D32",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B1053",
+              "roomId": "R237",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B1054",
+              "roomId": "R237",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1055",
+              "roomId": "R237",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1056",
+              "roomId": "R237",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1057",
+              "roomId": "R237",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 11.4,
+          "hasNegativePressure": false
+        },
+        {
+          "id": "R238",
+          "departmentId": "D32",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B1058",
+              "roomId": "R238",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B1059",
+              "roomId": "R238",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1060",
+              "roomId": "R238",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1061",
+              "roomId": "R238",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1062",
+              "roomId": "R238",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 12.6,
+          "hasNegativePressure": false
+        },
+        {
+          "id": "R239",
+          "departmentId": "D32",
+          "capacity": 5,
+          "beds": [
+            {
+              "id": "B1063",
+              "roomId": "R239",
+              "type": "ICU",
+              "hasVentilator": true,
+              "broken": false
+            },
+            {
+              "id": "B1064",
+              "roomId": "R239",
+              "type": "BARIATRIC",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1065",
+              "roomId": "R239",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1066",
+              "roomId": "R239",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            },
+            {
+              "id": "B1067",
+              "roomId": "R239",
+              "type": "REGULAR",
+              "hasVentilator": false,
+              "broken": false
+            }
+          ],
+          "distanceFromNurseStation": 13.799999999999999,
+          "hasNegativePressure": true
+        }
+      ]
+    }
+  ],
+  "patientsByDepartmentId": {
+    "D28": {
+      "P621": {
+        "id": "P621",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 6,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "ASSIGNED",
+        "admittedAt": "2026-05-06T14:08:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P632": {
+        "id": "P632",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "ASSIGNED",
+        "admittedAt": "2026-05-06T12:51:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P620": {
+        "id": "P620",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "ASSIGNED",
+        "admittedAt": "2026-05-06T14:15:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P631": {
+        "id": "P631",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "IMMUNO_COMPROMISED",
+          "severityScore": 4,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "ASSIGNED",
+        "admittedAt": "2026-05-06T12:58:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P612": {
+        "id": "P612",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 3,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "ASSIGNED",
+        "admittedAt": "2026-05-06T15:11:12.154Z",
+        "temporarilyUnavailable": false
+      },
+      "P623": {
+        "id": "P623",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 2,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "ASSIGNED",
+        "admittedAt": "2026-05-06T13:54:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P611": {
+        "id": "P611",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 2,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "ASSIGNED",
+        "admittedAt": "2026-05-06T15:18:12.153Z",
+        "temporarilyUnavailable": false
+      },
+      "P622": {
+        "id": "P622",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "IMMUNO_COMPROMISED",
+          "severityScore": 7,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "ASSIGNED",
+        "admittedAt": "2026-05-06T14:01:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P633": {
+        "id": "P633",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 6,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "ASSIGNED",
+        "admittedAt": "2026-05-06T12:44:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P630": {
+        "id": "P630",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 3,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "ASSIGNED",
+        "admittedAt": "2026-05-06T13:05:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P618": {
+        "id": "P618",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 3,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "ASSIGNED",
+        "admittedAt": "2026-05-06T14:29:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P629": {
+        "id": "P629",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 2,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "ASSIGNED",
+        "admittedAt": "2026-05-06T13:12:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P617": {
+        "id": "P617",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 2,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "ASSIGNED",
+        "admittedAt": "2026-05-06T14:36:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P628": {
+        "id": "P628",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "IMMUNO_COMPROMISED",
+          "severityScore": 7,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "ASSIGNED",
+        "admittedAt": "2026-05-06T13:19:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P619": {
+        "id": "P619",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "IMMUNO_COMPROMISED",
+          "severityScore": 4,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "ASSIGNED",
+        "admittedAt": "2026-05-06T14:22:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P614": {
+        "id": "P614",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "ASSIGNED",
+        "admittedAt": "2026-05-06T14:57:12.154Z",
+        "temporarilyUnavailable": false
+      },
+      "P625": {
+        "id": "P625",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "IMMUNO_COMPROMISED",
+          "severityScore": 4,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "ASSIGNED",
+        "admittedAt": "2026-05-06T13:40:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P613": {
+        "id": "P613",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "IMMUNO_COMPROMISED",
+          "severityScore": 4,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "ASSIGNED",
+        "admittedAt": "2026-05-06T15:04:12.154Z",
+        "temporarilyUnavailable": false
+      },
+      "P624": {
+        "id": "P624",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 3,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "ASSIGNED",
+        "admittedAt": "2026-05-06T13:47:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P616": {
+        "id": "P616",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "IMMUNO_COMPROMISED",
+          "severityScore": 7,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "ASSIGNED",
+        "admittedAt": "2026-05-06T14:43:12.154Z",
+        "temporarilyUnavailable": false
+      },
+      "P627": {
+        "id": "P627",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 6,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "ASSIGNED",
+        "admittedAt": "2026-05-06T13:26:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P615": {
+        "id": "P615",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 6,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "ASSIGNED",
+        "admittedAt": "2026-05-06T14:50:12.154Z",
+        "temporarilyUnavailable": false
+      },
+      "P626": {
+        "id": "P626",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "ASSIGNED",
+        "admittedAt": "2026-05-06T13:33:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000001": {
+        "id": "NX000001",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000002": {
+        "id": "NX000002",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000003": {
+        "id": "NX000003",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000004": {
+        "id": "NX000004",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000005": {
+        "id": "NX000005",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000006": {
+        "id": "NX000006",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000007": {
+        "id": "NX000007",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000008": {
+        "id": "NX000008",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000009": {
+        "id": "NX000009",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000010": {
+        "id": "NX000010",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000011": {
+        "id": "NX000011",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000012": {
+        "id": "NX000012",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000013": {
+        "id": "NX000013",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000014": {
+        "id": "NX000014",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000015": {
+        "id": "NX000015",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000016": {
+        "id": "NX000016",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000017": {
+        "id": "NX000017",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000018": {
+        "id": "NX000018",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000019": {
+        "id": "NX000019",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000020": {
+        "id": "NX000020",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000021": {
+        "id": "NX000021",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000022": {
+        "id": "NX000022",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000023": {
+        "id": "NX000023",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000024": {
+        "id": "NX000024",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000025": {
+        "id": "NX000025",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000026": {
+        "id": "NX000026",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000027": {
+        "id": "NX000027",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      }
+    },
+    "D29": {
+      "P643": {
+        "id": "P643",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T13:55:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P654": {
+        "id": "P654",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "IMMUNO_COMPROMISED",
+          "severityScore": 4,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T12:38:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P642": {
+        "id": "P642",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "IMMUNO_COMPROMISED",
+          "severityScore": 4,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T14:02:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P653": {
+        "id": "P653",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 3,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T12:45:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P634": {
+        "id": "P634",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 2,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T14:58:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P645": {
+        "id": "P645",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "IMMUNO_COMPROMISED",
+          "severityScore": 7,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T13:41:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P656": {
+        "id": "P656",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 6,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T12:24:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P644": {
+        "id": "P644",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 6,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T13:48:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P655": {
+        "id": "P655",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T12:31:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P650": {
+        "id": "P650",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 6,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T13:06:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P641": {
+        "id": "P641",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 3,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T14:09:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P652": {
+        "id": "P652",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 2,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T12:52:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P640": {
+        "id": "P640",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 2,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T14:16:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P651": {
+        "id": "P651",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "IMMUNO_COMPROMISED",
+          "severityScore": 7,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T12:59:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P639": {
+        "id": "P639",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "IMMUNO_COMPROMISED",
+          "severityScore": 7,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T14:23:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P636": {
+        "id": "P636",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "IMMUNO_COMPROMISED",
+          "severityScore": 4,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T14:44:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P647": {
+        "id": "P647",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 3,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T13:27:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P635": {
+        "id": "P635",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 3,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T14:51:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P646": {
+        "id": "P646",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 2,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T13:34:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P638": {
+        "id": "P638",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 6,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T14:30:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P649": {
+        "id": "P649",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T13:13:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P637": {
+        "id": "P637",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T14:37:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P648": {
+        "id": "P648",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "IMMUNO_COMPROMISED",
+          "severityScore": 4,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T13:20:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000028": {
+        "id": "NX000028",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000029": {
+        "id": "NX000029",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000030": {
+        "id": "NX000030",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000031": {
+        "id": "NX000031",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000032": {
+        "id": "NX000032",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000033": {
+        "id": "NX000033",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000034": {
+        "id": "NX000034",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000035": {
+        "id": "NX000035",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000036": {
+        "id": "NX000036",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000037": {
+        "id": "NX000037",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000038": {
+        "id": "NX000038",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000039": {
+        "id": "NX000039",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000040": {
+        "id": "NX000040",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000041": {
+        "id": "NX000041",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000042": {
+        "id": "NX000042",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000043": {
+        "id": "NX000043",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000044": {
+        "id": "NX000044",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000045": {
+        "id": "NX000045",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000046": {
+        "id": "NX000046",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000047": {
+        "id": "NX000047",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000048": {
+        "id": "NX000048",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000049": {
+        "id": "NX000049",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000050": {
+        "id": "NX000050",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000051": {
+        "id": "NX000051",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000052": {
+        "id": "NX000052",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000053": {
+        "id": "NX000053",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000054": {
+        "id": "NX000054",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000055": {
+        "id": "NX000055",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000056": {
+        "id": "NX000056",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000057": {
+        "id": "NX000057",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000058": {
+        "id": "NX000058",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000059": {
+        "id": "NX000059",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000060": {
+        "id": "NX000060",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000061": {
+        "id": "NX000061",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000062": {
+        "id": "NX000062",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000063": {
+        "id": "NX000063",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000064": {
+        "id": "NX000064",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000065": {
+        "id": "NX000065",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000066": {
+        "id": "NX000066",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000067": {
+        "id": "NX000067",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000068": {
+        "id": "NX000068",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000069": {
+        "id": "NX000069",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000070": {
+        "id": "NX000070",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000071": {
+        "id": "NX000071",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000072": {
+        "id": "NX000072",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000073": {
+        "id": "NX000073",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000074": {
+        "id": "NX000074",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000075": {
+        "id": "NX000075",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000076": {
+        "id": "NX000076",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      },
+      "NX000077": {
+        "id": "NX000077",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T17:56:39.548Z",
+        "temporarilyUnavailable": false
+      }
+    },
+    "D30": {
+      "P665": {
+        "id": "P665",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "IMMUNO_COMPROMISED",
+          "severityScore": 4,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T13:42:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P664": {
+        "id": "P664",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 3,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T13:49:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P667": {
+        "id": "P667",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 6,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T13:28:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P666": {
+        "id": "P666",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T13:35:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P661": {
+        "id": "P661",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 6,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T14:10:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P660": {
+        "id": "P660",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T14:17:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P663": {
+        "id": "P663",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 2,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T13:56:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P662": {
+        "id": "P662",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "IMMUNO_COMPROMISED",
+          "severityScore": 7,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T14:03:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P669": {
+        "id": "P669",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 2,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T13:14:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P668": {
+        "id": "P668",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "IMMUNO_COMPROMISED",
+          "severityScore": 7,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T13:21:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P670": {
+        "id": "P670",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 3,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T13:07:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P676": {
+        "id": "P676",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 3,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T12:25:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P675": {
+        "id": "P675",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 2,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T12:32:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P678": {
+        "id": "P678",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T12:11:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P677": {
+        "id": "P677",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "IMMUNO_COMPROMISED",
+          "severityScore": 4,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T12:18:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P672": {
+        "id": "P672",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T12:53:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P671": {
+        "id": "P671",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "IMMUNO_COMPROMISED",
+          "severityScore": 4,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T13:00:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P674": {
+        "id": "P674",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "IMMUNO_COMPROMISED",
+          "severityScore": 7,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T12:39:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P673": {
+        "id": "P673",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 6,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T12:46:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P658": {
+        "id": "P658",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 3,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T14:31:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P657": {
+        "id": "P657",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 2,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T14:38:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P679": {
+        "id": "P679",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 6,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T12:04:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P659": {
+        "id": "P659",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "IMMUNO_COMPROMISED",
+          "severityScore": 4,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T14:24:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "p9999": {
+        "id": "p9999",
+        "personalDetails": {
+          "firstName": "as",
+          "lastName": "as",
+          "dateOfBirth": null,
+          "gender": "MALE"
+        },
+        "clinicalData": {
+          "riskLevel": "UNKNOWN",
+          "severityScore": 1,
+          "needsVentilator": false,
+          "requiredBedType": "REGULAR",
+          "weightKg": null
+        },
+        "status": "DISCHARGED",
+        "admittedAt": "2026-05-06T15:26:51.046633200Z",
+        "temporarilyUnavailable": false
+      }
+    },
+    "D31": {
+      "P687": {
+        "id": "P687",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 3,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T13:29:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P698": {
+        "id": "P698",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 2,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T12:12:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P686": {
+        "id": "P686",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 2,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T13:36:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P697": {
+        "id": "P697",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "IMMUNO_COMPROMISED",
+          "severityScore": 7,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T12:19:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P689": {
+        "id": "P689",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T13:15:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P700": {
+        "id": "P700",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "IMMUNO_COMPROMISED",
+          "severityScore": 4,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T11:58:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P688": {
+        "id": "P688",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "IMMUNO_COMPROMISED",
+          "severityScore": 4,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T13:22:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P699": {
+        "id": "P699",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 3,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T12:05:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P683": {
+        "id": "P683",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T13:57:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P694": {
+        "id": "P694",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "IMMUNO_COMPROMISED",
+          "severityScore": 4,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T12:40:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P682": {
+        "id": "P682",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "IMMUNO_COMPROMISED",
+          "severityScore": 4,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T14:04:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P693": {
+        "id": "P693",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 3,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T12:47:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P685": {
+        "id": "P685",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "IMMUNO_COMPROMISED",
+          "severityScore": 7,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T13:43:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P696": {
+        "id": "P696",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 6,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T12:26:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P684": {
+        "id": "P684",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 6,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T13:50:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P695": {
+        "id": "P695",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T12:33:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P702": {
+        "id": "P702",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 6,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T11:44:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P701": {
+        "id": "P701",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T11:51:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P690": {
+        "id": "P690",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 6,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T13:08:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P681": {
+        "id": "P681",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 3,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T14:11:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P692": {
+        "id": "P692",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 2,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T12:54:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P680": {
+        "id": "P680",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 2,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T14:18:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P691": {
+        "id": "P691",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "IMMUNO_COMPROMISED",
+          "severityScore": 7,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T13:01:12.155Z",
+        "temporarilyUnavailable": false
+      }
+    },
+    "D32": {
+      "P720": {
+        "id": "P720",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "IMMUNO_COMPROMISED",
+          "severityScore": 7,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T11:59:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P711": {
+        "id": "P711",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "IMMUNO_COMPROMISED",
+          "severityScore": 4,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T13:02:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P722": {
+        "id": "P722",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 3,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T11:45:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P710": {
+        "id": "P710",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 3,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T13:09:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P721": {
+        "id": "P721",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 2,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T11:52:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P706": {
+        "id": "P706",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T13:37:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P717": {
+        "id": "P717",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "IMMUNO_COMPROMISED",
+          "severityScore": 4,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T12:20:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P705": {
+        "id": "P705",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "IMMUNO_COMPROMISED",
+          "severityScore": 4,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T13:44:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P716": {
+        "id": "P716",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 3,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T12:27:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P708": {
+        "id": "P708",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "IMMUNO_COMPROMISED",
+          "severityScore": 7,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T13:23:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P719": {
+        "id": "P719",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 6,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T12:06:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P707": {
+        "id": "P707",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 6,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T13:30:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P718": {
+        "id": "P718",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T12:13:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P713": {
+        "id": "P713",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 6,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T12:48:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P724": {
+        "id": "P724",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T11:31:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P712": {
+        "id": "P712",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 5,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T12:55:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P723": {
+        "id": "P723",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "IMMUNO_COMPROMISED",
+          "severityScore": 4,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T11:38:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P704": {
+        "id": "P704",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 3,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T13:51:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P715": {
+        "id": "P715",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 2,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T12:34:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P703": {
+        "id": "P703",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 2,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T13:58:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P714": {
+        "id": "P714",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "IMMUNO_COMPROMISED",
+          "severityScore": 7,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T12:41:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P725": {
+        "id": "P725",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "RESPIRATORY",
+          "severityScore": 6,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T11:24:12.155Z",
+        "temporarilyUnavailable": false
+      },
+      "P709": {
+        "id": "P709",
+        "personalDetails": null,
+        "clinicalData": {
+          "riskLevel": "CLEAN",
+          "severityScore": 2,
+          "needsVentilator": false,
+          "requiredBedType": null,
+          "weightKg": null
+        },
+        "status": "WAITING",
+        "admittedAt": "2026-05-06T13:16:12.155Z",
+        "temporarilyUnavailable": false
+      }
+    }
+  },
+  "assignmentsByDepartmentId": {
+    "D28": {
+      "P621": "B830",
+      "P632": "B825",
+      "P631": "B821",
+      "P620": "B827",
+      "P612": "B835",
+      "P623": "B838",
+      "P622": "B819",
+      "P633": "B828",
+      "P611": "B840",
+      "P630": "B832",
+      "P618": "B834",
+      "P629": "B837",
+      "P628": "B818",
+      "P617": "B839",
+      "P619": "B823",
+      "P625": "B822",
+      "P614": "B836",
+      "P613": "B824",
+      "P624": "B833",
+      "P616": "B820",
+      "P627": "B829",
+      "P615": "B831",
+      "P626": "B826"
+    },
+    "D29": {},
+    "D30": {},
+    "D31": {},
+    "D32": {}
+  }
+}

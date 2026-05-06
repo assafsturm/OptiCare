@@ -1,6 +1,7 @@
 package Controller;
 
 import Algorithm.AssignmentState;
+import Algorithm.AlgorithmTrace;
 import Algorithm.CostCalculator;
 import Algorithm.feasibility.FeasibilityChecker;
 import Algorithm.feasibility.FeasibilityResult;
@@ -48,9 +49,14 @@ public class DefaultAssignmentWorkflowService implements AssignmentWorkflowServi
     @Override
     public AssignmentProposal proposeAssignment(Department department, Map<String, Patient> patientById,
                                                 AssignmentState currentState) {
+        AlgorithmTrace.log("workflow", "Starting proposal for department="
+                + (department != null ? department.getId() : "null")
+                + ", patients=" + (patientById != null ? patientById.size() : 0));
         AssignmentState baselineInput = currentState != null ? currentState : new AssignmentState();
         FeasibilityResult feasibility = feasibilityChecker.check(department, patientById, baselineInput);
         if (!feasibility.isFeasible()) {
+            AlgorithmTrace.log("workflow", "Feasibility failed with " + feasibility.getViolations().size()
+                    + " violation(s): " + feasibility.getViolations());
             return new AssignmentProposal(
                     false,
                     new ArrayList<>(feasibility.getViolations()),
@@ -59,17 +65,20 @@ public class DefaultAssignmentWorkflowService implements AssignmentWorkflowServi
                     0.0,
                     0.0,
                     0,
-                    false
+                    false,
+                    List.of()
             );
         }
 
         RiskMatrix riskMatrix = RiskMatrixFactory.fromConfig(config);
         HardConstraints hardConstraints = new HardConstraints(riskMatrix, department);
         AssignmentState warmStartState = GreedyWarmStart.build(department, patientById, baselineInput, hardConstraints);
+        AlgorithmTrace.log("workflow", "Warm start completed. Assigned count=" + warmStartState.size());
         AssignmentState baselineForTransfer = new AssignmentState(warmStartState);
         CostCalculator costCalculator = new CostCalculator(riskMatrix, config);
 
         double baselineZ = costCalculator.computeZ(baselineForTransfer, department, patientById, baselineForTransfer);
+        AlgorithmTrace.log("workflow", "Baseline energy (Z)=" + baselineZ);
         SaResult result = saEngine.run(
                 department,
                 patientById,
@@ -80,16 +89,41 @@ public class DefaultAssignmentWorkflowService implements AssignmentWorkflowServi
                 hardConstraints
         );
         double proposedZ = result.bestZ();
+        AssignmentState proposedState = result.bestState();
+        List<String> warnings = unplacedWaitingWarnings(department, proposedState);
+        AlgorithmTrace.log("workflow", "SA finished. proposedZ=" + proposedZ
+                + ", iterations=" + result.iterations()
+                + ", stoppedByTime=" + result.stoppedByTimeLimit()
+                + ", placementWarnings=" + warnings.size());
         return new AssignmentProposal(
                 true,
                 List.of(),
                 baselineForTransfer,
-                result.bestState(),
+                proposedState,
                 baselineZ,
                 proposedZ,
                 result.iterations(),
-                result.stoppedByTimeLimit()
+                result.stoppedByTimeLimit(),
+                warnings
         );
+    }
+
+    /**
+     * Waiting patients who remain eligible but have no bed in the proposed state after optimization.
+     */
+    private static List<String> unplacedWaitingWarnings(Department department, AssignmentState proposedState) {
+        List<String> out = new ArrayList<>();
+        if (department == null || proposedState == null || department.getWaitingList() == null) {
+            return out;
+        }
+        for (Patient p : department.getWaitingList()) {
+            if (p != null && p.getStatus() == PatientStatus.WAITING && !p.isTemporarilyUnavailable()
+                    && proposedState.getBed(p.getId()) == null) {
+                out.add("Patient " + p.getId()
+                        + " could not be placed (no legal bed reachable via assign/move/swap).");
+            }
+        }
+        return out;
     }
 
     @Override

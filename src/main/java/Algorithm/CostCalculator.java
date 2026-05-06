@@ -16,6 +16,7 @@ import Model.entety.Room;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Computes total cost Z and components (C_safety, C_clinical, C_policy, C_transfer, C_unassigned)
@@ -23,6 +24,7 @@ import java.util.Map;
  */
 public class CostCalculator {
 
+    private static final AtomicInteger EVALUATION_COUNTER = new AtomicInteger(0);
     private final List<CostStrategy> strategies;
     private final SafetyCostStrategy safety;
     private final ClinicalCostStrategy clinical;
@@ -65,6 +67,10 @@ public class CostCalculator {
         double z = 0;
         for (CostStrategy s : strategies) {
             z += s.computeTotal(state, department, patientById, initialState);
+        }
+        int eval = EVALUATION_COUNTER.incrementAndGet();
+        if (eval <= 10 || eval % 100 == 0) {
+            AlgorithmTrace.log("cost", "Energy evaluation #" + eval + " => Z=" + z);
         }
         return z;
     }
