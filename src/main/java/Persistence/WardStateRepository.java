@@ -6,12 +6,13 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Optional;
 
-/** Load/save contract for the ward JSON snapshot (Stage 6). */
+
+// load save contract for the ward json snapshot
 public interface WardStateRepository {
 
     Path getPersistencePath();
 
-    Optional<WardStateDocument> loadIfPresent() throws IOException;
+    Optional<WardStateDocument> loadIfPresent() throws IOException; // load the ward state if it exists
 
-    long save(WardStateDocument draft) throws IOException;
+    long save(WardStateDocument draft) throws IOException; // save the ward state
 }

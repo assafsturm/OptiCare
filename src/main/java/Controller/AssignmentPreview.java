@@ -2,9 +2,9 @@ package Controller;
 
 import java.util.List;
 
-/**
- * Preview/diff summary for approve-reject decision.
- */
+
+// record for the preview UI
+// has the changes and sa stat run
 public record AssignmentPreview(
         List<PatientAssignmentDiff> patientDiffs,
         int changedPatients,

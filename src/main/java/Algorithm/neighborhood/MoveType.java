@@ -1,8 +1,6 @@
 package Algorithm.neighborhood;
 
-/**
- * Neighborhood move categories.
- */
+// enum for for what change is being made
 public enum MoveType {
     ASSIGN,
     MOVE,

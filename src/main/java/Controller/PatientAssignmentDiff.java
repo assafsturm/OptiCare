@@ -1,8 +1,7 @@
 package Controller;
 
-/**
- * Patient-level assignment diff line for preview UI.
- */
+
+// record for the patient assignment diff, helps with the preview UI
 public record PatientAssignmentDiff(
         String patientId,
         String fromBedId,

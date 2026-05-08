@@ -1,25 +1,23 @@
 package Controller;
 
-import Algorithm.AssignmentState;
-
 import java.util.List;
 
-/**
- * Immutable proposal output for Stage-4 workflow "propose assignment".
- */
+import Algorithm.AssignmentState;
+
+
+// recored for the proposle, all ifno that the optimazer returns
 public record AssignmentProposal(
         boolean feasible,
         List<String> feasibilityViolations,
         AssignmentState baselineState,
-        AssignmentState proposedState,
-        double baselineZ,
+        AssignmentState proposedState, 
+        double baselineZ,// sa meta data
         double proposedZ,
         int iterations,
         boolean stoppedByTimeLimit,
-        /** Soft messages e.g. waiting patients still unassigned after SA (feasible runs only). */
-        List<String> warnings
+        List<String> warnings// if patients not assigned after sa
 ) {
-    public AssignmentProposal {
+    public AssignmentProposal { // compact constructor
         warnings = warnings == null ? List.of() : List.copyOf(warnings);
     }
 

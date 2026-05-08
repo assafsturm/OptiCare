@@ -2,10 +2,8 @@ package Algorithm.neighborhood;
 
 import java.util.Objects;
 
-/**
- * Immutable move descriptor for neighborhood generation.
- * This object carries only identifiers so it is safe to log/hash/undo.
- */
+// immutable move descriptor for neighborhood generation
+// kind of data cerier for the relevent move set
 public final class NeighborMove {
 
     private final MoveType type;

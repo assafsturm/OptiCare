@@ -2,9 +2,8 @@ package Algorithm.risk;
 
 import Config.AlgorithmConfig;
 
-/**
- * Single construction path for {@link RiskMatrix} from {@link AlgorithmConfig} (Big M source of truth).
- */
+
+// Factory for the risk matrix from the algorithm config
 public final class RiskMatrixFactory {
 
     private RiskMatrixFactory() {

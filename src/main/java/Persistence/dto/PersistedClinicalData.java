@@ -3,7 +3,7 @@ package Persistence.dto;
 import Model.enums.BedType;
 import Model.enums.RiskLevel;
 
-/** JSON DTO aligned with {@link Model.entety.ClinicalData}. */
+// dto shaped for json 
 public final class PersistedClinicalData {
 
     private RiskLevel riskLevel;

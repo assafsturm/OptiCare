@@ -24,20 +24,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-/**
- * Default Stage-4 workflow service (slice 1): propose assignment only.
- */
+
+// implementation of the assignment workflow service
 public class DefaultAssignmentWorkflowService implements AssignmentWorkflowService {
 
-    private final AlgorithmConfig config;
-    private final SimulatedAnnealingEngine saEngine;
-    private final FeasibilityChecker feasibilityChecker;
-    private final Map<String, AssignmentProposal> pendingByDepartmentId = new HashMap<>();
+    private final AlgorithmConfig config;// algorithm config
+    private final SimulatedAnnealingEngine saEngine;// sa engine
+    private final FeasibilityChecker feasibilityChecker;// feasibility checker
+    private final Map<String, AssignmentProposal> pendingByDepartmentId = new HashMap<>();// pending proposals by department id
 
     public DefaultAssignmentWorkflowService(AlgorithmConfig config) {
         this(config, new SimulatedAnnealingEngine(), new FeasibilityChecker(config));
     }
-
+    // overload constructors for mising params
     public DefaultAssignmentWorkflowService(AlgorithmConfig config,
                                             SimulatedAnnealingEngine saEngine,
                                             FeasibilityChecker feasibilityChecker) {
@@ -46,6 +45,7 @@ public class DefaultAssignmentWorkflowService implements AssignmentWorkflowServi
         this.feasibilityChecker = feasibilityChecker;
     }
 
+    // propose an assignment for a department (run the optimization - greedy warm start + sa)
     @Override
     public AssignmentProposal proposeAssignment(Department department, Map<String, Patient> patientById,
                                                 AssignmentState currentState) {
@@ -53,8 +53,8 @@ public class DefaultAssignmentWorkflowService implements AssignmentWorkflowServi
                 + (department != null ? department.getId() : "null")
                 + ", patients=" + (patientById != null ? patientById.size() : 0));
         AssignmentState baselineInput = currentState != null ? currentState : new AssignmentState();
-        FeasibilityResult feasibility = feasibilityChecker.check(department, patientById, baselineInput);
-        if (!feasibility.isFeasible()) {
+        FeasibilityResult feasibility = feasibilityChecker.check(department, patientById, baselineInput);// check if the assignment is feasible
+        if (!feasibility.isFeasible()) {// if not feasible, return a proposal with the violations
             AlgorithmTrace.log("workflow", "Feasibility failed with " + feasibility.getViolations().size()
                     + " violation(s): " + feasibility.getViolations());
             return new AssignmentProposal(
@@ -70,16 +70,16 @@ public class DefaultAssignmentWorkflowService implements AssignmentWorkflowServi
             );
         }
 
-        RiskMatrix riskMatrix = RiskMatrixFactory.fromConfig(config);
-        HardConstraints hardConstraints = new HardConstraints(riskMatrix, department);
-        AssignmentState warmStartState = GreedyWarmStart.build(department, patientById, baselineInput, hardConstraints);
+        RiskMatrix riskMatrix = RiskMatrixFactory.fromConfig(config);// create a risk matrix from the config
+        HardConstraints hardConstraints = new HardConstraints(riskMatrix, department);// create hard constraints from the risk matrix and the department
+        AssignmentState warmStartState = GreedyWarmStart.build(department, patientById, baselineInput, hardConstraints);// build a greedy start state from the department, patients and hard constraints
         AlgorithmTrace.log("workflow", "Warm start completed. Assigned count=" + warmStartState.size());
-        AssignmentState baselineForTransfer = new AssignmentState(warmStartState);
-        CostCalculator costCalculator = new CostCalculator(riskMatrix, config);
+        AssignmentState baselineForTransfer = new AssignmentState(warmStartState);// copy the greedy start state (shalow)
+        CostCalculator costCalculator = new CostCalculator(riskMatrix, config);// create a cost calculator from the risk matrix and the config
 
-        double baselineZ = costCalculator.computeZ(baselineForTransfer, department, patientById, baselineForTransfer);
+        double baselineZ = costCalculator.computeZ(baselineForTransfer, department, patientById, baselineForTransfer);// compute the baseline energy
         AlgorithmTrace.log("workflow", "Baseline energy (Z)=" + baselineZ);
-        SaResult result = saEngine.run(
+        SaResult result = saEngine.run( // run the sa
                 department,
                 patientById,
                 new AssignmentState(warmStartState),
@@ -88,14 +88,14 @@ public class DefaultAssignmentWorkflowService implements AssignmentWorkflowServi
                 config,
                 hardConstraints
         );
-        double proposedZ = result.bestZ();
-        AssignmentState proposedState = result.bestState();
-        List<String> warnings = unplacedWaitingWarnings(department, proposedState);
+        double proposedZ = result.bestZ();// get the best energy
+        AssignmentState proposedState = result.bestState();// get the best state
+        List<String> warnings = unplacedWaitingWarnings(department, proposedState);// get the warnings
         AlgorithmTrace.log("workflow", "SA finished. proposedZ=" + proposedZ
                 + ", iterations=" + result.iterations()
                 + ", stoppedByTime=" + result.stoppedByTimeLimit()
                 + ", placementWarnings=" + warnings.size());
-        return new AssignmentProposal(
+        return new AssignmentProposal(// return a proposal with the results
                 true,
                 List.of(),
                 baselineForTransfer,
@@ -108,9 +108,8 @@ public class DefaultAssignmentWorkflowService implements AssignmentWorkflowServi
         );
     }
 
-    /**
-     * Waiting patients who remain eligible but have no bed in the proposed state after optimization.
-     */
+
+    // waiting patients who remain eligible but have no bed in the proposed state after optimization
     private static List<String> unplacedWaitingWarnings(Department department, AssignmentState proposedState) {
         List<String> out = new ArrayList<>();
         if (department == null || proposedState == null || department.getWaitingList() == null) {
@@ -126,99 +125,105 @@ public class DefaultAssignmentWorkflowService implements AssignmentWorkflowServi
         return out;
     }
 
+    // build a preview of the assignment proposal
     @Override
     public AssignmentPreview buildPreview(AssignmentProposal proposal) {
         AssignmentState baseline = proposal != null && proposal.baselineState() != null
-                ? proposal.baselineState() : new AssignmentState();
+                ? proposal.baselineState() : new AssignmentState();// get the baseline state
         AssignmentState proposed = proposal != null && proposal.proposedState() != null
-                ? proposal.proposedState() : new AssignmentState();
+                ? proposal.proposedState() : new AssignmentState();// get the proposed state
 
-        Set<String> patientIds = new HashSet<>();
-        patientIds.addAll(baseline.getAssignments().keySet());
-        patientIds.addAll(proposed.getAssignments().keySet());
+        Set<String> patientIds = new HashSet<>();// get the patient ids, no duplicates
+        patientIds.addAll(baseline.getAssignments().keySet());// add the patient ids from the baseline
+        patientIds.addAll(proposed.getAssignments().keySet());// add the patient ids from the proposed
 
         List<PatientAssignmentDiff> diffs = new ArrayList<>();
-        for (String patientId : patientIds) {
+        for (String patientId : patientIds) {// for each patient, get the from and to bed ids
             String fromBedId = baseline.getBed(patientId) != null ? baseline.getBed(patientId).getId() : null;
             String toBedId = proposed.getBed(patientId) != null ? proposed.getBed(patientId).getId() : null;
-            AssignmentChangeType type = classifyChange(fromBedId, toBedId);
-            diffs.add(new PatientAssignmentDiff(patientId, fromBedId, toBedId, type));
+            AssignmentChangeType type = classifyChange(fromBedId, toBedId);// classify the change
+            diffs.add(new PatientAssignmentDiff(patientId, fromBedId, toBedId, type));// add the diff to the list
         }
-        diffs.sort(Comparator.comparing(PatientAssignmentDiff::patientId, Comparator.nullsLast(String::compareTo)));
+        diffs.sort(Comparator.comparing(PatientAssignmentDiff::patientId, Comparator.nullsLast(String::compareTo)));// sort the diffs by the patient id
 
-        int unchanged = (int) diffs.stream().filter(d -> d.changeType() == AssignmentChangeType.UNCHANGED).count();
-        int changed = diffs.size() - unchanged;
-        return new AssignmentPreview(
+        int unchanged = (int) diffs.stream().filter(d -> d.changeType() == AssignmentChangeType.UNCHANGED).count(); //stream the diffs and count the unchanged ones
+        int changed = diffs.size() - unchanged; // count the changed ones
+        return new AssignmentPreview(// return a preview with the results
                 diffs,
                 changed,
-                unchanged,
-                proposal != null ? proposal.baselineZ() : 0.0,
-                proposal != null ? proposal.proposedZ() : 0.0
+                unchanged,// count the unchanged ones
+                proposal != null ? proposal.baselineZ() : 0.0,// get the baseline energy
+                proposal != null ? proposal.proposedZ() : 0.0// get the proposed energy
         );
     }
 
+    // set the pending proposal for a department in the map
     @Override
     public void setPendingProposal(String departmentId, AssignmentProposal proposal) {
         if (departmentId == null) return;
         if (proposal == null) {
             pendingByDepartmentId.remove(departmentId);
-            return;
+            return;// if proposal is null, 
         }
-        pendingByDepartmentId.put(departmentId, proposal);
+        pendingByDepartmentId.put(departmentId, proposal);// esle put the proposal in the map
     }
 
+    // get the pending proposal for a department from the map
     @Override
     public AssignmentProposal getPendingProposal(String departmentId) {
         if (departmentId == null) return null;
         return pendingByDepartmentId.get(departmentId);
     }
-
+    //approve the pending proposal for a department and return the new current assignment state
     @Override
     public AssignmentState approvePendingProposal(String departmentId, AssignmentState currentState) {
         AssignmentProposal pending = getPendingProposal(departmentId);
         if (pending == null || !pending.feasible() || pending.proposedState() == null) {
             return currentState != null ? new AssignmentState(currentState) : new AssignmentState();
         }
-        pendingByDepartmentId.remove(departmentId);
-        return new AssignmentState(pending.proposedState());
+        pendingByDepartmentId.remove(departmentId);// remove the proposal from pending
+        return new AssignmentState(pending.proposedState());// return the new current assignment state
     }
 
+    // reject the pending proposal for a department and return the unchanged current assignment state
     @Override
     public AssignmentState rejectPendingProposal(String departmentId, AssignmentState currentState) {
         if (departmentId != null) {
-            pendingByDepartmentId.remove(departmentId);
+            pendingByDepartmentId.remove(departmentId); // remove the proposal from pending
         }
         return currentState != null ? new AssignmentState(currentState) : new AssignmentState();
     }
 
+    // admit a patient into the department waiting list
     @Override
     public void admitPatient(Department department, Patient patient) {
         if (department == null || patient == null || patient.getId() == null) return;
-        boolean exists = department.getWaitingList().stream()
+        boolean exists = department.getWaitingList().stream() // check if the patient is already in the waiting list
                 .anyMatch(p -> p != null && patient.getId().equals(p.getId()));
         if (!exists) {
-            patient.setStatus(PatientStatus.WAITING);
-            department.getWaitingList().add(patient);
+            patient.setStatus(PatientStatus.WAITING); // set the patient status to waiting
+            department.getWaitingList().add(patient); // add the patient to the waiting list
         }
     }
 
+    // discharge a patient from the department and return the assignment state after the discharge
     @Override
     public AssignmentState dischargePatient(Department department, String patientId, AssignmentState currentState) {
         AssignmentState next = currentState != null ? new AssignmentState(currentState) : new AssignmentState();
         if (patientId == null) return next;
 
-        next.unassign(patientId);
+        next.unassign(patientId); // unassign the patient from the bed if assigned
         if (department != null) {
-            for (Patient p : department.getWaitingList()) {
+            for (Patient p : department.getWaitingList()) { // check if the patient is in the waiting list
                 if (p != null && patientId.equals(p.getId())) {
-                    p.setStatus(PatientStatus.DISCHARGED);
+                    p.setStatus(PatientStatus.DISCHARGED); // set the patient status to discharged
                 }
             }
             department.getWaitingList().removeIf(p -> p != null && patientId.equals(p.getId()));
         }
         return next;
     }
-
+    // build a waiting list view for the department 
     @Override
     public List<Patient> buildWaitingQueueView(Department department) {
         if (department == null) return List.of();
@@ -228,15 +233,16 @@ public class DefaultAssignmentWorkflowService implements AssignmentWorkflowServi
                 queue.add(p);
             }
         }
-        queue.sort(WaitingListComparatorFactory.forGlobalQueue());
+        queue.sort(WaitingListComparatorFactory.forGlobalQueue()); // sort the waiting list by the comparator
         return queue;
     }
 
+    // classify the change type between two beds
     private static AssignmentChangeType classifyChange(String fromBedId, String toBedId) {
-        if (fromBedId == null && toBedId == null) return AssignmentChangeType.UNCHANGED;
-        if (fromBedId == null) return AssignmentChangeType.ASSIGNED;
-        if (toBedId == null) return AssignmentChangeType.UNASSIGNED;
-        if (fromBedId.equals(toBedId)) return AssignmentChangeType.UNCHANGED;
-        return AssignmentChangeType.MOVED;
+        if (fromBedId == null && toBedId == null) return AssignmentChangeType.UNCHANGED; //missing in both sates
+        if (fromBedId == null) return AssignmentChangeType.ASSIGNED;// not in baseline state but in proposed state
+        if (toBedId == null) return AssignmentChangeType.UNASSIGNED; // to = null and from = not null, so unassigned
+        if (fromBedId.equals(toBedId)) return AssignmentChangeType.UNCHANGED; // same bed in both states
+        return AssignmentChangeType.MOVED; // moved to a diffrent bed
     }
 }

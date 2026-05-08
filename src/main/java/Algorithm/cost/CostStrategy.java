@@ -6,11 +6,10 @@ import Model.entety.Patient;
 
 import java.util.Map;
 
-/**
- * One term of the objective (e.g. C_safety). Strategies sum their contribution for the full state.
- */
+// interface for all cost strategies
 public interface CostStrategy {
 
+    // computes the total cost for the given state
     double computeTotal(AssignmentState state, Department department,
                         Map<String, Patient> patientById, AssignmentState initialState);
 }

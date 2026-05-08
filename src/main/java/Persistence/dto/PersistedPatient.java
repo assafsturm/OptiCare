@@ -1,9 +1,9 @@
 package Persistence.dto;
 
-import Model.enums.PatientStatus;
-
 import java.time.Instant;
 
+import Model.enums.PatientStatus;
+// dto shaped for json 
 public final class PersistedPatient {
 
     private String id;

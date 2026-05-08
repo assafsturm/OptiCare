@@ -1,7 +1,7 @@
 package Persistence.dto;
 
 import Model.enums.BedType;
-
+// dto shaped for json 
 public final class PersistedBed {
 
     private String id;

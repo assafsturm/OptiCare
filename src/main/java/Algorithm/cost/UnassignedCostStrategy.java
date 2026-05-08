@@ -8,10 +8,8 @@ import Model.enums.PatientStatus;
 
 import java.util.Map;
 
-/**
- * C_unassigned = W_unassigned × count of waiting patients eligible for assignment but not in {@link AssignmentState}.
- * Excludes {@link Patient#isTemporarilyUnavailable()}.
- */
+// Cost strategy for the unassigned penalty (waiting patients eligible for assignment but not in the state) 
+// for algorithm to prefer assigning waiting patients over not assigning them
 public class UnassignedCostStrategy implements CostStrategy {
 
     private final AlgorithmConfig config;
@@ -25,6 +23,7 @@ public class UnassignedCostStrategy implements CostStrategy {
                                Map<String, Patient> patientById, AssignmentState initialState) {
         int waitingCount = countUnassignedEligibleWaiting(department, state);
         return config.getUnassignedPenaltyWeight() * waitingCount;
+        // O(w)
     }
 
     public static int countUnassignedEligibleWaiting(Department department, AssignmentState state) {

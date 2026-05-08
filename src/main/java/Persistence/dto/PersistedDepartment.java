@@ -3,11 +3,11 @@ package Persistence.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+// dto shaped for json 
 public final class PersistedDepartment {
 
     private String id;
     private String name;
-    /** Ordered waiting ids (deterministic restore of queue UX). */
     private List<String> waitingPatientIds = new ArrayList<>();
     private List<PersistedRoom> rooms = new ArrayList<>();
 

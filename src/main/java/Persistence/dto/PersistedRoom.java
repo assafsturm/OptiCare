@@ -3,6 +3,7 @@ package Persistence.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+// dto shaped for json 
 public final class PersistedRoom {
 
     private String id;

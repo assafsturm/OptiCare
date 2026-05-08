@@ -2,39 +2,44 @@ package Algorithm.risk;
 
 import Model.enums.RiskLevel;
 
-/**
- * 2D penalty matrix for cohorting: penalty for placing a patient with risk level X
- * in a room/cohort with effective risk level Y. Used in C_safety. Hard violations
- * (e.g. INFECTIOUS next to IMMUNO_COMPROMISED) get Big M so the solution is rejected.
- */
+
+// 2D penalty matrix for cohorting penalty for placing a patient with risk level X
+// in a room with effective risk level Y. see in C_safety. Hard violations
 public class RiskMatrix {
 
     private final double[][] matrix;
     private final double bigM;
 
-    public RiskMatrix(double bigM) {
+    public RiskMatrix(double bigM) { // bigM is the penalty for hard violations
         this.bigM = bigM;
         int n = RiskLevel.values().length;
         this.matrix = new double[n][n];
-        initDefaultPenalties();
+        initDefaultPenalties(); 
     }
 
-    private void initDefaultPenalties() {
+    private void initDefaultPenalties() { // initialize the default penalties for each risk level pair
         RiskLevel[] levels = RiskLevel.values();
         for (int i = 0; i < levels.length; i++) {
             for (int j = 0; j < levels.length; j++) {
                 matrix[i][j] = getDefaultPenalty(levels[i], levels[j]);
             }
         }
-    }
+    }// O(|RL|^2)
 
-    /**
-     * Default rules: forbidden pairs get Big M; otherwise soft penalties or 0.
-     * INFECTIOUS in same cohort as IMMUNO_COMPROMISED = forbidden.
-     * RESPIRATORY next to IMMUNO_COMPROMISED = forbidden (per RiskLevel JavaDoc).
-     */
+    
+    // default rules: forbidden pairs get Big M otherwise soft penalties or 0.
     private double getDefaultPenalty(RiskLevel patient, RiskLevel roomOrCohort) {
-        // UNKNOWN: conservative finite penalties only (not automatically hard-forbidden).
+        // unknown + unknown = 5000
+        // unknown + other = penaltyUnknownWith(known)
+        // infectious + immuno compromised = bigM
+        // immuno compromised + infectious = bigM
+        // respiratory + immuno compromised = bigM
+        // immuno compromised + respiratory = bigM
+        // infectious + clean = bigM
+        // clean + infectious = bigM
+        // respiratory + clean = 500
+        // clean + respiratory = 500
+        // all other pairs = 0
         if (patient == RiskLevel.UNKNOWN && roomOrCohort == RiskLevel.UNKNOWN) {
             return 5_000;
         }
@@ -51,33 +56,32 @@ public class RiskMatrix {
         if (patient == RiskLevel.RESPIRATORY && roomOrCohort == RiskLevel.CLEAN) return 500;
         if (patient == RiskLevel.CLEAN && roomOrCohort == RiskLevel.RESPIRATORY) return 500;
         return 0;
-    }
+    } // asymmetric hadeling
 
     private double penaltyUnknownWith(RiskLevel known) {
         return switch (known) {
-            case IMMUNO_COMPROMISED, INFECTIOUS -> 100_000;
-            case RESPIRATORY, CLEAN -> 30_000;
-            case UNKNOWN -> 5_000;
+            case IMMUNO_COMPROMISED, INFECTIOUS -> 100_000;// unknown + immuno compromised / infectious
+            case RESPIRATORY, CLEAN -> 30_000;// unkonwn + clean / respiratory 
+            case UNKNOWN -> 5_000; // unknown + unknown 
         };
     }
-
+    // ordinal is the index of the risk level in the enum (same as RiskLevel.values() same order)
     public double getPenalty(RiskLevel patient, RiskLevel roomOrCohort) {
         if (patient == null || roomOrCohort == null) return 0;
         return matrix[patient.ordinal()][roomOrCohort.ordinal()];
-    }
+    } // returns the corsed value if the matrix for risk levels
 
-    /** Override penalty for a specific (patient, room/cohort) pair. */
+    
+    // override the penalty for a specific risk level pair
     public void setPenalty(RiskLevel patient, RiskLevel roomOrCohort, double penalty) {
         if (patient == null || roomOrCohort == null) return;
         matrix[patient.ordinal()][roomOrCohort.ordinal()] = penalty;
     }
 
-    /**
-     * True when cohorting this pair is a hard violation (matrix uses {@link #bigM}).
-     * Soft penalties ({@code << bigM}) are not forbidden here.
-     */
+    //any near bigM penalty is considered hard
     public boolean isForbiddenCohortPair(RiskLevel a, RiskLevel b) {
         if (a == null || b == null) return false;
-        return getPenalty(a, b) >= bigM * 0.5;
+        return getPenalty(a, b) >= bigM * 0.5; // If only exact hard pairs then  (== bigM)
+        // but this is for making sure even coustom penalties are considered hard
     }
 }

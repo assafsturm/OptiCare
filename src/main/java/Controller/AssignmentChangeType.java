@@ -1,11 +1,10 @@
 package Controller;
 
-/**
- * Per-patient assignment transition between baseline and proposed states.
- */
+
+// enum for the type of assignment change , helps with the preview UI
 public enum AssignmentChangeType {
     ASSIGNED,
     MOVED,
-    UNASSIGNED,
+    UNASSIGNED, // currently cant be
     UNCHANGED
 }

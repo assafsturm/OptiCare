@@ -1,0 +1,57 @@
+/*Domain model first
+Start with Model.entety (Patient, ClinicalData, Bed, Room, Department, plus enums).
+If you don’t fully own these objects, algorithm/persistence logic will stay fuzzy.
+
+State container
+Learn Algorithm.AssignmentState next.
+This is the “truth table” of who is in which bed; almost every layer depends on it.
+
+Hard constraints before optimization
+Read Algorithm.feasibility.HardConstraints and FeasibilityChecker.
+This defines legal vs illegal placements (clinical fit, cohorting, ventilator, negative pressure, etc.).
+
+Cost function stack
+Then read:
+
+Algorithm.CostCalculator
+Algorithm.cost.* (Safety, Policy, Transfer, Unassigned, Clinical)
+This explains what “better assignment” mathematically means.
+Search mechanics
+Then:
+
+Algorithm.greedy.GreedyWarmStart
+Algorithm.neighborhood.*
+Algorithm.sa.SimulatedAnnealingEngine
+This gives you “how candidate states are generated and accepted.”
+Controller orchestration
+Controller.DefaultAssignmentWorkflowService
+This is the pipeline: feasibility -> greedy -> SA -> proposal/preview -> approve/reject/admit/discharge.
+
+Persistence pipeline
+Read in this order:
+
+Persistence.dto.* + WardStateDocument
+WardStateMapper
+JsonFileWardStateRepository
+AtomicJsonFiles, PersistenceJson, PersistencePaths
+This explains in-memory graph <-> JSON snapshot <-> disk.
+UI shell last
+View.OptiCareApp + WardDialogs + OptiCareViewFactory
+This is easier once you already know model/controller/persistence*/
+//package Model
+    /package entety
+        bed.java
+        ClinicalData.java
+        Department.java
+        patient.java
+        personalDitels.java
+        room.java
+    /Enum
+        bedType.java
+        Gender.java
+        patientStatus.java
+        riskLevel.java
+    /policy
+        paitentriskpolicy.java
+
+//package Algorithm

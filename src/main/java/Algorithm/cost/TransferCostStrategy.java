@@ -10,13 +10,14 @@ import Model.entety.Patient;
 import java.util.Map;
 import java.util.Objects;
 
-/** C_transfer: baseline-relative move penalty. */
+
+// Cost strategy for the transfer penalty baseline relative move penalty
 public class TransferCostStrategy implements CostStrategy {
 
     private final AlgorithmConfig config;
     private final RoomTopologyGraph topologyGraph;
 
-    public TransferCostStrategy(AlgorithmConfig config) {
+    public TransferCostStrategy(AlgorithmConfig config) { // when graph is not provided (the current sate of project)
         this(config, null);
     }
 
@@ -34,6 +35,7 @@ public class TransferCostStrategy implements CostStrategy {
             z += computeForPatient(e.getKey(), e.getValue(), state, initialState);
         }
         return z;
+        // O(A)
     }
 
     public double computeForPatient(String patientId, Bed currentBed, AssignmentState state, AssignmentState initialState) {
@@ -42,13 +44,14 @@ public class TransferCostStrategy implements CostStrategy {
         if (initialBed == null) return 0;
         if (Objects.equals(initialBed.getId(), currentBed != null ? currentBed.getId() : null)) return 0;
         if (currentBed == null) return config.getTransferPenaltyWeight();
-        if (topologyGraph == null) return config.getTransferPenaltyWeight();
-
+        if (topologyGraph == null) return config.getTransferPenaltyWeight(); // if everytihnig is in order return the transfer penalty weight
+    // NOT IMPLEMENTED 
         double shortestPath = topologyGraph.getShortestPathDistance(initialBed.getRoomId(), currentBed.getRoomId());
         if (!Double.isFinite(shortestPath)) {
             return config.getTransferPenaltyWeight() * config.getTransferNoPathMultiplier();
         }
         double multiplier = 1.0 + config.getTransferDistanceScale() * Math.max(0.0, shortestPath);
         return config.getTransferPenaltyWeight() * multiplier;
+    // NOT IMPLEMENTED 
     }
 }

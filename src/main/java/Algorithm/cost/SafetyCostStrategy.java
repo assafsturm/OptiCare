@@ -13,7 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/** C_safety: cohorting penalties within the same room. */
+
+// Cost strategy for the safety penalty (cohorting penalties within the same room)
 public class SafetyCostStrategy implements CostStrategy {
 
     private final RiskMatrix riskMatrix;
@@ -34,6 +35,7 @@ public class SafetyCostStrategy implements CostStrategy {
             z += computeForPatient(patient, room, state, patientById, patientId, bed);
         }
         return z;
+        // O(A * R + A * B_r)
     }
 
     public double computeForPatient(Patient patient, Room room, AssignmentState state,
@@ -46,7 +48,8 @@ public class SafetyCostStrategy implements CostStrategy {
             cost += riskMatrix.getPenalty(patientRisk, otherRisk);
         }
         return cost;
-    }
+    } // per patient cohorting 
+    // O(B_r)
 
     private static List<Patient> getOtherPatientsInRoom(AssignmentState state, Room room, String excludePatientId,
                                                         Bed excludeBed, Map<String, Patient> patientById) {
@@ -63,6 +66,6 @@ public class SafetyCostStrategy implements CostStrategy {
                 }
             }
         }
-        return others;
+        return others; // all other patients in the room except the one to exclude
     }
 }

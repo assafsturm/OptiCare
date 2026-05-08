@@ -1,9 +1,10 @@
 package Persistence.dto;
 
-import Model.enums.Gender;
-
 import java.time.LocalDate;
 
+import Model.enums.Gender;
+
+// dto shaped for json 
 public final class PersistedPersonalDetails {
 
     private String firstName;
