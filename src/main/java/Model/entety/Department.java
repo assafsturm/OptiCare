@@ -6,8 +6,8 @@ import java.util.List;
 public class Department {
     private String id;
     private String name;
-    private List<Room> rooms = new ArrayList<>();
-    private List<Patient> waitingList = new ArrayList<>();
+    private List<Room> rooms = new ArrayList<>(); // list of all rooms in the department
+    private List<Patient> waitingList = new ArrayList<>(); // list of all patients in the waiting list
 
     public Department() {
     }
@@ -25,18 +25,18 @@ public class Department {
             allBeds.addAll(room.getBeds());
         }
         return allBeds;
-    }
+    } // returns all beds in the department
 
-    /** Returns the room with the given id, or null if not found. */
+    // returns the room with the given id or null if not found
     public Room findRoomById(String roomId) {
         if (roomId == null) return null;
         for (Room r : rooms) {
             if (roomId.equals(r.getId())) return r;
         }
         return null;
-    }
+    } // O(|R|)
 
-    /** Returns the bed with the given id in this department, or null if not found. */
+    // returns the bed with the given id in this department or null if not found
     public Bed findBedById(String bedId) {
         if (bedId == null) return null;
         for (Room r : rooms) {
@@ -45,16 +45,17 @@ public class Department {
             }
         }
         return null;
-    }
+    } // O(|R|*|B|)
 
     public int getTotalCapacity() {
         return rooms.stream().mapToInt(Room::getCapacity).sum();
-    }
+    } // return the total capacity of the department 
 
     public void addRoom(Room room) {
         this.rooms.add(room);
     }
 
+// getters and setters for the department
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 

@@ -1,7 +1,11 @@
 package Algorithm.feasibility;
 
-import Algorithm.AssignmentState;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import Algorithm.AlgorithmTrace;
+import Algorithm.AssignmentState;
 import Algorithm.risk.RiskMatrixFactory;
 import Config.AlgorithmConfig;
 import Model.entety.Bed;
@@ -9,16 +13,8 @@ import Model.entety.Department;
 import Model.entety.Patient;
 import Model.enums.PatientStatus;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-/**
- * Pre-flight checks before optimization: enough beds for everyone who needs one,
- * and current baseline assignments must satisfy hard constraints.
- * Per-waiting-patient direct-bed checks are intentionally omitted so SA can resolve
- * placements via assign/move/swap.
- */
+// pre run checks before any optimization is run
+// checks if the current state is feasible and if there are enough beds legal for all patients
 public class FeasibilityChecker {
 
     private final AlgorithmConfig config;
@@ -27,10 +23,7 @@ public class FeasibilityChecker {
         this.config = config;
     }
 
-    /**
-     * Feasibility for assigning all {@link PatientStatus#WAITING} patients on the waiting list
-     * (excluding {@link Patient#isTemporarilyUnavailable()}) plus any already in {@code currentState}.
-     */
+//Feasibility for assigning all waiting patients on the waiting list (excluding temporarily unavailable) plus any already in currentState
     public FeasibilityResult check(Department department, Map<String, Patient> patientById, AssignmentState currentState) {
         if (department == null) {
             return new FeasibilityResult(false, List.of("Department is null"));
@@ -40,7 +33,7 @@ public class FeasibilityChecker {
         List<String> violations = new ArrayList<>();
         List<Bed> allBeds = department.getAllBeds();
         List<Patient> eligibleWaiting = new ArrayList<>();
-        for (Patient p : department.getWaitingList()) {
+        for (Patient p : department.getWaitingList()) { // Build eligibleWaiting List (waiting and not temporarily unavailable and not currently assigned to a bed)
             if (p != null && p.getStatus() == PatientStatus.WAITING && !p.isTemporarilyUnavailable()
                     && (currentState == null || currentState.getBed(p.getId()) == null)) {
                 eligibleWaiting.add(p);
@@ -53,11 +46,11 @@ public class FeasibilityChecker {
                 + (currentState != null ? currentState.size() : 0)
                 + ", eligibleWaiting=" + eligibleWaiting.size()
                 + ", totalBeds=" + totalBeds);
-        if (totalNeedingBeds > totalBeds) {
+        if (totalNeedingBeds > totalBeds) { // if there are more patients than beds, return false
             violations.add("Not enough beds: " + totalNeedingBeds + " patients, " + totalBeds + " beds");
         }
 
-        if (currentState != null) {
+        if (currentState != null) { // check if the current state is feasible
             for (Map.Entry<String, Bed> e : currentState.getAssignments().entrySet()) {
                 String pid = e.getKey();
                 Bed bed = e.getValue();

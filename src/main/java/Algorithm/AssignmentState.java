@@ -1,21 +1,26 @@
 package Algorithm;
 
-import Model.entety.Bed;
-import Model.entety.Patient;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import Model.entety.Bed;
+import Model.entety.Patient;
+
 /**
  * Snapshot of patient-to-bed assignment. Used by the optimizer as a candidate solution.
  * Supports deep copy so SA can mutate a copy without affecting the best state.
+ * 
+ * represents the assignment of patients to beds in a r
  */
 public class AssignmentState {
 
-    /** patientId -> Bed. Current assignment of each assigned patient. */
-    private final Map<String, Bed> patientToBed;
-    /** bedId -> patientId. Reverse map for quick lookup of who is in a bed. */
-    private final Map<String, String> bedToPatient;
+    // patientId -> Bed Current assignment of each assigned patient
+    private final Map<String, Bed> patientToBed;  //  string to bed to avoid calling findbedbyid (for needing Bed)
+    //Reverse map for quick lookup of who is in a bed
+    private final Map<String, String> bedToPatient;   // string to string mostly enghuth for knowing who occupies the bed
+
+    // set up for reverse lookup in O(1) time see files HardConstraints SafetyCostStrategy
 
     public AssignmentState() {
         this.patientToBed = new HashMap<>();
@@ -31,7 +36,7 @@ public class AssignmentState {
         this.bedToPatient = new HashMap<>(other.bedToPatient);
     }
 
-    /** Returns an unmodifiable view of patientId -> Bed. */
+    // Returns an unmodifiable view of patientId -> Bed
     public Map<String, Bed> getAssignments() {
         return Collections.unmodifiableMap(patientToBed);
     }
@@ -51,14 +56,14 @@ public class AssignmentState {
 
     /**
      * Assigns patient to bed. If the bed is already occupied, the current occupant is unassigned first.
-     * Rejects null patient, null bed, or null ids (no-op).
+     * Rejects null patient, null bed, or null ids
      */
     public void assign(Patient patient, Bed bed) {
         if (patient == null || bed == null) return;
         String pid = patient.getId();
         String bid = bed.getId();
         if (pid == null || bid == null) return;
-        // If bed is already occupied by another patient, unassign them first (one patient per bed).
+        // If bed is already occupied by another patient, unassign them first 
         String currentInBed = bedToPatient.get(bid);
         if (currentInBed != null && !currentInBed.equals(pid)) {
             patientToBed.remove(currentInBed);
@@ -82,7 +87,7 @@ public class AssignmentState {
         if (bed != null) bedToPatient.remove(bed.getId());
     }
 
-    /** Returns true if the bed is assigned to some patient in this state. */
+    // returns true if the bed is assigned to some patient in this state
     public boolean isBedOccupied(Bed bed) {
         return bed != null && bedToPatient.containsKey(bed.getId());
     }

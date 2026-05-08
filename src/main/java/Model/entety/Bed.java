@@ -1,13 +1,14 @@
 package Model.entety;
 
-import Model.enums.BedType;
-import java.util.Objects;
+import java.util.Objects; // enum for bed type
+
+import Model.enums.BedType; // for equals and hashCode
 
 public class Bed {
-    private String id;
+    private String id; 
     private String roomId;
     private BedType type;
-    private boolean hasVentilator;
+    private boolean hasVentilator; 
     private boolean isBroken;
 
     public Bed() {
@@ -15,18 +16,18 @@ public class Bed {
 
     public Bed(String id, String roomId, BedType type, boolean hasVentilator) {
         this(id, roomId, type, hasVentilator, false);
-    }
+    } // constructor for bed when it's not broken by default
 
-    public Bed(String id, String roomId, BedType type, boolean hasVentilator, boolean isBroken) {
+    public Bed(String id, String roomId, BedType type, boolean hasVentilator, boolean isBroken) { 
         this.id = id;
         this.roomId = roomId;
         this.type = type;
         this.hasVentilator = hasVentilator;
         this.isBroken = isBroken;
-    }
+    } // constructor for bed when isBroken is provided
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object obj) { // override equals method to compare beds by id and not by reference
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Bed other = (Bed) obj;
@@ -34,9 +35,11 @@ public class Bed {
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode() { // override hashCode method to return the hash of the id
         return Objects.hash(id);
     }
+
+// getters and setters for the bed
 
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
@@ -53,3 +56,5 @@ public class Bed {
     public boolean isBroken() { return isBroken; }
     public void setBroken(boolean broken) { isBroken = broken; }
 }
+
+

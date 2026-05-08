@@ -1,4 +1,4 @@
-﻿package View;
+package View;
 
 import Algorithm.AssignmentState;
 import Algorithm.feasibility.HardConstraints;
@@ -207,7 +207,7 @@ public class OptiCareApp extends Application {
 
     private void onLoginClicked() {
         try {
-            Optional<LoginResult> res = Stage7Dialogs.showLoginDialog(primaryStage, usersRepository);
+            Optional<LoginResult> res = WardDialogs.showLoginDialog(primaryStage, usersRepository);
             if (res.isPresent()) {
                 currentRole = res.get().role();
                 loggedInUsername = res.get().username();
@@ -296,11 +296,11 @@ public class OptiCareApp extends Application {
         if (!RolePermissions.mayAdmitOrDischarge(currentRole)) {
             return;
         }
-        Optional<Stage7Dialogs.AdmitPatientInput> input = Stage7Dialogs.showAdmitPatientDialog(primaryStage, departments);
+        Optional<WardDialogs.AdmitPatientInput> input = WardDialogs.showAdmitPatientDialog(primaryStage, departments);
         if (input.isEmpty()) {
             return;
         }
-        Stage7Dialogs.AdmitPatientInput x = input.get();
+        WardDialogs.AdmitPatientInput x = input.get();
         Map<String, Patient> reg = patientByDepartmentId.computeIfAbsent(x.department().getId(), k -> new HashMap<>());
         if (reg.containsKey(x.patientId())) {
             warningsArea.setText("Patient id already exists in this department: " + x.patientId());
@@ -315,7 +315,7 @@ public class OptiCareApp extends Application {
         warningsArea.setText("Admitted patient " + p.getId() + " to waiting list.");
     }
 
-    private static Patient buildPatientFromAdmit(Stage7Dialogs.AdmitPatientInput x) {
+    private static Patient buildPatientFromAdmit(WardDialogs.AdmitPatientInput x) {
         PersonalDetails pd = null;
         if (x.firstName() != null || x.lastName() != null || x.dateOfBirth() != null || x.gender() != null) {
             String fn = x.firstName() == null ? "" : x.firstName();
@@ -372,7 +372,7 @@ public class OptiCareApp extends Application {
         if (!RolePermissions.mayEditWardStructure(currentRole)) {
             return;
         }
-        Optional<Stage7Dialogs.AddDepartmentInput> in = Stage7Dialogs.showAddDepartmentDialog(primaryStage);
+        Optional<WardDialogs.AddDepartmentInput> in = WardDialogs.showAddDepartmentDialog(primaryStage);
         if (in.isEmpty()) {
             return;
         }
@@ -395,11 +395,11 @@ public class OptiCareApp extends Application {
         if (!RolePermissions.mayEditWardStructure(currentRole)) {
             return;
         }
-        Optional<Stage7Dialogs.AddRoomInput> in = Stage7Dialogs.showAddRoomDialog(primaryStage, departments);
+        Optional<WardDialogs.AddRoomInput> in = WardDialogs.showAddRoomDialog(primaryStage, departments);
         if (in.isEmpty()) {
             return;
         }
-        Stage7Dialogs.AddRoomInput x = in.get();
+        WardDialogs.AddRoomInput x = in.get();
         if (x.department().getRooms().stream().anyMatch(r -> x.roomId().equals(r.getId()))) {
             warningsArea.setText("Room id already exists in department: " + x.roomId());
             return;
@@ -417,11 +417,11 @@ public class OptiCareApp extends Application {
         if (!RolePermissions.mayEditWardStructure(currentRole)) {
             return;
         }
-        Optional<Stage7Dialogs.AddBedInput> in = Stage7Dialogs.showAddBedDialog(primaryStage, departments);
+        Optional<WardDialogs.AddBedInput> in = WardDialogs.showAddBedDialog(primaryStage, departments);
         if (in.isEmpty()) {
             return;
         }
-        Stage7Dialogs.AddBedInput x = in.get();
+        WardDialogs.AddBedInput x = in.get();
         if (x.department().getAllBeds().stream().anyMatch(b -> x.bedId().equals(b.getId()))) {
             warningsArea.setText("Bed id already exists in department: " + x.bedId());
             return;
@@ -456,11 +456,11 @@ public class OptiCareApp extends Application {
         if (!RolePermissions.mayManageUsers(currentRole)) {
             return;
         }
-        Optional<Stage7Dialogs.AddUserInput> in = Stage7Dialogs.showAddUserDialog(primaryStage);
+        Optional<WardDialogs.AddUserInput> in = WardDialogs.showAddUserDialog(primaryStage);
         if (in.isEmpty()) {
             return;
         }
-        Stage7Dialogs.AddUserInput x = in.get();
+        WardDialogs.AddUserInput x = in.get();
         try {
             usersRepository.addUser(new AppUser(x.username(), x.password(), x.role()));
             warningsArea.setText("Saved user " + x.username() + " (" + x.role() + ").");

@@ -1,10 +1,10 @@
 package Model.enums;
 
-// מתאר את סוג המיטה, חשוב להמשך פונקצית העלויות
+// describes the type of bed 
 
 
 public enum BedType {
-    REGULAR,    // מיטה רגילה
-    ICU,        // מיטת טיפול נמרץ (יקרה ונדירה)
-    BARIATRIC   // מיטה מחוזקת (לחולים כבדי משקל)
+    REGULAR,
+    ICU, // intensive care unit)
+    BARIATRIC // (for patients with weight above 120 kg) (FAT PEOPLE)
 }

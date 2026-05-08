@@ -1,9 +1,9 @@
-﻿package Model.entety;
+package Model.entety;
 
-import exception.CapacityExceededException;
+import java.util.ArrayList; // for the capacity exceeded exception
+import java.util.List; // for the list of beds
 
-import java.util.ArrayList;
-import java.util.List;
+import exception.CapacityExceededException; 
 
 public class Room {
     private String id;
@@ -11,7 +11,7 @@ public class Room {
     private int capacity;
     private List<Bed> beds = new ArrayList<>();
     private double distanceFromNurseStation;
-    private boolean hasNegativePressure;
+    private boolean hasNegativePressure; // used to chohort patients with infectious risk level
 
     public Room() {
     }
@@ -48,7 +48,7 @@ public class Room {
     public void setCapacity(int capacity) { this.capacity = capacity; }
 
     public List<Bed> getBeds() { return beds; }
-    /** Sets the bed list; if size exceeds capacity, throws IllegalArgumentException. */
+    // sets the bed list if the size exceeds the capacity throws an exception
     public void setBeds(List<Bed> beds) {
         List<Bed> newBeds = beds != null ? beds : new ArrayList<>();
         if (newBeds.size() > capacity) {

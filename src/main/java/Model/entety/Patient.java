@@ -1,18 +1,18 @@
 package Model.entety;
 
-import Model.enums.PatientStatus;
-
 import java.time.Instant;
-import java.util.Objects;
+import java.util.Objects; // for the admission time
+
+import Model.enums.PatientStatus; // for equals and hashCode
 
 public class Patient {
     private String id;
     private PersonalDetails personalDetails;
     private ClinicalData clinicalData;
     private PatientStatus status = PatientStatus.WAITING;
-    /** Admission time for deterministic waiting-list ordering; null sorts last in tie-breaks. */
+    // admission time for waiting list ordering null sorts last in tie breaks (see watinglistcomparatorfactory)
     private Instant admittedAt;
-    /** When true, patient is excluded from Assign / Move / Swap (persisted). */
+    // When true patient is excluded from Assign/Move/Swap
     private boolean temporarilyUnavailable;
 
     public Patient() {
@@ -22,7 +22,7 @@ public class Patient {
         this.id = id;
         this.personalDetails = personalDetails;
         this.clinicalData = clinicalData;
-    }
+    } // constructor for patient when admission time and temporarily unavailable are not provided
 
     public Patient(String id, PersonalDetails personalDetails, ClinicalData clinicalData,
                    Instant admittedAt, boolean temporarilyUnavailable) {
@@ -31,8 +31,7 @@ public class Patient {
         this.clinicalData = clinicalData;
         this.admittedAt = admittedAt;
         this.temporarilyUnavailable = temporarilyUnavailable;
-    }
-
+    } 
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -42,10 +41,10 @@ public class Patient {
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode() {// hash by id
         return Objects.hash(id);
     }
-
+// getters and setters for the patient
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 

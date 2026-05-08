@@ -1,15 +1,15 @@
 package Model.entety;
 
-import Model.enums.Gender;
-
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.OptionalInt;
 
-public class PersonalDetails {
+import Model.enums.Gender;
+
+public class PersonalDetails { 
     private String firstName;
     private String lastName;
-    /** Calendar date of birth; null when unknown (see {@link #ageYearsAt(LocalDate)}). */
+    // Calendar date of birth
     private LocalDate dateOfBirth;
     private Gender gender;
 
@@ -32,10 +32,8 @@ public class PersonalDetails {
     public LocalDate getDateOfBirth() { return dateOfBirth; }
     public void setDateOfBirth(LocalDate dateOfBirth) { this.dateOfBirth = dateOfBirth; }
 
-    /**
-     * Completed years between date of birth and {@code asOfDate} (exclusive of birthdays that fall after {@code asOfDate}).
-     * Empty when DOB is unknown or falls strictly after {@code asOfDate}.
-     */
+    // returns the age of the person at the given date
+    // OptionalInt is used to return the age or empty if the date of birth is unknown or falls strictly after the given date
     public OptionalInt ageYearsAt(LocalDate asOfDate) {
         if (dateOfBirth == null || asOfDate == null) {
             return OptionalInt.empty();

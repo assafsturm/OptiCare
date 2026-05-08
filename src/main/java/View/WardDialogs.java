@@ -1,5 +1,12 @@
 package View;
 
+import java.io.IOException;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+import java.util.List;
+import java.util.Optional;
+
 import Auth.JsonFileUsersRepository;
 import Auth.LoginResult;
 import Auth.Role;
@@ -26,19 +33,12 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Window;
 
-import java.io.IOException;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
-import java.util.List;
-import java.util.Optional;
-
 /**
  * Minimal modal dialogs for Stage 7 (login, admit, ward structure, users).
  */
-public final class Stage7Dialogs {
+public final class WardDialogs {
 
-    private Stage7Dialogs() {
+    private WardDialogs() {
     }
 
     public record AdmitPatientInput(
@@ -88,7 +88,7 @@ public final class Stage7Dialogs {
         dialog.initOwner(owner);
         dialog.initModality(Modality.WINDOW_MODAL);
         dialog.setTitle("Log in");
-        dialog.setHeaderText("Minimal demo auth (plaintext in users.json)");
+        dialog.setHeaderText("log in");
 
         ButtonType loginButtonType = new ButtonType("Log in", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
@@ -156,7 +156,7 @@ public final class Stage7Dialogs {
         riskBox.getSelectionModel().select(RiskLevel.UNKNOWN);
         TextField severity = new TextField("0");
         TextField admittedAt = new TextField();
-        admittedAt.setPromptText("ISO instant (empty = now)");
+        admittedAt.setPromptText("instant (empty = now)");
         CheckBox vent = new CheckBox("Needs ventilator");
         ComboBox<BedType> bedTypeBox = new ComboBox<>(FXCollections.observableArrayList(BedType.values()));
         bedTypeBox.getSelectionModel().select(BedType.REGULAR);

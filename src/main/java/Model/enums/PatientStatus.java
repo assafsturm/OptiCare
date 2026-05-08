@@ -5,12 +5,12 @@ package Model.enums;
  * WAITING → ASSIGNED → DISCHARGED.
  */
 public enum PatientStatus {
-    /** On waiting list, not yet assigned to a bed. */
+    // on waiting list, not yet assigned to a bed.
     WAITING,
 
-    /** Currently assigned to a bed. */
+    // currently assigned to a bed.
     ASSIGNED,
 
-    /** Released; removed from assignment and bed freed. */
+    // Released removed from assignment and bed freed.
     DISCHARGED
 }
