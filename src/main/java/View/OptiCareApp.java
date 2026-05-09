@@ -28,22 +28,22 @@ import Persistence.PersistencePaths;
 import Persistence.WardStateMapper;
 import Persistence.WardStateRepository;
 import Persistence.dto.WardStateDocument;
-import javafx.application.Application;
-import javafx.concurrent.Task;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
-import javafx.scene.chart.XYChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.Tooltip;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
+import javafx.application.Application; // to use the javafx application framework
+import javafx.concurrent.Task;// to run heavy work on a background thread so the javafx ui will not freeze
+import javafx.geometry.Insets;// to set the padding of the ui elements
+import javafx.scene.Scene;// to create the scene
+import javafx.scene.chart.XYChart;// the charts 
+import javafx.scene.control.Button;// the buttons
+import javafx.scene.control.Label;// labels
+import javafx.scene.control.ListCell; // for listview to show the correct text
+import javafx.scene.control.ListView; // view for lists of items
+import javafx.scene.control.SelectionMode; // to select multiple items or single item
+import javafx.scene.control.TextArea; // text area for text input
+import javafx.scene.control.Tooltip; // tooltips for hover
+import javafx.scene.layout.BorderPane; // layout for the border pane
+import javafx.scene.layout.HBox; // layout for the horizontal box
+import javafx.scene.layout.VBox; // layout for the vertical box
+import javafx.stage.Stage; // to create the stage
 
 import java.io.IOException;
 import java.time.Instant;
@@ -56,9 +56,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-/**
- * Stage 7 JavaFX shell: ward drill-down, minimal roles (guest/nurse/admin), JSON persistence.
- */
+
+// main application class, extends Application to use the javafx application framework
 public class OptiCareApp extends Application {
 
     public static void main(String[] args) {
@@ -117,62 +116,65 @@ public class OptiCareApp extends Application {
     private final XYChart.Series<Number, Number> bestZSeries = new XYChart.Series<>();
     private final XYChart.Series<Number, Number> currentZSeries = new XYChart.Series<>();
 
-    private int optimizeRunIndex = 0;
+    private int optimizeRunIndex = 0;// index for the optimization run
 
+    // startup -> load data -> layout -> buldings -> refresh -> show
     @Override
     public void start(Stage stage) {
-        this.primaryStage = stage;
-        usersRepository = new JsonFileUsersRepository(PersistencePaths.defaultUsersJsonPath());
+        this.primaryStage = stage; // main window
+        usersRepository = new JsonFileUsersRepository(PersistencePaths.defaultUsersJsonPath());// create the users repository
         try {
-            usersRepository.loadOrInitialize();
+            usersRepository.loadOrInitialize();// load or initialize the users file
         } catch (IOException e) {
-            bootstrapWarning = "Could not initialize users file: " + e.getMessage();
+            bootstrapWarning = "Could not initialize users file: " + e.getMessage();// 
         }
 
-        loadOrSeedInitialState();
-        configureListCellFactories();
-        BorderPane root = new BorderPane();
-        root.setTop(buildTopSection());
+        loadOrSeedInitialState();// load or seed the initial state - load json -> hydrate -> applyHydration or seed demo data
+        configureListCellFactories();// make sure viewList dosnet do T.toString()
+        BorderPane root = new BorderPane();// create the root pane and plance sections in the correct order
+        root.setTop(buildTopSection());// build method returns a subtree of controls (buttons, lists, charts)
         root.setLeft(buildDepartmentWardAndRoomPanel());
         root.setCenter(buildBedPanel());
         root.setRight(buildInsightsPanel());
         root.setBottom(buildBottomSection());
-        BorderPane.setMargin(root.getLeft(), new Insets(8));
+        BorderPane.setMargin(root.getLeft(), new Insets(8));// set the padding (spaces in bettwin sections)
         BorderPane.setMargin(root.getCenter(), new Insets(8));
         BorderPane.setMargin(root.getRight(), new Insets(8));
         BorderPane.setMargin(root.getBottom(), new Insets(8));
 
-        configureListBindings();
-        refreshKpis();
-        refreshDepartmentOverview();
-        applyRoleUi();
+        configureListBindings();// for updates in view based on user actions
+        refreshKpis();// refresh the KPIs
+        refreshDepartmentOverview(); // refresh the department overview
+        // refreshes in starte objects in memeory not ui. (acts liek a initialzion not refresh) (jsut here like that refresh normally after objects are being changed in memoey and need to be updatted in ui)
+        applyRoleUi();// apply role base disabled buttons
 
         if (bootstrapWarning != null && !bootstrapWarning.isBlank()) {
-            warningsArea.setText(bootstrapWarning);
+            warningsArea.setText(bootstrapWarning);// set the warning setup if needed
         }
-
-        Scene scene = new Scene(root, 1300, 760);
-        stage.setTitle("OptiCare - Stage 7 UI");
+        // root for dynamic streching
+        Scene scene = new Scene(root, 1300, 760);// create the scene (the stuff on the inside of the window)
+        stage.setTitle("OptiCare");
         stage.setScene(scene);
         stage.show();
     }
 
-    private VBox buildTopSection() {
-        VBox top = new VBox(8);
-        top.getChildren().add(OptiCareViewFactory.buildKpiBar(occupancyLabel, waitingLabel, unassignedLabel, currentZLabel, bestZLabel));
-        roleLabel = new Label("Role: Guest (view only)");
+    private VBox buildTopSection() {// build the kpi and authentication section (the top)
+        VBox top = new VBox(8); // create vertical box
+        top.getChildren().add(OptiCareViewFactory.buildKpiBar(occupancyLabel, waitingLabel, unassignedLabel, currentZLabel, bestZLabel)); //build and add the kpi bar
+        roleLabel = new Label("Role: Guest");
         loginButton = new Button("Log in");
         logoutButton = new Button("Log out");
-        logoutButton.setDisable(true);
+        logoutButton.setDisable(true);// cant log out if not logged in
         loginButton.setOnAction(e -> onLoginClicked());
         logoutButton.setOnAction(e -> onLogoutClicked());
-        HBox auth = new HBox(12, roleLabel, loginButton, logoutButton);
-        auth.setPadding(new Insets(0, 10, 0, 10));
-        top.getChildren().add(auth);
+        HBox auth = new HBox(12, roleLabel, loginButton, logoutButton);// creat horizontal box for the authentication section
+        auth.setPadding(new Insets(0, 10, 0, 10));// padding
+        top.getChildren().add(auth);// add authentication
         return top;
     }
 
-    private VBox buildBottomSection() {
+    private VBox buildBottomSection() {// build the actions section (the bottom)
+        // create the buttons
         findAssignmentButton = new Button("Find Assignment");
         cancelButton = new Button("Cancel");
         approveButton = new Button("Approve");
@@ -184,59 +186,60 @@ public class OptiCareApp extends Application {
         addRoomButton = new Button("Add room");
         addBedButton = new Button("Add bed");
         addUserButton = new Button("Add user");
-
-        findAssignmentButton.setOnAction(e -> runOptimizationAsync());
-        cancelButton.setOnAction(e -> cancelOptimization());
-        approveButton.setOnAction(e -> onApproveClicked());
-        rejectButton.setOnAction(e -> onRejectClicked());
-        manualOverrideButton.setOnAction(e -> applyManualOverride());
-        admitPatientButton.setOnAction(e -> onAdmitPatientClicked());
-        dischargePatientButton.setOnAction(e -> onDischargePatientClicked());
-        addDepartmentButton.setOnAction(e -> onAddDepartmentClicked());
-        addRoomButton.setOnAction(e -> onAddRoomClicked());
-        addBedButton.setOnAction(e -> onAddBedClicked());
-        addUserButton.setOnAction(e -> onAddUserClicked());
-
+        // set actions for the buttons
+        findAssignmentButton.setOnAction(e -> runOptimizationAsync());// start optimization
+        cancelButton.setOnAction(e -> cancelOptimization());// cancel optimization
+        approveButton.setOnAction(e -> onApproveClicked());// approve proposal
+        rejectButton.setOnAction(e -> onRejectClicked());// reject proposal
+        manualOverrideButton.setOnAction(e -> applyManualOverride());// manual override
+        admitPatientButton.setOnAction(e -> onAdmitPatientClicked());// admit patient
+        dischargePatientButton.setOnAction(e -> onDischargePatientClicked());// discharge patient
+        addDepartmentButton.setOnAction(e -> onAddDepartmentClicked());// add department
+        addRoomButton.setOnAction(e -> onAddRoomClicked());// add room
+        addBedButton.setOnAction(e -> onAddBedClicked());// add bed
+        addUserButton.setOnAction(e -> onAddUserClicked());// add user
+        // build horizontal boxes for the buttons
         HBox workflow = OptiCareViewFactory.buildActionsPanel(
                 findAssignmentButton, cancelButton, approveButton, rejectButton, manualOverrideButton);
         HBox nurseRow = new HBox(10, admitPatientButton, dischargePatientButton);
         HBox adminRow = new HBox(10, addDepartmentButton, addRoomButton, addBedButton, addUserButton);
-        VBox box = new VBox(10, workflow, nurseRow, adminRow);
+        VBox box = new VBox(10, workflow, nurseRow, adminRow);// creats  a grid like layout with the buttons
         return box;
     }
 
-    private void onLoginClicked() {
+    private void onLoginClicked() {// login button action, maneges after someone presses Log in
         try {
-            Optional<LoginResult> res = WardDialogs.showLoginDialog(primaryStage, usersRepository);
+            Optional<LoginResult> res = WardDialogs.showLoginDialog(primaryStage, usersRepository);// show the login dialog + handles authentication
             if (res.isPresent()) {
                 currentRole = res.get().role();
                 loggedInUsername = res.get().username();
-                updateRoleLabel();
-                applyRoleUi();
+                updateRoleLabel();// update the role label
+                applyRoleUi();// apply the role ui (enable baesed on the role)
                 warningsArea.setText("Logged in as " + loggedInUsername + " (" + currentRole + ").");
             }
         } catch (Exception ex) {
             warningsArea.setText("Login error: " + ex.getMessage());
         }
     }
-
+    // logout button action 
     private void onLogoutClicked() {
-        currentRole = Role.GUEST;
+        currentRole = Role.GUEST;// set the role to guest
         loggedInUsername = null;
-        updateRoleLabel();
-        applyRoleUi();
-        warningsArea.setText("Logged out (guest / view only).");
+        updateRoleLabel();// update the role label
+        applyRoleUi();// apply the role ui dissabled buttons
+        warningsArea.setText("Logged out - view only.");
     }
 
-    private void updateRoleLabel() {
+    private void updateRoleLabel() {// update the role label - setting the right text for the role label
         if (currentRole == Role.GUEST) {
-            roleLabel.setText("Role: Guest (view only)");
+            roleLabel.setText("Role: Guest ");
         } else {
             roleLabel.setText("Role: " + currentRole + (loggedInUsername == null ? "" : " — " + loggedInUsername));
         }
-        logoutButton.setDisable(currentRole == Role.GUEST);
+        logoutButton.setDisable(currentRole == Role.GUEST);// disable the logout button if the role is gust
     }
-
+    // apply the role ui (enable/disable buttons baesed on the role)
+    // called by onLoginClicked and onLogoutClicked
     private void applyRoleUi() {
         boolean nurseLike = RolePermissions.mayRunOptimization(currentRole);
         findAssignmentButton.setDisable(!nurseLike);
@@ -251,28 +254,30 @@ public class OptiCareApp extends Application {
         addBedButton.setDisable(!RolePermissions.mayEditWardStructure(currentRole));
         addUserButton.setDisable(!RolePermissions.mayManageUsers(currentRole));
     }
-
+    // logic when new assignment is approved
+    // checking permissions and getting the selected department and current state then approving the pending proposal and updating the state in memory and on disk
     private void onApproveClicked() {
-        if (!RolePermissions.mayApproveOrReject(currentRole)) {
+        if (!RolePermissions.mayApproveOrReject(currentRole)) {// extra check (should be dissabled)
             warningsArea.setText("Log in as nurse or admin to approve.");
             return;
         }
-        Department selectedDepartment = selectedDepartment();
+        Department selectedDepartment = selectedDepartment();// get the selected department
         if (selectedDepartment == null) {
             return;
         }
-        AssignmentState current = currentStateFor(selectedDepartment);
-        AssignmentState approved = workflowService.approvePendingProposal(selectedDepartment.getId(), current);
-        currentStateByDepartmentId.put(selectedDepartment.getId(), approved);
-        reconcileDepartmentAfterApproval(selectedDepartment, approved);
+        AssignmentState current = currentStateFor(selectedDepartment);// get the current state of the department
+        AssignmentState approved = workflowService.approvePendingProposal(selectedDepartment.getId(), current);// approve the pending proposal (get the approved state from the proposal)
+        currentStateByDepartmentId.put(selectedDepartment.getId(), approved); // put the approved state in the map by department id
+        reconcileDepartmentAfterApproval(selectedDepartment, approved);// makes sure life sycle of patients is consistent
         warningsArea.setText("Approved pending proposal.");
         previewDiffList.getItems().clear();
-        refreshKpis();
-        refreshBeds();
-        refreshWaitingPatients();
-        persistWardSnapshot();
+        refreshKpis();// refresh the KPIs
+        refreshBeds();// refresh the beds
+        refreshWaitingPatients();// refresh the waiting patients
+        persistWardSnapshot();// persist the ward snapshot (save the state to the json file)
     }
-
+    // logic when new assignment is rejected
+    // checking permissions and getting the selected department and current state then rejecting the pending proposal and updating the state in memory
     private void onRejectClicked() {
         if (!RolePermissions.mayApproveOrReject(currentRole)) {
             warningsArea.setText("Log in as nurse or admin to reject.");
@@ -282,40 +287,41 @@ public class OptiCareApp extends Application {
         if (selectedDepartment == null) {
             return;
         }
-        AssignmentState current = currentStateFor(selectedDepartment);
-        AssignmentState rejected = workflowService.rejectPendingProposal(selectedDepartment.getId(), current);
-        currentStateByDepartmentId.put(selectedDepartment.getId(), rejected);
+        AssignmentState current = currentStateFor(selectedDepartment);// get the current state of the department
+        AssignmentState rejected = workflowService.rejectPendingProposal(selectedDepartment.getId(), current);// reject
+        currentStateByDepartmentId.put(selectedDepartment.getId(), rejected); // put the rejected state in the map by department id (will be the same sate)
         warningsArea.setText("Rejected pending proposal.");
         previewDiffList.getItems().clear();
-        refreshKpis();
-        refreshBeds();
-        refreshWaitingPatients();
+        refreshKpis();// refresh the KPIs
+        refreshBeds();// refresh the beds
+        refreshWaitingPatients();// refresh the waiting patients
     }
 
     private void onAdmitPatientClicked() {
-        if (!RolePermissions.mayAdmitOrDischarge(currentRole)) {
+        if (!RolePermissions.mayAdmitOrDischarge(currentRole)) {// extra check (should be dissabled)
             return;
         }
-        Optional<WardDialogs.AdmitPatientInput> input = WardDialogs.showAdmitPatientDialog(primaryStage, departments);
+        Optional<WardDialogs.AdmitPatientInput> input = WardDialogs.showAdmitPatientDialog(primaryStage, departments);// open the admit patient dialog and hendle logic
         if (input.isEmpty()) {
             return;
         }
         WardDialogs.AdmitPatientInput x = input.get();
-        Map<String, Patient> reg = patientByDepartmentId.computeIfAbsent(x.department().getId(), k -> new HashMap<>());
-        if (reg.containsKey(x.patientId())) {
+        // if the depatment is not in the map, create enrty and retuern the nested map, if it is return the nested map
+        Map<String, Patient> reg = patientByDepartmentId.computeIfAbsent(x.department().getId(), k -> new HashMap<>()); // map method - give me the value for this key if non crate it store it and return
+        if (reg.containsKey(x.patientId())) {// is the patient in depatment?
             warningsArea.setText("Patient id already exists in this department: " + x.patientId());
             return;
         }
-        Patient p = buildPatientFromAdmit(x);
-        workflowService.admitPatient(x.department(), p);
-        reg.put(p.getId(), p);
+        Patient p = buildPatientFromAdmit(x); // build the patient from the admit input
+        workflowService.admitPatient(x.department(), p);// handle addmit logic
+        reg.put(p.getId(), p); // put the patient in the map by id (this is not assigned just all patients in the department accros it all)
         refreshWaitingPatients();
         refreshKpis();
-        persistWardSnapshot();
+        persistWardSnapshot();// save the new "hospital" to the json file
         warningsArea.setText("Admitted patient " + p.getId() + " to waiting list.");
     }
-
-    private static Patient buildPatientFromAdmit(WardDialogs.AdmitPatientInput x) {
+    //called by onAdmitPatientClicked
+    private static Patient buildPatientFromAdmit(WardDialogs.AdmitPatientInput x) {// build the patient from the admit input
         PersonalDetails pd = null;
         if (x.firstName() != null || x.lastName() != null || x.dateOfBirth() != null || x.gender() != null) {
             String fn = x.firstName() == null ? "" : x.firstName();
@@ -325,144 +331,147 @@ public class OptiCareApp extends Application {
         ClinicalData cd = new ClinicalData(
                 x.riskLevel(), x.severityScore(), x.needsVentilator(), x.requiredBedType(), x.weightKg());
         Patient p = new Patient(x.patientId(), pd, cd, x.admittedAt(), x.temporarilyUnavailable());
-        p.setStatus(PatientStatus.WAITING);
+        p.setStatus(PatientStatus.WAITING); // set the patient status to waiting
         return p;
     }
-
+    // handle discharge logic
     private void onDischargePatientClicked() {
         if (!RolePermissions.mayAdmitOrDischarge(currentRole)) {
             return;
         }
-        Department d = selectedDepartment();
+        Department d = selectedDepartment();// get the selected department
         if (d == null) {
             warningsArea.setText("Select a department first.");
             return;
         }
         String patientId = null;
-        Patient selWait = waitingPatientList.getSelectionModel().getSelectedItem();
+        // start with waiting list
+        Patient selWait = waitingPatientList.getSelectionModel().getSelectedItem();// what patient was cliked last
         if (selWait != null && selWait.getId() != null) {
             patientId = selWait.getId();
-        } else {
-            Bed b = bedList.getSelectionModel().getSelectedItem();
+        } else {// if not waiting list, check beds
+            Bed b = bedList.getSelectionModel().getSelectedItem();// what bed was cliked last
             if (b != null) {
-                patientId = currentStateFor(d).getPatientIdInBed(b);
+                patientId = currentStateFor(d).getPatientIdInBed(b); // get the patient id in the bed
             }
         }
-        if (patientId == null) {
+        if (patientId == null) { // if no patient id, show warning
             warningsArea.setText("Select a waiting patient or an occupied bed, then Discharge.");
             return;
         }
-        AssignmentState next = workflowService.dischargePatient(d, patientId, currentStateFor(d));
-        currentStateByDepartmentId.put(d.getId(), next);
-        refreshKpis();
-        refreshBeds();
-        refreshWaitingPatients();
-        persistWardSnapshot();
+        AssignmentState next = workflowService.dischargePatient(d, patientId, currentStateFor(d));// disscarch patient from bed and return the new state
+        currentStateByDepartmentId.put(d.getId(), next);// override the current state in memory with the new state
+        refreshKpis();// refresh the KPIs
+        refreshBeds();// refresh the beds
+        refreshWaitingPatients();// refresh the waiting patients
+        persistWardSnapshot();// save new state
         warningsArea.setText("Discharged patient " + patientId + ".");
     }
-
+    // clear all pending proposals for all departments
+    // caled by onAddDepartmentClicked, onAddRoomClicked, onAddBedClicked
+    // if new somthing was added we need to clear the pending proposals to sync with the new structure
     private void clearPendingProposalsAllDepartments() {
-        for (Department d : departments) {
+        for (Department d : departments) {// clear all pending proposals for all departments
             workflowService.setPendingProposal(d.getId(), null);
         }
         previewDiffList.getItems().clear();
     }
-
+     // create a new department and asve
     private void onAddDepartmentClicked() {
         if (!RolePermissions.mayEditWardStructure(currentRole)) {
             return;
         }
-        Optional<WardDialogs.AddDepartmentInput> in = WardDialogs.showAddDepartmentDialog(primaryStage);
+        Optional<WardDialogs.AddDepartmentInput> in = WardDialogs.showAddDepartmentDialog(primaryStage);// open the add department dialog and handle logic
         if (in.isEmpty()) {
             return;
         }
         String id = in.get().departmentId();
-        if (departments.stream().anyMatch(dep -> id.equals(dep.getId()))) {
+        if (departments.stream().anyMatch(dep -> id.equals(dep.getId()))) {// is the department id already in the list?
             warningsArea.setText("Department id already exists: " + id);
             return;
         }
         Department created = new Department(id, in.get().name(), new ArrayList<>(), new ArrayList<>());
-        departments.add(created);
-        patientByDepartmentId.put(id, new HashMap<>());
-        currentStateByDepartmentId.put(id, new AssignmentState());
-        departmentList.getItems().setAll(departments);
-        clearPendingProposalsAllDepartments();
-        persistWardSnapshot();
+        departments.add(created); // add the new department to the list
+        patientByDepartmentId.put(id, new HashMap<>()); // create a new patient map for the department
+        currentStateByDepartmentId.put(id, new AssignmentState()); // create a new state for the department
+        departmentList.getItems().setAll(departments); // update the department list
+        clearPendingProposalsAllDepartments(); // clear all pending proposals for all departments
+        persistWardSnapshot(); // save the new state to the json file
         warningsArea.setText("Added department " + id + ".");
     }
 
-    private void onAddRoomClicked() {
+    private void onAddRoomClicked() { // create a new room and save
         if (!RolePermissions.mayEditWardStructure(currentRole)) {
             return;
         }
-        Optional<WardDialogs.AddRoomInput> in = WardDialogs.showAddRoomDialog(primaryStage, departments);
+        Optional<WardDialogs.AddRoomInput> in = WardDialogs.showAddRoomDialog(primaryStage, departments);// open the add room dialog and handle logic
         if (in.isEmpty()) {
             return;
         }
         WardDialogs.AddRoomInput x = in.get();
-        if (x.department().getRooms().stream().anyMatch(r -> x.roomId().equals(r.getId()))) {
+        if (x.department().getRooms().stream().anyMatch(r -> x.roomId().equals(r.getId()))) {// is the room id already in exsisting department?
             warningsArea.setText("Room id already exists in department: " + x.roomId());
             return;
         }
-        Room room = new Room(x.roomId(), x.department().getId(), x.capacity(), new ArrayList<>(),
+        Room room = new Room(x.roomId(), x.department().getId(), x.capacity(), new ArrayList<>(), // create a new room
                 x.distanceFromNurseStation(), x.hasNegativePressure());
-        x.department().getRooms().add(room);
-        refreshRoomAndBedUiAfterStructureChange(x.department());
+        x.department().getRooms().add(room); // add the new room to the department
+        refreshRoomAndBedUiAfterStructureChange(x.department()); // refresh the room and bed ui 
         clearPendingProposalsAllDepartments();
-        persistWardSnapshot();
+        persistWardSnapshot(); // save the new state to the json file
         warningsArea.setText("Added room " + x.roomId() + " to " + x.department().getId() + ".");
     }
 
-    private void onAddBedClicked() {
+    private void onAddBedClicked() { // create a new bed and save
         if (!RolePermissions.mayEditWardStructure(currentRole)) {
             return;
         }
-        Optional<WardDialogs.AddBedInput> in = WardDialogs.showAddBedDialog(primaryStage, departments);
+        Optional<WardDialogs.AddBedInput> in = WardDialogs.showAddBedDialog(primaryStage, departments);// open the add bed dialog and handle logic
         if (in.isEmpty()) {
             return;
         }
         WardDialogs.AddBedInput x = in.get();
-        if (x.department().getAllBeds().stream().anyMatch(b -> x.bedId().equals(b.getId()))) {
+        if (x.department().getAllBeds().stream().anyMatch(b -> x.bedId().equals(b.getId()))) {// is the bed id already in exsisting department?
             warningsArea.setText("Bed id already exists in department: " + x.bedId());
             return;
         }
         try {
-            Bed bed = new Bed(x.bedId(), x.room().getId(), x.bedType(), x.hasVentilator(), x.broken());
-            x.room().addBed(bed);
+            Bed bed = new Bed(x.bedId(), x.room().getId(), x.bedType(), x.hasVentilator(), x.broken()); // create a new bed
+            x.room().addBed(bed); // add the new bed to the room
         } catch (RuntimeException ex) {
             warningsArea.setText("Could not add bed: " + ex.getMessage());
             return;
         }
-        refreshRoomAndBedUiAfterStructureChange(x.department());
-        clearPendingProposalsAllDepartments();
-        persistWardSnapshot();
+        refreshRoomAndBedUiAfterStructureChange(x.department()); // refresh the room and bed ui
+        clearPendingProposalsAllDepartments(); // clear all pending proposals for all departments
+        persistWardSnapshot(); // save the new state to the json file
         warningsArea.setText("Added bed " + x.bedId() + " to room " + x.room().getId() + ".");
     }
-
-    private void refreshRoomAndBedUiAfterStructureChange(Department dept) {
-        departmentList.getItems().setAll(departments);
-        departmentList.getSelectionModel().select(dept);
-        roomList.getItems().setAll(dept.getRooms());
-        if (!dept.getRooms().isEmpty()) {
+    // called by onAddRoomClicked and onAddBedClicked
+    private void refreshRoomAndBedUiAfterStructureChange(Department dept) { // refresh the room and bed ui after the structure change
+        departmentList.getItems().setAll(departments); // update the department list
+        departmentList.getSelectionModel().select(dept); // select the department
+        roomList.getItems().setAll(dept.getRooms()); // update the room list
+        if (!dept.getRooms().isEmpty()) { // if there are rooms, select the first one
             roomList.getSelectionModel().select(0);
         }
-        refreshDepartmentOverview();
-        refreshKpis();
-        refreshBeds();
-        refreshWaitingPatients();
+        refreshDepartmentOverview(); // refresh the department overview
+        refreshKpis(); // refresh the KPIs
+        refreshBeds(); // refresh the beds
+        refreshWaitingPatients(); // refresh the waiting patients
     }
-
+    // create a new user and save
     private void onAddUserClicked() {
         if (!RolePermissions.mayManageUsers(currentRole)) {
             return;
         }
-        Optional<WardDialogs.AddUserInput> in = WardDialogs.showAddUserDialog(primaryStage);
+        Optional<WardDialogs.AddUserInput> in = WardDialogs.showAddUserDialog(primaryStage);// open the add user dialog and handle logic
         if (in.isEmpty()) {
             return;
         }
         WardDialogs.AddUserInput x = in.get();
         try {
-            usersRepository.addUser(new AppUser(x.username(), x.password(), x.role()));
+            usersRepository.addUser(new AppUser(x.username(), x.password(), x.role())); // create a new user and save
             warningsArea.setText("Saved user " + x.username() + " (" + x.role() + ").");
         } catch (IllegalArgumentException ex) {
             warningsArea.setText("Add user failed: " + ex.getMessage());
@@ -470,23 +479,23 @@ public class OptiCareApp extends Application {
             warningsArea.setText("Add user failed: " + ex.getMessage());
         }
     }
-
-    private void loadOrSeedInitialState() {
-        Path persistencePath = PersistencePaths.defaultWardStateJsonPath();
-        wardStateRepository = new JsonFileWardStateRepository(persistencePath);
+    // called by start
+    private void loadOrSeedInitialState() { // load or seed the initial state - load json -> hydrate -> applyHydration or seed demo data
+        Path persistencePath = PersistencePaths.defaultWardStateJsonPath();// get the path to the json file
+        wardStateRepository = new JsonFileWardStateRepository(persistencePath); 
         try {
-            var opt = wardStateRepository.loadIfPresent();
+            var opt = wardStateRepository.loadIfPresent();// load the ward state if it exists
             if (opt.isEmpty()) {
-                seedDemoData();
+                seedDemoData();// seed the demo data if file is not found
                 return;
             }
-            WardStateMapper.WardHydration h = WardStateMapper.hydrate(opt.get());
+            WardStateMapper.WardHydration h = WardStateMapper.hydrate(opt.get());// hydrate the ward state
             if (h.departments().isEmpty()) {
-                seedDemoData();
+                seedDemoData();// seed the demo data if the file is empty
                 bootstrapWarning = "Persistence file was empty; loaded demo data instead.\n" + persistencePath;
                 return;
             }
-            applyHydration(h);
+            applyHydration(h);// apply the hydration to the state
         } catch (IllegalArgumentException ex) {
             seedDemoData();
             bootstrapWarning = "Could not load ward state (" + ex.getMessage() + "); using demo data.\n" + persistencePath;
@@ -495,31 +504,31 @@ public class OptiCareApp extends Application {
             bootstrapWarning = "Could not read ward state file; using demo data.\n" + persistencePath + "\n" + ex.getMessage();
         }
     }
-
-    private void applyHydration(WardStateMapper.WardHydration h) {
-        departments.clear();
-        departments.addAll(h.departments());
-        patientByDepartmentId.clear();
+    // called by loadOrSeedInitialState
+    private void applyHydration(WardStateMapper.WardHydration h) { // apply the hydration to the state
+        departments.clear();// clear the departments
+        departments.addAll(h.departments());// add the departments to the state
+        patientByDepartmentId.clear();// clear the patient by department id
         for (var e : h.patientsByDepartmentId().entrySet()) {
-            patientByDepartmentId.put(e.getKey(), new HashMap<>(e.getValue()));
+            patientByDepartmentId.put(e.getKey(), new HashMap<>(e.getValue()));// add the patients to the state
         }
-        currentStateByDepartmentId.clear();
+        currentStateByDepartmentId.clear();// clear the current state by department id
         for (var e : h.assignmentStates().entrySet()) {
-            currentStateByDepartmentId.put(e.getKey(), e.getValue());
+            currentStateByDepartmentId.put(e.getKey(), e.getValue());// add the current state to the state
         }
         for (Department d : departments) {
-            workflowService.setPendingProposal(d.getId(), null);
+            workflowService.setPendingProposal(d.getId(), null);// clear the pending proposals
         }
     }
-
-    private void persistWardSnapshot() {
+    // called by onApproveClicked, onRejectClicked, onAdmitPatientClicked, onDischargePatientClicked, onAddDepartmentClicked, onAddRoomClicked, onAddBedClicked
+    private void persistWardSnapshot() { // persist the ward snapshot - save the state to the json file
         if (wardStateRepository == null) {
             return;
         }
         try {
-            WardStateDocument draft = WardStateMapper.captureDraft(
+            WardStateDocument draft = WardStateMapper.captureDraft(// capture the draft of the state - java -> dto presist 
                     departments, patientByDepartmentId, currentStateByDepartmentId);
-            long v = wardStateRepository.save(draft);
+            long v = wardStateRepository.save(draft);// save the state to the json file
             String prior = warningsArea.getText();
             String note = "Saved ward state (version " + v + ") to " + wardStateRepository.getPersistencePath() + ".";
             warningsArea.setText(prior == null || prior.isBlank() ? note : prior + "\n" + note);
@@ -527,10 +536,11 @@ public class OptiCareApp extends Application {
             warningsArea.setText("Save failed: " + ex.getMessage());
         }
     }
-
+    // override default behavior of listview to show the correct text
+    // not doing T.toString
     private void configureListCellFactories() {
         departmentList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        departmentList.setCellFactory(list -> new ListCell<>() {
+        departmentList.setCellFactory(list -> new ListCell<>() {// for depatment
             @Override
             protected void updateItem(Department dept, boolean empty) {
                 super.updateItem(dept, empty);
@@ -543,7 +553,7 @@ public class OptiCareApp extends Application {
         });
 
         roomList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        roomList.setCellFactory(list -> new ListCell<>() {
+        roomList.setCellFactory(list -> new ListCell<>() {// for room
             @Override
             protected void updateItem(Room room, boolean empty) {
                 super.updateItem(room, empty);
@@ -555,7 +565,7 @@ public class OptiCareApp extends Application {
             }
         });
         waitingPatientList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        waitingPatientList.setCellFactory(list -> new ListCell<>() {
+        waitingPatientList.setCellFactory(list -> new ListCell<>() {// for waiting list
             @Override
             protected void updateItem(Patient p, boolean empty) {
                 super.updateItem(p, empty);
@@ -572,7 +582,7 @@ public class OptiCareApp extends Application {
         });
 
         bedList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        bedList.setCellFactory(list -> new ListCell<>() {
+        bedList.setCellFactory(list -> new ListCell<>() {// for bed
             @Override
             protected void updateItem(Bed bed, boolean empty) {
                 super.updateItem(bed, empty);
@@ -586,19 +596,19 @@ public class OptiCareApp extends Application {
                 String pid = selectedDepartment == null
                         ? null
                         : currentStateFor(selectedDepartment).getPatientIdInBed(bed);
-                if (pid == null) {
+                if (pid == null) { // if no patient in bed, show empty
                     setText(bed.getId() + " | " + bed.getType() + " | EMPTY — available");
-                    setStyle("-fx-background-color: #eaf6ea;");
-                    setTooltip(new Tooltip("No patient assigned; valid target for manual assignment."));
+                    setStyle("-fx-background-color: #eaf6ea;");// green background
+                    setTooltip(new Tooltip("No patient assigned; valid target for manual assignment."));// tooltip on hover
                 } else {
                     setText(bed.getId() + " | " + bed.getType() + " | OCCUPIED (" + pid + ")");
-                    setStyle("-fx-background-color: #fff0f0;");
-                    setTooltip(new Tooltip("Already assigned to " + pid + ". Manual override needs an EMPTY bed."));
+                    setStyle("-fx-background-color: #fff0f0;");// red background
+                    setTooltip(new Tooltip("Already assigned to " + pid + ". Manual override needs an EMPTY bed."));// tooltip on hover
                 }
             }
         });
 
-        previewDiffList.setCellFactory(list -> new ListCell<>() {
+        previewDiffList.setCellFactory(list -> new ListCell<>() {// for preview diff list
             @Override
             protected void updateItem(PatientAssignmentDiff d, boolean empty) {
                 super.updateItem(d, empty);
@@ -606,24 +616,27 @@ public class OptiCareApp extends Application {
             }
         });
     }
-
+    // format the patient diff line - patient id | change type | from bed id -> to bed id
     private static String formatPatientDiffLine(PatientAssignmentDiff d) {
-        String from = d.fromBedId() != null ? d.fromBedId() : "\u2014";
-        String to = d.toBedId() != null ? d.toBedId() : "\u2014";
-        return d.patientId() + " | " + d.changeType() + " | " + from + " \u2192 " + to;
+        String from = d.fromBedId() != null ? d.fromBedId() : "\u2014";// uni code for dash
+        String to = d.toBedId() != null ? d.toBedId() : "\u2014";// uni code for dash
+        return d.patientId() + " | " + d.changeType() + " | " + from + " \u2192 " + to;// patient id | change type | from bed id -> to bed id
     }
 
-    /** Lists only rows that differ from baseline (excludes UNCHANGED). */
+    
+    // called by buildInsightsPanel
+    // filter out the unchanged diffs and sort the diffs by the patient id
     private static List<PatientAssignmentDiff> visiblePreviewDiffs(AssignmentPreview preview) {
-        if (preview == null || preview.patientDiffs() == null) {
+        if (preview == null || preview.patientDiffs() == null) { // if no preview or no patient diffs, return empty list
             return List.of();
         }
-        return preview.patientDiffs().stream()
+        return preview.patientDiffs().stream()// stream the patient diffs and filter out the unchanged diffs and sort the diffs by the patient id
                 .filter(d -> d.changeType() != AssignmentChangeType.UNCHANGED)
                 .sorted(Comparator.comparing(PatientAssignmentDiff::patientId, Comparator.nullsLast(String::compareTo)))
                 .collect(Collectors.toList());
     }
-
+    // called by start
+    // build the department ward and room panel
     private javafx.scene.layout.VBox buildDepartmentWardAndRoomPanel() {
         return OptiCareViewFactory.buildDepartmentWardAndRoomPanel(
                 buildDepartmentOverviewCard(),
@@ -632,33 +645,36 @@ public class OptiCareApp extends Application {
                 waitingPatientList,
                 selectedRoomLabel
         );
-    }
-
-    private javafx.scene.layout.GridPane buildDepartmentOverviewCard() {
+    } // returns vbox with the department overview card, department list, room list, waiting patient list, and selected room label
+// right
+    private javafx.scene.layout.GridPane buildDepartmentOverviewCard() {// build the department overview card
         return OptiCareViewFactory.buildDepartmentOverviewCard(departmentNameLabel, departmentRoomsLabel, departmentCapacityLabel);
-    }
-
-    private javafx.scene.layout.VBox buildBedPanel() {
+    } // returns gridpane with the department name, department rooms, and department capacity   
+// center
+    private javafx.scene.layout.VBox buildBedPanel() {// build the bed panel
         return OptiCareViewFactory.buildBedPanel(bedList, selectedBedLabel, selectedPatientLabel);
-    }
-
-    private javafx.scene.layout.VBox buildInsightsPanel() {
+    } // returns vbox with the bed list, selected bed label, and selected patient label
+// left
+    private javafx.scene.layout.VBox buildInsightsPanel() {// build the insights panel  - returns vbox with the warnings area, preview diff list, why area, best z series, and current z series
         return OptiCareViewFactory.buildInsightsPanel(warningsArea, previewDiffList, whyArea, bestZSeries, currentZSeries);
     }
-
+// wires the department -> room -> bed cascade and hooks selection listeners so the rest of the UI stays in sync.
     private void configureListBindings() {
-        departmentList.getItems().setAll(departments);
-        if (!departments.isEmpty()) {
+        departmentList.getItems().setAll(departments); // fill the list with the departments in memory
+        if (!departments.isEmpty()) { // if there are departments, select the first one
             departmentList.getSelectionModel().select(0);
         }
+        
+        // triggers and listeners for the department list
+        // when the selected department changes, update the room list, bed list, department overview, KPIs, beds, waiting patients, warnings area, preview diff list, why area, selected room label, selected bed label, and selected patient label
         departmentList.getSelectionModel().selectedItemProperty().addListener((obs, oldV, dept) -> {
-            roomList.getItems().setAll(dept == null ? List.of() : dept.getRooms());
-            if (dept != null && !dept.getRooms().isEmpty()) {
+            roomList.getItems().setAll(dept == null ? List.of() : dept.getRooms());// replace with new room list, if no rooms empty list
+            if (dept != null && !dept.getRooms().isEmpty()) { // if there are rooms, select the first one
                 roomList.getSelectionModel().select(0);
-            } else {
+            } else { // if no rooms, clear the bed list
                 bedList.getItems().clear();
             }
-            refreshDepartmentOverview();
+            refreshDepartmentOverview();// refresh the department overview for viewing the change
             refreshKpis();
             refreshBeds();
             refreshWaitingPatients();
@@ -669,18 +685,24 @@ public class OptiCareApp extends Application {
             selectedBedLabel.setText("Bed: -");
             selectedPatientLabel.setText("Patient: -");
         });
+        // bec listeners dont rerun after the initial selection, we need to manually set the room list and select the first room
         Department selected = selectedDepartment();
-        if (selected != null) {
+        if (selected != null) { // if there is a selected department, set the room list and select the first room
             roomList.getItems().setAll(selected.getRooms());
-            if (!selected.getRooms().isEmpty()) {
+            if (!selected.getRooms().isEmpty()) { // if there are rooms, select the first one
                 roomList.getSelectionModel().select(0);
             }
-        }
-        refreshWaitingPatients();
-        roomList.getSelectionModel().selectedItemProperty().addListener((obs, oldV, room) -> {
+        } 
+        refreshWaitingPatients();// refresh the waiting patients to the current selected department
+        // triggers and listeners for the room list
+        // when the selected room changes, update the bed list and selected room label
+        roomList.getSelectionModel().selectedItemProperty().addListener((obs, oldV, room) -> {// when the selected room changes, update the bed list and selected room label
             selectedRoomLabel.setText("Room: " + (room == null ? "-" : room.getId()));
             refreshBeds();
         });
+        // triggers and listeners for the bed list
+        // when the selected bed changes, update the selected bed label, selected patient label, and why area
+        // duplicate like dep
         bedList.getSelectionModel().selectedItemProperty().addListener((obs, oldV, bed) -> {
             if (bed == null) {
                 selectedBedLabel.setText("Bed: -");
@@ -692,60 +714,61 @@ public class OptiCareApp extends Application {
             Department selectedDepartment = selectedDepartment();
             String pid = selectedDepartment == null ? null : currentStateFor(selectedDepartment).getPatientIdInBed(bed);
             selectedPatientLabel.setText(pid == null ? "Status: EMPTY (bed available)" : "Status: OCCUPIED — " + pid);
-            renderWhyPanel(pid);
+            renderWhyPanel(pid); // render the why panel for the selected bed
         });
-        refreshBeds();
+        refreshBeds();// refresh the beds to the current selected room
     }
-
+//refresh the waiting patients (sorted) 
     private void refreshWaitingPatients() {
         Department selectedDepartment = selectedDepartment();
-        waitingPatientList.getSelectionModel().clearSelection();
-        waitingPatientList.getItems().clear();
+        waitingPatientList.getSelectionModel().clearSelection(); // clear the selection
+        waitingPatientList.getItems().clear();// clear the waiting patient list
         if (selectedDepartment != null) {
-            waitingPatientList.getItems().addAll(workflowService.buildWaitingQueueView(selectedDepartment));
+            waitingPatientList.getItems().addAll(workflowService.buildWaitingQueueView(selectedDepartment));// add the  waiting patients  to the list
         }
-        waitingPatientList.refresh();
-        if (!waitingPatientList.getItems().isEmpty()) {
-            waitingPatientList.getSelectionModel().select(0);
+        waitingPatientList.refresh();// forces list cells to redraw
+        if (!waitingPatientList.getItems().isEmpty()) { // if there are waiting patients, select the first one
+            waitingPatientList.getSelectionModel().select(0); 
         }
     }
-
+//refresh the beds 
     private void refreshBeds() {
-        Room selected = roomList.getSelectionModel().getSelectedItem();
-        bedList.getSelectionModel().clearSelection();
-        bedList.getItems().clear();
+        Room selected = roomList.getSelectionModel().getSelectedItem();// current selected room
+        bedList.getSelectionModel().clearSelection();// clear the bed selection
+        bedList.getItems().clear();// clear the bed list
         if (selected != null) {
-            bedList.getItems().addAll(selected.getBeds());
+            bedList.getItems().addAll(selected.getBeds());// add the beds to the list
         }
-        bedList.refresh();
+        bedList.refresh();// forces list cells to redraw
         if (!bedList.getItems().isEmpty()) {
-            bedList.getSelectionModel().select(0);
+            bedList.getSelectionModel().select(0); // select the first bed
         }
     }
 
-    private void refreshKpis() {
+    private void refreshKpis() {// refresh the kpis
         Department selectedDepartment = selectedDepartment();
-        if (selectedDepartment == null) {
+        if (selectedDepartment == null) {// if no department, set the kpis to -
             occupancyLabel.setText("Occupancy: -");
             waitingLabel.setText("Waiting: -");
             unassignedLabel.setText("Unassigned Estimate: -");
             return;
         }
+        // gettign the kpi values from the current state
         AssignmentState currentState = currentStateFor(selectedDepartment);
         int occupied = currentState.size();
         int capacity = selectedDepartment.getAllBeds().size();
         int waiting = workflowService.buildWaitingQueueView(selectedDepartment).size();
         int unassigned = Math.max(0, waiting - Math.max(0, capacity - occupied));
         double occupancyPct = capacity == 0 ? 0.0 : (100.0 * occupied / capacity);
-
+        // setting the kpi values to the labels
         occupancyLabel.setText(String.format("Occupancy: %d/%d (%.1f%%)", occupied, capacity, occupancyPct));
         waitingLabel.setText("Waiting: " + waiting);
         unassignedLabel.setText("Unassigned Estimate: " + unassigned);
     }
-
-    private void refreshDepartmentOverview() {
+    // summary of the department
+    private void refreshDepartmentOverview() {// refresh the department overview
         Department selectedDepartment = selectedDepartment();
-        if (selectedDepartment == null) {
+        if (selectedDepartment == null) {// if no department, set the department overview to -
             departmentNameLabel.setText("Department: -");
             departmentRoomsLabel.setText("Rooms: -");
             departmentCapacityLabel.setText("Capacity: -");
@@ -755,8 +778,9 @@ public class OptiCareApp extends Application {
         departmentRoomsLabel.setText("Rooms: " + selectedDepartment.getRooms().size());
         departmentCapacityLabel.setText("Capacity: " + selectedDepartment.getAllBeds().size() + " beds");
     }
-
-    private void runOptimizationAsync() {
+// starts heavy optimization work on a background thread so the javafx ui will not freeze
+//when the worker thread finishes (or fails or is cancelled) it updates charts, labels, warnings, and the preview diff list
+    private void runOptimizationAsync() {// run the optimization asynchronously
         if (!RolePermissions.mayRunOptimization(currentRole)) {
             warningsArea.setText("Log in as nurse or admin to run optimization.");
             return;
@@ -770,66 +794,66 @@ public class OptiCareApp extends Application {
             warningsArea.setText("Select a department before optimization.");
             return;
         }
-        warningsArea.setText("Running optimization asynchronously...");
-        Task<AssignmentProposal> task = new Task<>() {
+        warningsArea.setText("Running optimization asynchronously...");// set the warnings area to running optimization asynchronously
+        Task<AssignmentProposal> task = new Task<>() {// dfiens call, what runs on the background thread
             @Override
             protected AssignmentProposal call() {
-                return workflowService.proposeAssignment(
+                return workflowService.proposeAssignment(// propose the assignment (run the sa)
                         selectedDepartment,
                         patientByDepartmentId.getOrDefault(selectedDepartment.getId(), Map.of()),
                         currentStateFor(selectedDepartment)
                 );
             }
         };
-        runningOptimizationTask = task;
-        task.setOnSucceeded(evt -> {
-            AssignmentProposal proposal = task.getValue();
-            workflowService.setPendingProposal(selectedDepartment.getId(), proposal);
-            AssignmentPreview preview = workflowService.buildPreview(proposal);
-            optimizeRunIndex++;
-            bestZSeries.getData().add(new XYChart.Data<>(optimizeRunIndex, proposal.proposedZ()));
-            currentZSeries.getData().add(new XYChart.Data<>(optimizeRunIndex, proposal.baselineZ()));
-            currentZLabel.setText(String.format("Current Z: %.2f", preview.baselineZ()));
-            bestZLabel.setText(String.format("Best Z: %.2f", preview.proposedZ()));
+        runningOptimizationTask = task;// set the running optimization task to the task
+        task.setOnSucceeded(evt -> {// when the task succeeds, update the charts, labels, warnings, and the preview diff list
+            AssignmentProposal proposal = task.getValue();// get the proposal from the task
+            workflowService.setPendingProposal(selectedDepartment.getId(), proposal);// set the pending proposal to the proposal
+            AssignmentPreview preview = workflowService.buildPreview(proposal);// build the preview from the proposal
+            optimizeRunIndex++;// increment the optimize run index
+            bestZSeries.getData().add(new XYChart.Data<>(optimizeRunIndex, proposal.proposedZ()));// add the proposed z to the best z series
+            currentZSeries.getData().add(new XYChart.Data<>(optimizeRunIndex, proposal.baselineZ()));// add the baseline z to the current z series
+            currentZLabel.setText(String.format("Current Z: %.2f", preview.baselineZ()));// set the current z label to the baseline z
+            bestZLabel.setText(String.format("Best Z: %.2f", preview.proposedZ()));// set the best z label to the proposed z
             warningsArea.setText(buildWarningText(proposal, preview));
-            previewDiffList.getItems().setAll(visiblePreviewDiffs(preview));
+            previewDiffList.getItems().setAll(visiblePreviewDiffs(preview));// set the preview diff list to the visible preview diffs
             runningOptimizationTask = null;
-        });
-        task.setOnFailed(evt -> {
+        });// set the running optimization task to null
+        task.setOnFailed(evt -> {// when the task fails, update the warnings area and the preview diff list
             Throwable ex = task.getException();
             warningsArea.setText("Optimization failed: " + (ex == null ? "unknown error" : ex.getMessage()));
             previewDiffList.getItems().clear();
             runningOptimizationTask = null;
         });
-        task.setOnCancelled(evt -> {
+        task.setOnCancelled(evt -> {// when the task is cancelled, update the warnings area and the preview diff list
             warningsArea.setText("Optimization cancelled.");
             previewDiffList.getItems().clear();
             runningOptimizationTask = null;
         });
-        Thread worker = new Thread(task, "opticare-optimizer");
-        worker.setDaemon(true);
-        worker.start();
+        Thread worker = new Thread(task, "opticare-optimizer");// create a new thread for the optimization
+        worker.setDaemon(true);// set the thread to daemon so it will not block the program from exiting
+        worker.start();// start the thread
     }
 
-    private void cancelOptimization() {
+    private void cancelOptimization() {// cancel the optimization 
         if (!RolePermissions.mayRunOptimization(currentRole)) {
             warningsArea.setText("Log in as nurse or admin to cancel optimization.");
             return;
         }
-        if (runningOptimizationTask != null && runningOptimizationTask.isRunning()) {
+        if (runningOptimizationTask != null && runningOptimizationTask.isRunning()) {// if the optimization is running, cancel it
             runningOptimizationTask.cancel();
         } else {
             warningsArea.setText("No active optimization task to cancel.");
         }
     }
-
+    // turns an assignmentProposal plus its assignmentPreview into one line string shown in warningsArea after optimization finishes 
     private String buildWarningText(AssignmentProposal proposal, AssignmentPreview preview) {
         if (!proposal.feasible()) {
             return "Hard constraint violations:\n- " + String.join("\n- ", proposal.feasibilityViolations());
         }
         int listed = (int) preview.patientDiffs().stream()
                 .filter(d -> d.changeType() != AssignmentChangeType.UNCHANGED)
-                .count();
+                .count(); // how many patients have changed (how many rows)
         String base = "Preview ready.\nChanged patients: " + preview.changedPatients()
                 + "\nUnchanged patients: " + preview.unchangedPatients()
                 + "\nDelta Z: " + String.format("%.2f", preview.deltaZ())
@@ -843,10 +867,9 @@ public class OptiCareApp extends Application {
         return base;
     }
 
-    /**
-     * Keeps patient lifecycle and waiting-list state consistent with approved assignments.
-     * This prevents double counting in feasibility (assigned + still waiting).
-     */
+
+    // keeps patient lifecycle and waiting-list state consistent with approved assignments.
+    // prevents double counting in feasibility (assigned + still waiting).
     private void reconcileDepartmentAfterApproval(Department department, AssignmentState approvedState) {
         if (department == null || approvedState == null) return;
         Map<String, Patient> patientById = patientByDepartmentId.getOrDefault(department.getId(), Map.of());
@@ -855,20 +878,20 @@ public class OptiCareApp extends Application {
                 boolean assigned = approvedState.getBed(p.getId()) != null;
                 if (assigned) {
                     p.setStatus(PatientStatus.ASSIGNED);
-                    department.getWaitingList().removeIf(w -> w != null && p.getId().equals(w.getId()));
+                    department.getWaitingList().removeIf(w -> w != null && p.getId().equals(w.getId()));//removed from wating list if assigned
                 } else if (p.getStatus() != PatientStatus.DISCHARGED) {
                     p.setStatus(PatientStatus.WAITING);
                     boolean alreadyWaiting = department.getWaitingList().stream()
                             .anyMatch(w -> w != null && p.getId().equals(w.getId()));
                     if (!alreadyWaiting) {
-                        department.getWaitingList().add(p);
+                        department.getWaitingList().add(p);// if not already waiting, add to waiting list
                     }
                 }
             }
         }
     }
 
-    private void renderWhyPanel(String patientId) {
+    private void renderWhyPanel(String patientId) {// renders the why panel for the selected bed
         if (patientId == null) {
             whyArea.setText("No patient selected. Select an occupied bed for a compact breakdown.");
             return;
@@ -892,54 +915,54 @@ public class OptiCareApp extends Application {
                 + "\nC_transfer: baseline move distance");
     }
 
-    private void applyManualOverride() {
+    private void applyManualOverride() {// applies a manual override to the selected bed (must select depatment room bed patient)
         if (!RolePermissions.mayManualOverride(currentRole)) {
             warningsArea.setText("Log in as nurse or admin for manual override.");
             return;
         }
-        Department selectedDepartment = selectedDepartment();
-        Patient selectedPatient = waitingPatientList.getSelectionModel().getSelectedItem();
-        Bed selectedBed = bedList.getSelectionModel().getSelectedItem();
+        Department selectedDepartment = selectedDepartment();// get the selected department
+        Patient selectedPatient = waitingPatientList.getSelectionModel().getSelectedItem();// get the selected patient
+        Bed selectedBed = bedList.getSelectionModel().getSelectedItem();// get the selected bed
         if (selectedDepartment == null || selectedPatient == null || selectedBed == null) {
             warningsArea.setText("Manual override requires department + waiting patient + target bed selection.");
             return;
         }
-        AssignmentState state = currentStateFor(selectedDepartment);
-        if (state.isBedOccupied(selectedBed)) {
+        AssignmentState state = currentStateFor(selectedDepartment);// get the current state for the selected department
+        if (state.isBedOccupied(selectedBed)) {// is the bed already occupied?
             String occ = state.getPatientIdInBed(selectedBed);
             warningsArea.setText("Manual override blocked: this bed is already OCCUPIED"
                     + (occ != null ? " (" + occ + ")." : ".")
                     + " In the bed list, choose a row that says EMPTY — available.");
             return;
         }
-        HardConstraints hardConstraints = new HardConstraints(
+        HardConstraints hardConstraints = new HardConstraints(// creates a new hard constraints object
                 RiskMatrixFactory.fromConfig(config),
                 selectedDepartment
         );
-        Map<String, Patient> byId = patientByDepartmentId.getOrDefault(selectedDepartment.getId(), Map.of());
-        if (!hardConstraints.isLegalAssignOrMoveToFreeBed(selectedPatient, selectedBed, state, byId)) {
+        Map<String, Patient> byId = patientByDepartmentId.getOrDefault(selectedDepartment.getId(), Map.of());// get the patients by id for the selected department
+        if (!hardConstraints.isLegalAssignOrMoveToFreeBed(selectedPatient, selectedBed, state, byId)) {// can this move be done?
             warningsArea.setText("Manual override blocked by hard constraints (clinical/cohort/isolation).");
             return;
         }
-        state.assign(selectedPatient, selectedBed);
-        selectedPatient.setStatus(PatientStatus.ASSIGNED);
+        state.assign(selectedPatient, selectedBed);// assign the patient to the bed
+        selectedPatient.setStatus(PatientStatus.ASSIGNED);// set the patient status to assigned
         if (!selectedDepartment.getWaitingList().remove(selectedPatient)) {
-            selectedDepartment.getWaitingList().removeIf(
+            selectedDepartment.getWaitingList().removeIf(// remove the patient from the waiting list if it is in the waiting list
                     p -> p != null && selectedPatient.getId() != null && selectedPatient.getId().equals(p.getId()));
         }
-        workflowService.setPendingProposal(selectedDepartment.getId(), null);
-        previewDiffList.getItems().clear();
+        workflowService.setPendingProposal(selectedDepartment.getId(), null);// set the pending proposal to null
+        previewDiffList.getItems().clear();// clear the preview diff list
         warningsArea.setText("Manual override applied for patient " + selectedPatient.getId() + " -> bed " + selectedBed.getId() + ". Pending optimizer proposal cleared—run Find Assignment again before Approve.");
         refreshKpis();
         refreshBeds();
         refreshWaitingPatients();
         persistWardSnapshot();
     }
-
+// seed demo data (for testing), will be used if no json file is found
     private void seedDemoData() {
-        departments.clear();
-        patientByDepartmentId.clear();
-        currentStateByDepartmentId.clear();
+        departments.clear();// clear the departments
+        patientByDepartmentId.clear();// clear the patient by department id
+        currentStateByDepartmentId.clear();// clear the current state by department id
 
         Room r1 = new Room("R1", "D1", 2, new java.util.ArrayList<>(), 5.0, true);
         Room r2 = new Room("R2", "D1", 2, new java.util.ArrayList<>(), 12.0, false);
@@ -979,22 +1002,22 @@ public class OptiCareApp extends Application {
         currentStateByDepartmentId.put(d1.getId(), stateD1);
         currentStateByDepartmentId.put(d2.getId(), stateD2);
 
-        /* Apply seeded assignment before lists bind / paint so occupancy matches reality on first view.
-           (Deferring via runLater mutated state without refreshing beds—cells showed EMPTY until selection changed.) */
+        // Apply seeded assignment before lists bind / paint so occupancy matches reality on first view.
+        // (Deferring via runLater mutated state without refreshing beds—cells showed EMPTY until selection changed.) 
         stateD1.assign(p2, r1.getBeds().get(0));
         p2.setStatus(PatientStatus.ASSIGNED);
         d1.getWaitingList().removeIf(p -> p != null && p2.getId().equals(p.getId()));
     }
 
-    private Department selectedDepartment() {
-        return departmentList.getSelectionModel().getSelectedItem();
+    private Department selectedDepartment() {// gets the selected department
+        return departmentList.getSelectionModel().getSelectedItem(); // what depatmet was cliked last
     }
 
-    private AssignmentState currentStateFor(Department department) {
-        return currentStateByDepartmentId.computeIfAbsent(department.getId(), ignored -> new AssignmentState());
+    private AssignmentState currentStateFor(Department department) {// gets the current state for the selected department
+        return currentStateByDepartmentId.computeIfAbsent(department.getId(), ignored -> new AssignmentState());// if the department is not in the map, create a new assignment state
     }
 
-    private Patient waiting(String id, RiskLevel risk, int severity, Instant admittedAt, boolean temporarilyUnavailable) {
+    private Patient waiting(String id, RiskLevel risk, int severity, Instant admittedAt, boolean temporarilyUnavailable) {// creates a new patient and sets the status to waiting
         Patient p = new Patient(id, null, new ClinicalData(risk, severity, false, null), admittedAt, temporarilyUnavailable);
         p.setStatus(PatientStatus.WAITING);
         return p;

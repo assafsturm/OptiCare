@@ -3,7 +3,9 @@ package Auth;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Root JSON for {@code users.json}. */
+
+
+// root JSON for users json file (equivalent to the ward state document)
 public final class UsersDocument {
 
     public static final int CURRENT_SCHEMA_VERSION = 1;

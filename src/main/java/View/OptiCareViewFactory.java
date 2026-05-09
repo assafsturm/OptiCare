@@ -20,7 +20,7 @@ final class OptiCareViewFactory {
 
     private OptiCareViewFactory() {
     }
-
+// builds the kpi bar Padding, alignment, light blue banner style
     static HBox buildKpiBar(Label occupancyLabel, Label waitingLabel, Label unassignedLabel,
                             Label currentZLabel, Label bestZLabel) {
         HBox row = new HBox(18, occupancyLabel, waitingLabel, unassignedLabel, currentZLabel, bestZLabel);
@@ -29,7 +29,7 @@ final class OptiCareViewFactory {
         row.setStyle("-fx-background-color: #f5f8ff; -fx-border-color: #d5ddef;");
         return row;
     }
-
+// builds the department overview card Header + room/capacity row, green tinted border
     static GridPane buildDepartmentOverviewCard(Label departmentNameLabel, Label departmentRoomsLabel,
                                                 Label departmentCapacityLabel) {
         GridPane card = new GridPane();
@@ -44,7 +44,7 @@ final class OptiCareViewFactory {
         card.add(departmentCapacityLabel, 1, 2);
         return card;
     }
-
+// builds the department ward and room panel Department Overview card + dept / room / waiting listview + selected room label setVgrow so lists steal vertical space
     static VBox buildDepartmentWardAndRoomPanel(GridPane departmentOverviewCard,
                                                 ListView<?> departmentList,
                                                 ListView<?> roomList,
@@ -61,14 +61,14 @@ final class OptiCareViewFactory {
         box.setPrefWidth(320);
         return box;
     }
-
+    // nulids the bed punnel in the enter, vbox bed listview 
     static VBox buildBedPanel(ListView<?> bedList, Label selectedBedLabel, Label selectedPatientLabel) {
         Label title = new Label("Beds in Selected Room");
         VBox box = new VBox(8, title, bedList, selectedBedLabel, selectedPatientLabel);
         VBox.setVgrow(bedList, Priority.ALWAYS);
         return box;
     }
-
+// builds the insights panel Read only warningsArea, proposal diff list, why area, best z series, current z series
     static VBox buildInsightsPanel(TextArea warningsArea, ListView<PatientAssignmentDiff> previewDiffList, TextArea whyArea,
                                    XYChart.Series<Number, Number> bestZSeries,
                                    XYChart.Series<Number, Number> currentZSeries) {
@@ -107,7 +107,7 @@ final class OptiCareViewFactory {
         box.setPrefWidth(430);
         return box;
     }
-
+// builds the actions panel Find Assignment, Cancel, Approve, Reject, Manual Override HBox of workflow buttons
     static HBox buildActionsPanel(Button findAssignmentButton, Button cancelButton,
                                   Button approveButton, Button rejectButton, Button manualOverrideButton) {
         HBox row = new HBox(10, findAssignmentButton, cancelButton, approveButton, rejectButton, manualOverrideButton);

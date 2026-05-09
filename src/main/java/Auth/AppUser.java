@@ -3,7 +3,9 @@ package Auth;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Single user row in {@code users.json} (plaintext password — coursework only). */
+
+// single user row in users json file
+// annotated with JsonCreator and JsonProperty to be serialized and deserialized by Jackson
 public final class AppUser {
 
     private String username;
@@ -12,7 +14,7 @@ public final class AppUser {
 
     public AppUser() {
     }
-
+    // json can build from this constructor
     @JsonCreator
     public AppUser(
             @JsonProperty("username") String username,

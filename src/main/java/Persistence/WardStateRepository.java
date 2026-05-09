@@ -1,10 +1,10 @@
 package Persistence;
 
-import Persistence.dto.WardStateDocument;
-
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Optional;
+
+import Persistence.dto.WardStateDocument; // present or not (no null)
 
 
 // load save contract for the ward json snapshot

@@ -33,15 +33,14 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Window;
 
-/**
- * Minimal modal dialogs for Stage 7 (login, admit, ward structure, users).
- */
+
+// dialogs for the application
 public final class WardDialogs {
 
     private WardDialogs() {
     }
 
-    public record AdmitPatientInput(
+    public record AdmitPatientInput(// record for the admit patient input 
             Department department,
             String patientId,
             RiskLevel riskLevel,
@@ -58,7 +57,7 @@ public final class WardDialogs {
     ) {
     }
 
-    public record AddDepartmentInput(String departmentId, String name) {
+    public record AddDepartmentInput(String departmentId, String name) {// record for the add department input
     }
 
     public record AddRoomInput(
@@ -70,7 +69,7 @@ public final class WardDialogs {
     ) {
     }
 
-    public record AddBedInput(
+    public record AddBedInput(// record for the add bed input
             Department department,
             Room room,
             String bedId,
@@ -80,35 +79,37 @@ public final class WardDialogs {
     ) {
     }
 
-    public record AddUserInput(String username, String password, Role role) {
+    public record AddUserInput(String username, String password, Role role) {// record for the add user input
     }
 
-    public static Optional<LoginResult> showLoginDialog(Window owner, JsonFileUsersRepository repo) {
-        Dialog<LoginResult> dialog = new Dialog<>();
+    public static Optional<LoginResult> showLoginDialog(Window owner, JsonFileUsersRepository repo) {// show the login dialog
+        Dialog<LoginResult> dialog = new Dialog<>();// create a new dialog
         dialog.initOwner(owner);
-        dialog.initModality(Modality.WINDOW_MODAL);
+        dialog.initModality(Modality.WINDOW_MODAL); // to make the dialog modal
         dialog.setTitle("Log in");
         dialog.setHeaderText("log in");
 
         ButtonType loginButtonType = new ButtonType("Log in", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
 
+        // create a new grid pane for the dialog
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(12));
-        TextField username = new TextField();
-        PasswordField password = new PasswordField();
+
+        TextField username = new TextField();// create a new text field for the username
+        PasswordField password = new PasswordField();// create a new password field for the password
         grid.add(new Label("Username:"), 0, 0);
         grid.add(username, 1, 0);
         grid.add(new Label("Password:"), 0, 1);
         grid.add(password, 1, 1);
-        dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().setContent(grid); // add the grid pane to the dialog
 
-        Button loginBtn = (Button) dialog.getDialogPane().lookupButton(loginButtonType);
-        loginBtn.addEventFilter(ActionEvent.ACTION, event -> {
+        Button loginBtn = (Button) dialog.getDialogPane().lookupButton(loginButtonType);// create a new button for the login
+        loginBtn.addEventFilter(ActionEvent.ACTION, event -> {// add an event filter to the button to handle the login
             try {
-                Optional<LoginResult> res = repo.authenticate(username.getText(), password.getText());
+                Optional<LoginResult> res = repo.authenticate(username.getText(), password.getText());// authenticate the user
                 if (res.isEmpty()) {
                     event.consume();
                     alert(Alert.AlertType.ERROR, "Login failed", "Unknown username/password.");
@@ -119,7 +120,7 @@ public final class WardDialogs {
             }
         });
 
-        dialog.setResultConverter(buttonType -> {
+        dialog.setResultConverter(buttonType -> {// defiens what showandwait returns based on the button type
             if (buttonType != loginButtonType) {
                 return null;
             }
@@ -131,23 +132,26 @@ public final class WardDialogs {
             }
         });
 
-        return dialog.showAndWait();
+        return dialog.showAndWait();// show the dialog and wait for the result
     }
 
-    public static Optional<AdmitPatientInput> showAdmitPatientDialog(Window owner, List<Department> departments) {
-        Dialog<AdmitPatientInput> dialog = new Dialog<>();
+    public static Optional<AdmitPatientInput> showAdmitPatientDialog(Window owner, List<Department> departments) {// show the admit patient dialog
+        Dialog<AdmitPatientInput> dialog = new Dialog<>();// create a new dialog
         dialog.initOwner(owner);
-        dialog.initModality(Modality.WINDOW_MODAL);
+        dialog.initModality(Modality.WINDOW_MODAL); // to make the dialog modal
         dialog.setTitle("Admit patient");
         dialog.setHeaderText("Patient joins department waiting list");
 
-        ButtonType saveType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+        ButtonType saveType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);// create a new button type for the save button
         dialog.getDialogPane().getButtonTypes().addAll(saveType, ButtonType.CANCEL);
 
-        GridPane grid = new GridPane();
+        GridPane grid = new GridPane();// create a new grid pane for the dialog
         grid.setHgap(10);
         grid.setVgap(8);
         grid.setPadding(new Insets(12));
+
+
+        // create the input fields for the dialog
 
         ComboBox<Department> deptBox = new ComboBox<>(FXCollections.observableArrayList(departments));
         applyDepartmentComboFormatting(deptBox);
@@ -169,6 +173,7 @@ public final class WardDialogs {
         dob.setPromptText("yyyy-MM-dd (optional)");
         ComboBox<String> genderBox = new ComboBox<>(FXCollections.observableArrayList("", "MALE", "FEMALE"));
 
+        // add the input fields to the grid
         int r = 0;
         grid.add(new Label("Department:"), 0, r);
         grid.add(deptBox, 1, r++);
@@ -195,42 +200,42 @@ public final class WardDialogs {
         grid.add(new Label("Gender:"), 0, r);
         grid.add(genderBox, 1, r++);
 
-        dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().setContent(grid); // add the grid pane to the dialog
 
-        Button saveBtn = (Button) dialog.getDialogPane().lookupButton(saveType);
-        saveBtn.addEventFilter(ActionEvent.ACTION, event -> {
+        Button saveBtn = (Button) dialog.getDialogPane().lookupButton(saveType); // create a new button for the save button
+        saveBtn.addEventFilter(ActionEvent.ACTION, event -> { // add an event filter to the button to handle the save
             if (deptBox.getValue() == null || patientId.getText() == null || patientId.getText().isBlank()) {
                 event.consume();
                 alert(Alert.AlertType.WARNING, "Missing data", "Department and patient ID are required.");
-                return;
+                return; // if the department or patient id is missing, consume the event and show an alert
             }
             try {
-                Integer.parseInt(severity.getText().trim());
+                Integer.parseInt(severity.getText().trim()); // parse the severity to an integer
             } catch (NumberFormatException ex) {
                 event.consume();
                 alert(Alert.AlertType.WARNING, "Invalid severity", "Severity must be an integer.");
             }
         });
 
-        dialog.setResultConverter(bt -> {
+        dialog.setResultConverter(bt -> {// set the result each button type
             if (bt != saveType) {
                 return null;
             }
-            Department d = deptBox.getValue();
-            String pid = patientId.getText().trim();
+            Department d = deptBox.getValue();// get the department from the combo box
+            String pid = patientId.getText().trim();// get the patient id from the text field
             if (d == null || pid.isEmpty()) {
-                return null;
+                return null; // if the department or patient id is missing, return null
             }
             int sev;
             try {
-                sev = Integer.parseInt(severity.getText().trim());
+                sev = Integer.parseInt(severity.getText().trim()); // parse the severity to an integer
             } catch (NumberFormatException ex) {
                 return null;
             }
             Instant adm;
             String at = admittedAt.getText() == null ? "" : admittedAt.getText().trim();
             if (at.isEmpty()) {
-                adm = Instant.now();
+                adm = Instant.now(); // if the admitted at is empty, set it to the current time
             } else {
                 try {
                     adm = Instant.parse(at);
@@ -242,7 +247,7 @@ public final class WardDialogs {
             String w = weightKg.getText() == null ? "" : weightKg.getText().trim();
             if (!w.isEmpty()) {
                 try {
-                    wKg = Integer.parseInt(w);
+                    wKg = Integer.parseInt(w); // parse the weight to an integer
                 } catch (NumberFormatException ex) {
                     return null;
                 }
@@ -263,7 +268,7 @@ public final class WardDialogs {
             }
             String fn = first.getText() == null ? "" : first.getText().trim();
             String ln = last.getText() == null ? "" : last.getText().trim();
-            return new AdmitPatientInput(
+            return new AdmitPatientInput(// return the admit patient input
                     d,
                     pid,
                     riskBox.getValue(),
@@ -280,7 +285,7 @@ public final class WardDialogs {
             );
         });
 
-        return dialog.showAndWait();
+        return dialog.showAndWait();// show the dialog and wait for the result
     }
 
     public static Optional<AddDepartmentInput> showAddDepartmentDialog(Window owner) {
@@ -323,14 +328,15 @@ public final class WardDialogs {
         return dialog.showAndWait();
     }
 
-    public static Optional<AddRoomInput> showAddRoomDialog(Window owner, List<Department> departments) {
-        Dialog<AddRoomInput> dialog = new Dialog<>();
+    public static Optional<AddRoomInput> showAddRoomDialog(Window owner, List<Department> departments) {// show the add room dialog
+        Dialog<AddRoomInput> dialog = new Dialog<>();// create a new dialog
         dialog.initOwner(owner);
         dialog.initModality(Modality.WINDOW_MODAL);
         dialog.setTitle("Add room");
         ButtonType saveType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(saveType, ButtonType.CANCEL);
 
+        // create the input fields for the dialog
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(8);
@@ -343,6 +349,7 @@ public final class WardDialogs {
         CheckBox neg = new CheckBox("Negative pressure");
         neg.setSelected(false);
 
+        // add the input fields to the grid
         grid.add(new Label("Department:"), 0, 0);
         grid.add(deptBox, 1, 0);
         grid.add(new Label("Room ID:"), 0, 1);
@@ -354,11 +361,13 @@ public final class WardDialogs {
         grid.add(neg, 1, 4);
         dialog.getDialogPane().setContent(grid);
 
+
+        // create a new button for the save button
         Button saveBtn = (Button) dialog.getDialogPane().lookupButton(saveType);
-        saveBtn.addEventFilter(ActionEvent.ACTION, event -> {
+        saveBtn.addEventFilter(ActionEvent.ACTION, event -> { //
             if (deptBox.getValue() == null || roomId.getText() == null || roomId.getText().isBlank()) {
                 event.consume();
-                alert(Alert.AlertType.WARNING, "Missing data", "Department and room ID are required.");
+                alert(Alert.AlertType.WARNING, "Missing data", "Department and room ID are required."); // if the department or room id is missing, consume the event and show an alert
                 return;
             }
             try {
@@ -369,11 +378,11 @@ public final class WardDialogs {
                 Double.parseDouble(distance.getText().trim());
             } catch (NumberFormatException ex) {
                 event.consume();
-                alert(Alert.AlertType.WARNING, "Invalid numbers", "Capacity must be >= 1; distance must be a number.");
+                alert(Alert.AlertType.WARNING, "Invalid numbers", "Capacity must be >= 1; distance must be a number."); // if the capacity or distance is not a number, consume the event and show an alert
             }
         });
 
-        dialog.setResultConverter(bt -> {
+        dialog.setResultConverter(bt -> {// set what showr
             if (bt != saveType) {
                 return null;
             }
@@ -388,7 +397,7 @@ public final class WardDialogs {
                 return null;
             }
         });
-        return dialog.showAndWait();
+        return dialog.showAndWait();// show the dialog and wait for the result
     }
 
     public static Optional<AddBedInput> showAddBedDialog(Window owner, List<Department> departments) {
@@ -411,12 +420,13 @@ public final class WardDialogs {
             }
         });
 
+        // create the input fields for the dialog
         TextField bedId = new TextField();
         ComboBox<BedType> typeBox = new ComboBox<>(FXCollections.observableArrayList(BedType.values()));
         typeBox.getSelectionModel().select(BedType.REGULAR);
         CheckBox vent = new CheckBox("Ventilator");
         CheckBox broken = new CheckBox("Broken");
-
+        // add the input to grid
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(8);
@@ -446,7 +456,7 @@ public final class WardDialogs {
         saveBtn.addEventFilter(ActionEvent.ACTION, event -> {
             if (deptBox.getValue() == null || roomBox.getValue() == null || bedId.getText() == null || bedId.getText().isBlank()) {
                 event.consume();
-                alert(Alert.AlertType.WARNING, "Missing data", "Department, room, and bed ID are required.");
+                alert(Alert.AlertType.WARNING, "Missing data", "Department, room, and bed ID are required."); // if the department, room, or bed id is missing, consume the event and show an alert
             }
         });
 
@@ -469,7 +479,7 @@ public final class WardDialogs {
         return dialog.showAndWait();
     }
 
-    public static Optional<AddUserInput> showAddUserDialog(Window owner) {
+    public static Optional<AddUserInput> showAddUserDialog(Window owner) {// show the add user dialog
         Dialog<AddUserInput> dialog = new Dialog<>();
         dialog.initOwner(owner);
         dialog.initModality(Modality.WINDOW_MODAL);
@@ -477,11 +487,13 @@ public final class WardDialogs {
         ButtonType saveType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(saveType, ButtonType.CANCEL);
 
+
+        //create the inputs
         TextField user = new TextField();
         PasswordField pass = new PasswordField();
         ComboBox<Role> roleBox = new ComboBox<>(FXCollections.observableArrayList(Role.NURSE, Role.ADMIN));
         roleBox.getSelectionModel().select(Role.NURSE);
-
+        // add the inputs
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(8);
@@ -514,15 +526,15 @@ public final class WardDialogs {
         return dialog.showAndWait();
     }
 
-    private static void alert(Alert.AlertType type, String title, String message) {
+    private static void alert(Alert.AlertType type, String title, String message) {// show an alert
         Alert a = new Alert(type);
         a.setTitle(title);
         a.setHeaderText(null);
         a.setContentText(message);
         a.showAndWait();
     }
-
-    private static void applyDepartmentComboFormatting(ComboBox<Department> box) {
+ // centralizes the string so department and room combos stay consistent with list view 
+    private static void applyDepartmentComboFormatting(ComboBox<Department> box) {// apply the department combo formatting
         box.setCellFactory(list -> new ListCell<>() {
             @Override
             protected void updateItem(Department item, boolean empty) {
@@ -539,7 +551,7 @@ public final class WardDialogs {
         });
     }
 
-    private static String formatDepartment(Department item, boolean empty) {
+    private static String formatDepartment(Department item, boolean empty) {// format the department into a string
         if (empty || item == null) {
             return null;
         }
@@ -547,7 +559,7 @@ public final class WardDialogs {
         return name + " (" + item.getId() + ")";
     }
 
-    private static void applyRoomComboFormatting(ComboBox<Room> box) {
+    private static void applyRoomComboFormatting(ComboBox<Room> box) {// apply the room combo formatting when 
         box.setCellFactory(list -> new ListCell<>() {
             @Override
             protected void updateItem(Room item, boolean empty) {
@@ -564,7 +576,7 @@ public final class WardDialogs {
         });
     }
 
-    private static String formatRoom(Room item, boolean empty) {
+    private static String formatRoom(Room item, boolean empty) {// format the room into a string
         if (empty || item == null) {
             return null;
         }
